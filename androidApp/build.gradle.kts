@@ -49,6 +49,12 @@ dependencies {
     implementation (libs.compose.destinations.core)
     ksp (libs.compose.destinations.ksp)
 
+    // Material Icon Extended
+    implementation(libs.androidx.material.icons.extended)
+
+    //size
+    implementation(libs.androidx.material3.window.size)
+
     implementation(libs.splash.screen)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.koin.android)
