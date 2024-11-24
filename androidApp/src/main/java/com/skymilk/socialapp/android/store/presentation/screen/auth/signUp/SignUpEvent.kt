@@ -10,4 +10,6 @@ sealed interface SignUpEvent {
 
     data class UpdatePasswordConfirm(val password: String) : SignUpEvent
 
+    data object SignUp : SignUpEvent
+
 }

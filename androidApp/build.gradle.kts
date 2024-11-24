@@ -57,7 +57,7 @@ dependencies {
 
     implementation(libs.splash.screen)
     implementation(libs.androidx.datastore.preferences)
-    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.accompanist.systemuicontroller)
 

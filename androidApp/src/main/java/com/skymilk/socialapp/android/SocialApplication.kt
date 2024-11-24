@@ -2,6 +2,7 @@ package com.skymilk.socialapp.android
 
 import android.app.Application
 import com.skymilk.socialapp.android.di.appModule
+import com.skymilk.socialapp.di.getSharedModule
 import org.koin.core.context.startKoin
 
 class SocialApplication:Application() {
@@ -9,7 +10,7 @@ class SocialApplication:Application() {
         super.onCreate()
 
         startKoin {
-            modules(appModule)
+            modules(appModule + getSharedModule())
         }
     }
 }

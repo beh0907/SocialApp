@@ -4,9 +4,10 @@ import androidx.compose.runtime.Composable
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.skymilk.socialapp.android.store.presentation.screen.destinations.HomeScreenDestination
+import com.skymilk.socialapp.android.store.presentation.screen.destinations.SignInDestination
 import org.koin.androidx.compose.koinViewModel
 
-@RootNavGraph(start = true)
 @Destination
 @Composable
 fun SignUp(
@@ -16,6 +17,8 @@ fun SignUp(
 
     SignUpScreen(
         uiState = viewModel.uiState,
-        onEvent = viewModel::onEvent
+        onEvent = viewModel::onEvent,
+        onNavigateToSignIn = { navigator.navigate(SignInDestination) },
+        onNavigateToHome = { navigator.navigate(HomeScreenDestination) }
     )
 }
