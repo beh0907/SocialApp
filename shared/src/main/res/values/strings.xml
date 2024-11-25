@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="follow_button_text">Follow</string>
+    <string name="onboarding_title">who to follow</string>
+    <string name="onboarding_description">팔로우하는 사용자의 게시물이 여기에 표시됩니다\n팔로우할 수 있는 추천 유저 목록은 다음과 같습니다</string>
+    <string name="onboarding_finish_button">완료</string>
+</resources>

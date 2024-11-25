@@ -28,10 +28,12 @@ val White76 = Color(0xFFF5F5F5)
 internal val LightColors = lightColorScheme(
     primary = Blue,
     onPrimaryContainer = Blue,
-    background = White76,
+    background = White,
     onBackground = Black87,
-    surface = White,
-    onSurface = Black87
+    surface = White76,
+    onSurface = Black87,
+    surfaceVariant = LightGray
+
 )
 
 internal val DarkColors = darkColorScheme(
@@ -40,5 +42,6 @@ internal val DarkColors = darkColorScheme(
     background = Black87,
     onBackground = White87,
     surface = Black24,
-    onSurface = White87
+    onSurface = White87,
+    surfaceVariant = DarkGray
 )

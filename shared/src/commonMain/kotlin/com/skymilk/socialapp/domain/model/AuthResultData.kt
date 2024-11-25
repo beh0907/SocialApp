@@ -10,3 +10,4 @@ data class AuthResultData(
     val followersCount: Int = 0,
     val followingCount: Int = 0,
 )
+

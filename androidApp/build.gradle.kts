@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.devtools.ksp)
 
+    kotlin("plugin.serialization") version "2.0.21"
 }
 
 android {
@@ -54,6 +55,13 @@ dependencies {
 
     //size
     implementation(libs.androidx.material3.window.size)
+
+    //serialization
+    implementation(libs.ktor.serialization.kotlinx.json)
+
+    //coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
     implementation(libs.splash.screen)
     implementation(libs.androidx.datastore.preferences)

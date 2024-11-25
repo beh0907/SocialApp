@@ -8,26 +8,29 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.repeatOnLifecycle
-import com.skymilk.socialapp.android.store.presentation.util.Event
-import com.skymilk.socialapp.android.store.presentation.util.EventBus.events
-import com.skymilk.socialapp.android.store.presentation.navigation.SocialApp
+import com.skymilk.socialapp.android.presentation.util.Event
+import com.skymilk.socialapp.android.presentation.util.EventBus.events
+import com.skymilk.socialapp.android.presentation.navigation.SocialApp
 import com.skymilk.socialapp.android.ui.theme.SocialAppTheme
 import kotlinx.coroutines.flow.collectLatest
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
+    private val mainViewModel: MainViewModel by viewModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             SocialAppTheme {
                 SetObserveMessage()
 
-                SocialApp()
+                val token = mainViewModel.authState.collectAsStateWithLifecycle(initialValue = null)
+                SocialApp(token.value)
             }
         }
     }
-
-
 
     @Composable
     private fun SetObserveMessage() {
