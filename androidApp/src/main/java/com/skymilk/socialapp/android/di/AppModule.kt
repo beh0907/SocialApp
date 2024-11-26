@@ -8,6 +8,8 @@ import com.skymilk.socialapp.android.presentation.common.datastore.UserSettingsS
 import com.skymilk.socialapp.android.presentation.screen.auth.signIn.SignInViewModel
 import com.skymilk.socialapp.android.presentation.screen.auth.signUp.SignUpViewModel
 import com.skymilk.socialapp.android.presentation.screen.main.home.HomeViewModel
+import com.skymilk.socialapp.android.presentation.screen.main.postDetail.PostDetailViewModel
+import com.skymilk.socialapp.android.presentation.screen.main.profile.ProfileViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -16,6 +18,8 @@ val appModule = module {
     viewModel { SignUpViewModel(get(), get()) }
     viewModel { MainViewModel(get()) }
     viewModel { HomeViewModel() }
+    viewModel { (postId: String) -> PostDetailViewModel(postId) }
+    viewModel { (userId: Int) -> ProfileViewModel(userId) }
 
     single {
         DataStoreFactory.create(

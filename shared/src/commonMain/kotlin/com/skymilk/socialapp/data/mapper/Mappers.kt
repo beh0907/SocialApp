@@ -5,7 +5,7 @@ import com.skymilk.socialapp.domain.model.AuthResultData
 
 internal fun AuthResponseData.toAuthResultData(): AuthResultData {
     return AuthResultData(
-        seq = seq,
+        id = id,
         name = name,
         email = email,
         bio = bio,

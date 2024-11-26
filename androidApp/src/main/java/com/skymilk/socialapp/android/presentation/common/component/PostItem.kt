@@ -1,4 +1,4 @@
-package com.skymilk.socialapp.android.presentation.screen.main.home.component
+package com.skymilk.socialapp.android.presentation.common.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,10 +29,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
-import com.skymilk.socialapp.android.R
-import com.skymilk.socialapp.android.presentation.common.component.CircleImage
-import com.skymilk.socialapp.android.presentation.common.component.shimmerEffect
+import com.skymilk.socialapp.R
 import com.skymilk.socialapp.android.presentation.common.dummy.Post
+import com.skymilk.socialapp.android.ui.theme.ExtraLargeSpacing
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
 import com.skymilk.socialapp.android.ui.theme.MediumSpacing
 
@@ -42,8 +41,8 @@ fun PostItem(
     post: Post,
     onPostClick: (Post) -> Unit,
     onProfileClick: (Int) -> Unit,
-    onLikeClick: () -> Unit,
-    onCommentClick: () -> Unit,
+    onLikeClick: (String) -> Unit,
+    onCommentClick: (String) -> Unit,
     isDetailScreen: Boolean = false
 ) {
 
@@ -52,6 +51,7 @@ fun PostItem(
             .fillMaxWidth()
             .background(color = MaterialTheme.colorScheme.surface)
             .clickable { onPostClick(post) }
+            .padding(bottom = ExtraLargeSpacing)
     ) {
         //헤더 유저 정보
         PostHeaderSection(
@@ -83,8 +83,8 @@ fun PostItem(
         PostFooterLikesSection(
             likesCount = post.likesCount,
             commentsCount = post.commentCount,
-            onLikeClick = onLikeClick,
-            onCommentClick = onCommentClick,
+            onLikeClick = { onLikeClick(post.id) },
+            onCommentClick = { onCommentClick((post.id)) },
         )
 
         //게시물 설명
@@ -93,7 +93,7 @@ fun PostItem(
             maxLines = if (isDetailScreen) 20 else 2,
             overflow = TextOverflow.Ellipsis,
             text = post.text,
-            style = MaterialTheme.typography.bodySmall,
+            style = MaterialTheme.typography.bodyMedium,
         )
     }
 }

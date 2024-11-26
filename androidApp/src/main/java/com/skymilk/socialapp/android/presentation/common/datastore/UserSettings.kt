@@ -5,7 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserSettings(
-    val seq: Int = -1,
+    val id: Int = -1,
     val name: String = "",
     val email: String = "",
     val bio: String = "",
@@ -17,7 +17,7 @@ data class UserSettings(
 
 fun AuthResultData.toUserSettings(): UserSettings {
     return UserSettings(
-        seq = seq,
+        id = id,
         name = name,
         email = email,
         bio = bio,
@@ -30,7 +30,7 @@ fun AuthResultData.toUserSettings(): UserSettings {
 
 fun UserSettings.toAuthResultData(): AuthResultData {
     return AuthResultData(
-        seq = seq,
+        id = id,
         name = name,
         email = email,
         bio = bio,

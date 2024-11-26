@@ -1,7 +1,7 @@
 package com.skymilk.socialapp.domain.model
 
 data class AuthResultData(
-    val seq: Int,
+    val id: Int,
     val name: String,
     val email: String,
     val bio: String,

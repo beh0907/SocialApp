@@ -68,5 +68,4 @@ dependencies {
     implementation(libs.koin.androidx.compose)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.accompanist.systemuicontroller)
-
 }

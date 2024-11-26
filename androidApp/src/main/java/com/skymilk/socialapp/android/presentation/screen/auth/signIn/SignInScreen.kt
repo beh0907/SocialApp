@@ -30,7 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.skymilk.socialapp.android.R
+import com.skymilk.socialapp.R
 import com.skymilk.socialapp.android.presentation.common.component.CustomTextField
 import com.skymilk.socialapp.android.ui.theme.ButtonHeight
 import com.skymilk.socialapp.android.ui.theme.ExtraLargeSpacing
@@ -97,7 +97,11 @@ fun SignInScreen(
                     onEvent(SignInEvent.SignIn)
                 }
             ) {
-                Text(text = stringResource(id = R.string.signin_button_hint))
+                Text(
+                    text = stringResource(id = R.string.signin_button_hint),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
             }
 
             CreateSection(onNavigateToSignUp = onNavigateToSignUp)

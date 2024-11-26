@@ -22,7 +22,7 @@ fun OnBoardingUserList(
         contentPadding = PaddingValues(horizontal = LargeSpacing)
     ) {
 
-        items(users, key = { it.seq }) {
+        items(users, key = { it.id }) {
             OnBoardingUserItem(
                 followsUser = it,
                 onUserClick = onUserClick,

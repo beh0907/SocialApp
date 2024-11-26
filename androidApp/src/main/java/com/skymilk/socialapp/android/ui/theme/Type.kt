@@ -6,7 +6,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
-import com.skymilk.socialapp.android.R
+import com.skymilk.socialapp.R
 
 val SamsungOneFont = FontFamily(
     listOf(

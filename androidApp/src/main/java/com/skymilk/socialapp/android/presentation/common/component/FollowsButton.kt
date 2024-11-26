@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.skymilk.socialapp.android.ui.theme.White
 
 @Composable
 fun FollowsButton(
@@ -32,7 +33,7 @@ fun FollowsButton(
         Text(
             text = stringResource(text),
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurface,
+            color = White,
             fontWeight = FontWeight.SemiBold
         )
     }

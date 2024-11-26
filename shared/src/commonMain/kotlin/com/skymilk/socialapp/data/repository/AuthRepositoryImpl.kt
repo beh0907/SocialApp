@@ -41,15 +41,22 @@ internal class AuthRepositoryImpl(
     ): Result<AuthResultData> {
         return withContext(dispatcher.io) {
             try {
+                println("1")
+
                 val request = SignInRequest(email,password)
+                println("2")
                 val authResponse = authService.signIn(request)
+                println("3")
 
                 if (authResponse.data == null) {
+                    println("4-1")
                     Result.Error(message = authResponse.errorMessage)
                 } else {
+                    println("4-2")
                     Result.Success(data = authResponse.data.toAuthResultData())
                 }
             } catch (e: Exception) {
+                println("5")
                 Result.Error(message = "서버와 통신할 수 없습니다. 다시 시도 해주세요.")
             }
         }

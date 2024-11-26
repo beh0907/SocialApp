@@ -1,8 +1,6 @@
 package com.skymilk.socialapp.android.presentation.screen.main.home
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,8 +14,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
-import androidx.compose.material3.pulltorefresh.pullToRefresh
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,7 +23,7 @@ import com.skymilk.socialapp.R
 import com.skymilk.socialapp.android.presentation.common.dummy.FollowsUser
 import com.skymilk.socialapp.android.presentation.common.dummy.Post
 import com.skymilk.socialapp.android.presentation.screen.main.home.component.OnBoardingUserList
-import com.skymilk.socialapp.android.presentation.screen.main.home.component.PostItem
+import com.skymilk.socialapp.android.presentation.common.component.PostItem
 import com.skymilk.socialapp.android.presentation.screen.main.home.state.OnBoardingUiState
 import com.skymilk.socialapp.android.presentation.screen.main.home.state.PostsUiState
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
@@ -42,8 +38,8 @@ fun HomeScreen(
     onEvent: (HomeEvent) -> Unit,
     onPostClick: (Post) -> Unit,
     onProfileClick: (Int) -> Unit,
-    onLikeClick: () -> Unit,
-    onCommentClick: () -> Unit,
+    onLikeClick: (String) -> Unit,
+    onCommentClick: (String) -> Unit,
 ) {
     PullToRefreshBox(
         modifier = modifier
@@ -58,7 +54,7 @@ fun HomeScreen(
                 item(key = "onBoarding") {
                     OnBoardingSection(
                         users = onBoardingUiState.users,
-                        onUserClick = { onProfileClick(it.seq) },
+                        onUserClick = { onProfileClick(it.id) },
                         onFollowClick = { user, isFollow ->
                             onEvent(HomeEvent.FollowUser(user, isFollow))
                         },

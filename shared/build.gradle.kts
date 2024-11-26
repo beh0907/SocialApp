@@ -43,8 +43,6 @@ kotlin {
 
                 //datastore
                 implementation(libs.androidx.datastore.preferences.core)
-
-                implementation(libs.kotlinx.datetime)
             }
         }
 
