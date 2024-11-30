@@ -1,6 +1,5 @@
 package com.skymilk.socialapp.android.presentation.screen.main.postDetail
 
-import android.R.attr.text
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,8 +27,9 @@ import com.skymilk.socialapp.R
 import com.skymilk.socialapp.android.presentation.common.component.PostItem
 import com.skymilk.socialapp.android.presentation.common.dummy.Comment
 import com.skymilk.socialapp.android.presentation.screen.main.postDetail.component.CommentItem
-import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.CommentsUiState
-import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.PostUiState
+import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.CommentsState
+import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.PostState
+import com.skymilk.socialapp.android.presentation.screen.main.profile.HeaderSection
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
 import com.skymilk.socialapp.android.ui.theme.MediumSpacing
 import com.skymilk.socialapp.android.ui.theme.White
@@ -37,56 +37,64 @@ import com.skymilk.socialapp.android.ui.theme.White
 @Composable
 fun PostDetailScreen(
     modifier: Modifier = Modifier,
-    postUiState: PostUiState,
-    commentsUiState: CommentsUiState,
+    postState: PostState,
+    commentsState: CommentsState,
     onEvent: (PostDetailEvent) -> Unit,
     onProfileClick: (Int) -> Unit,
     onCommentMoreClick: (Comment) -> Unit,
     onAddCommentClick: () -> Unit,
 ) {
-    if (postUiState.isLoading || commentsUiState.isLoading) {
-        Box(
-            modifier = modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.surface),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
-        }
-    } else {
-        LazyColumn(
-            modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.surface)
-        ) {
-            item(key = "post") {
-                PostItem(
-                    post = postUiState.post!!,
-                    onPostClick = { },
-                    onProfileClick = onProfileClick,
-                    onLikeClick = { },
-                    onCommentClick = { },
-                    isDetailScreen = true
-                )
-            }
-
-            item(key = "commentHeaderSection") {
-                HeaderSection(
-                    onAddCommentClick = onAddCommentClick
-                )
-            }
-
-
-            items(items = commentsUiState.comments, key = { it.id }) { comment ->
-                HorizontalDivider()
-
-                CommentItem(
-                    comment = comment,
-                    onProfileClick = onProfileClick,
-                    onCommentMoreClick = { onCommentMoreClick(comment) }
-                )
+    when {
+        postState is PostState.Loading || commentsState is CommentsState.Loading -> {
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surface),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
             }
         }
+
+
+        postState is PostState.Success && commentsState is CommentsState.Success -> {
+            LazyColumn(
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surface)
+            ) {
+                item(key = "post") {
+                    PostItem(
+                        post = postState.post,
+                        onPostClick = { },
+                        onProfileClick = onProfileClick,
+                        onLikeClick = { },
+                        onCommentClick = { },
+                        isDetailScreen = true
+                    )
+                }
+
+                item(key = "commentHeaderSection") {
+                    HeaderSection(
+                        onAddCommentClick = onAddCommentClick
+                    )
+                }
+
+
+                items(items = commentsState.comments, key = { it.id }) { comment ->
+                    HorizontalDivider()
+
+                    CommentItem(
+                        comment = comment,
+                        onProfileClick = onProfileClick,
+                        onCommentMoreClick = { onCommentMoreClick(comment) }
+                    )
+                }
+            }
+        }
+
+        else -> Unit
     }
-
 }
 
 @Composable

@@ -1,8 +1,9 @@
 package com.skymilk.socialapp.android.presentation.screen.auth.signIn
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.skymilk.socialapp.android.presentation.screen.destinations.HomeDestination
 import com.skymilk.socialapp.android.presentation.screen.destinations.SignInDestination
@@ -15,9 +16,11 @@ fun SignIn(
     navigator: DestinationsNavigator
 ) {
     val viewModel: SignInViewModel = koinViewModel()
+    val authState by viewModel.authState.collectAsStateWithLifecycle()
 
     SignInScreen(
         uiState = viewModel.uiState,
+        authState = authState,
         onEvent = viewModel::onEvent,
         onNavigateToSignUp = {
             navigator.navigate(SignUpDestination) {

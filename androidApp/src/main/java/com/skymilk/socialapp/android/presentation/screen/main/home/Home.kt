@@ -1,6 +1,8 @@
 package com.skymilk.socialapp.android.presentation.screen.main.home
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -16,9 +18,12 @@ fun Home(
 ) {
     val homeViewModel: HomeViewModel = koinViewModel()
 
+    val onBoardingUiState by homeViewModel.onBoardingUiState.collectAsStateWithLifecycle()
+    val postsUiState by homeViewModel.postsUiState.collectAsStateWithLifecycle()
+
     HomeScreen(
-        onBoardingUiState = homeViewModel.onBoardingUiState,
-        postsUiState = homeViewModel.postsUiState,
+        onBoardingState = onBoardingUiState,
+        postsState = postsUiState,
         onEvent = homeViewModel::onEvent,
         onPostClick = {
             navigator.navigate(PostDetailDestination(it.id))

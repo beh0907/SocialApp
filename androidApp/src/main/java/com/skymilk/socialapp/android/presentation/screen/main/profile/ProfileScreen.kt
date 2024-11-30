@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -35,8 +36,12 @@ import com.skymilk.socialapp.android.presentation.common.component.FollowsButton
 import com.skymilk.socialapp.android.presentation.common.component.PostItem
 import com.skymilk.socialapp.android.presentation.common.dummy.Post
 import com.skymilk.socialapp.android.presentation.common.dummy.Profile
-import com.skymilk.socialapp.android.presentation.screen.main.profile.state.UserInfoUiState
-import com.skymilk.socialapp.android.presentation.screen.main.profile.state.UserPostsUiState
+import com.skymilk.socialapp.android.presentation.common.state.PostsState
+import com.skymilk.socialapp.android.presentation.screen.main.postDetail.HeaderSection
+import com.skymilk.socialapp.android.presentation.screen.main.postDetail.component.CommentItem
+import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.CommentsState
+import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.PostState
+import com.skymilk.socialapp.android.presentation.screen.main.profile.state.ProfileState
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
 import com.skymilk.socialapp.android.ui.theme.MediumSpacing
 import com.skymilk.socialapp.android.ui.theme.SmallSpacing
@@ -44,48 +49,54 @@ import com.skymilk.socialapp.android.ui.theme.SmallSpacing
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
-    userInfoUiState: UserInfoUiState,
-    userPostsUiState: UserPostsUiState,
+    profileState: ProfileState,
+    postsState: PostsState,
     onEvent: (ProfileEvent) -> Unit,
+    onProfileClick: () -> Unit,
     onFollowersClick: () -> Unit,
     onFollowingClick: () -> Unit,
-    onFollowClick: () -> Unit,
     onPostClick: (Post) -> Unit,
     onLikeClick: (String) -> Unit,
     onCommentClick: (String) -> Unit,
 ) {
-    if (userInfoUiState.isLoading || userPostsUiState.isLoading) {
-        Box(
-            modifier = modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.surface),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
-        }
-    } else {
-        LazyColumn(
-            modifier = modifier.fillMaxSize()
-        ) {
-            item("header") {
-                HeaderSection(
-                    profile = userInfoUiState.profile!!,
-                    onFollowersClick = onFollowersClick,
-                    onFollowingClick = onFollowingClick,
-                    onFollowClick = onFollowClick
-                )
+    when {
+        profileState is ProfileState.Loading || postsState is PostsState.Loading -> {
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.surface),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
             }
+        }
 
-            items(items = userPostsUiState.posts, key = { post -> post.id }) {
-                PostItem(
-                    post = it,
-                    onPostClick = onPostClick,
-                    onProfileClick = { },
-                    onLikeClick = onLikeClick,
-                    onCommentClick = onCommentClick,
-                )
+        profileState is ProfileState.Success && postsState is PostsState.Success -> {
+            LazyColumn(
+                modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)
+            ) {
+                item("header") {
+                    HeaderSection(
+                        profile = profileState.profile,
+                        onFollowersClick = onFollowersClick,
+                        onFollowingClick = onFollowingClick,
+                        onFollowClick = onProfileClick
+                    )
+                }
+
+                items(items = postsState.posts, key = { post -> post.id }) {
+                    PostItem(
+                        post = it,
+                        onPostClick = onPostClick,
+                        onProfileClick = { },
+                        onLikeClick = onLikeClick,
+                        onCommentClick = onCommentClick,
+                    )
+                }
             }
         }
+
+        else -> Unit
     }
 }
 
@@ -102,6 +113,7 @@ fun HeaderSection(
     Column(
         modifier = modifier
             .fillMaxWidth()
+            .padding(bottom = MediumSpacing)
             .background(MaterialTheme.colorScheme.surface)
             .padding(LargeSpacing),
     ) {

@@ -8,12 +8,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.skymilk.socialapp.android.presentation.common.datastore.UserSettings
 import com.skymilk.socialapp.android.presentation.common.datastore.toUserSettings
-import com.skymilk.socialapp.android.presentation.screen.auth.signIn.SignInEvent
+import com.skymilk.socialapp.android.presentation.common.state.AuthState
+import com.skymilk.socialapp.android.presentation.screen.auth.signIn.state.SignInUIState
 import com.skymilk.socialapp.android.presentation.util.Event
 import com.skymilk.socialapp.android.presentation.util.sendEvent
-import com.skymilk.socialapp.domain.model.AuthResultData
 import com.skymilk.socialapp.domain.usecase.auth.SignInUseCase
 import com.skymilk.socialapp.util.Result
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SignInViewModel(
@@ -22,6 +24,9 @@ class SignInViewModel(
 ) : ViewModel() {
     var uiState by mutableStateOf(SignInUIState())
         private set
+
+    private val _authState = MutableStateFlow<AuthState>(AuthState.Initial)
+    val authState = _authState
 
     fun onEvent(event: SignInEvent) {
         when (event) {
@@ -43,33 +48,28 @@ class SignInViewModel(
 
     private fun signIn() {
         viewModelScope.launch {
-            uiState = uiState.copy(isAuthenticating = true)
+            authState.update { AuthState.Loading }
 
             val authResultData = signInUseCase(
                 email = uiState.email,
                 password = uiState.password
             )
 
-            uiState = when(authResultData) {
+            authState.update {
+                when (authResultData) {
+                    is Result.Error -> {
+                        val message = authResultData.message.toString()
+                        sendEvent(Event.Toast(message = message))
 
-                is Result.Error -> {
-                    val message = authResultData.message.toString()
-                    sendEvent(Event.Toast(message = message))
+                        AuthState.Error(message)
+                    }
 
-                    uiState.copy(
-                        isAuthenticating = false,
-                        authErrorMessage = message,
-                    )
-                }
+                    is Result.Success -> {
+                        //datastore 유저정보 저장
+                        dataStore.updateData { authResultData.data!!.toUserSettings() }
 
-                is Result.Success -> {
-                    //datastore 유저정보 저장
-                    dataStore.updateData { authResultData.data!!.toUserSettings() }
-
-                    uiState.copy(
-                        isAuthenticating = false,
-                        authenticationSuccess = true
-                    )
+                        AuthState.Authenticated
+                    }
                 }
             }
         }

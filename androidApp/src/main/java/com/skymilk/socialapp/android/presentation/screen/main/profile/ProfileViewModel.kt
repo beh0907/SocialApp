@@ -5,23 +5,26 @@ import androidx.lifecycle.ViewModel
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
-import com.skymilk.socialapp.android.presentation.common.dummy.sampleComments
 import com.skymilk.socialapp.android.presentation.common.dummy.samplePosts
 import com.skymilk.socialapp.android.presentation.common.dummy.sampleProfiles
-import com.skymilk.socialapp.android.presentation.screen.main.profile.state.UserInfoUiState
-import com.skymilk.socialapp.android.presentation.screen.main.profile.state.UserPostsUiState
+import com.skymilk.socialapp.android.presentation.common.state.PostsState
+import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.PostState
+import com.skymilk.socialapp.android.presentation.screen.main.profile.state.ProfileState
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
     private val userId: Int
 ): ViewModel() {
 
-    var userInfoUiState by mutableStateOf(UserInfoUiState())
-        private set
+    private val _profileState = MutableStateFlow<ProfileState>(ProfileState.Initial)
+    val profileState = _profileState.asStateFlow()
 
-    var userPostsUiState by mutableStateOf(UserPostsUiState())
-        private set
+    private val _postsState = MutableStateFlow<PostsState>(PostsState.Initial)
+    val postsState = _postsState.asStateFlow()
 
     init {
         loadData()
@@ -38,25 +41,26 @@ class ProfileViewModel(
 
     private fun loadData() {
         viewModelScope.launch {
-            userInfoUiState = userInfoUiState.copy(isLoading = true)
+            _profileState.update { ProfileState.Loading }
 
             delay(500)
 
-            userInfoUiState = userInfoUiState.copy(
-                isLoading = false,
-                profile = sampleProfiles.find { it.id == userId }
-            )
+            _profileState.update {
+                val profile = sampleProfiles.find { it.id == userId }
+
+                if (profile != null) ProfileState.Success(profile = profile)
+                else ProfileState.Error("프로필을 찾을 수 없습니다.")
+            }
         }
 
         viewModelScope.launch {
-            userPostsUiState = userPostsUiState.copy(isLoading = true)
+            _postsState.update { PostsState.Loading }
 
             delay(500)
 
-            userPostsUiState = userPostsUiState.copy(
-                isLoading = false,
-                posts = samplePosts,
-            )
+            _postsState.update {
+                PostsState.Success(posts = samplePosts)
+            }
         }
     }
 

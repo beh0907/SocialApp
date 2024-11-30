@@ -7,20 +7,23 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.skymilk.socialapp.android.presentation.common.dummy.sampleComments
 import com.skymilk.socialapp.android.presentation.common.dummy.samplePosts
-import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.CommentsUiState
-import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.PostUiState
+import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.CommentsState
+import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.PostState
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PostDetailViewModel(
     private val postId: String
 ): ViewModel() {
 
-    var postUiState by mutableStateOf(PostUiState())
-        private set
+    private val _postState = MutableStateFlow<PostState>(PostState.Initial)
+    val postState = _postState.asStateFlow()
 
-    var commentsUiState by mutableStateOf(CommentsUiState())
-        private set
+    private val _commentsState = MutableStateFlow<CommentsState>(CommentsState.Initial)
+    val commentsState = _commentsState.asStateFlow()
 
     init {
         loadData()
@@ -37,25 +40,26 @@ class PostDetailViewModel(
 
     private fun loadData() {
         viewModelScope.launch {
-            postUiState = postUiState.copy(isLoading = true)
+            _postState.update { PostState.Loading }
 
             delay(500)
 
-            postUiState = postUiState.copy(
-                isLoading = false,
-                post = samplePosts.find { it.id == postId }
-            )
+            _postState.update {
+                val post = samplePosts.find { it.id == postId }
+
+                if (post != null) PostState.Success(post = post)
+                else PostState.Error("게시글을 찾을 수 없습니다.")
+            }
         }
 
         viewModelScope.launch {
-            commentsUiState = commentsUiState.copy(isLoading = true)
+            _commentsState.update { CommentsState.Loading }
 
             delay(500)
 
-            commentsUiState = commentsUiState.copy(
-                isLoading = false,
-                comments = sampleComments,
-            )
+            _commentsState.update {
+                CommentsState.Success(comments = sampleComments)
+            }
         }
     }
 

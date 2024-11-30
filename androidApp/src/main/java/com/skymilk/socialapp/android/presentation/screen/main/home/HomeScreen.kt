@@ -1,5 +1,6 @@
 package com.skymilk.socialapp.android.presentation.screen.main.home
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,12 +21,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.skymilk.socialapp.R
+import com.skymilk.socialapp.android.presentation.common.component.PostItem
 import com.skymilk.socialapp.android.presentation.common.dummy.FollowsUser
 import com.skymilk.socialapp.android.presentation.common.dummy.Post
 import com.skymilk.socialapp.android.presentation.screen.main.home.component.OnBoardingUserList
-import com.skymilk.socialapp.android.presentation.common.component.PostItem
-import com.skymilk.socialapp.android.presentation.screen.main.home.state.OnBoardingUiState
-import com.skymilk.socialapp.android.presentation.screen.main.home.state.PostsUiState
+import com.skymilk.socialapp.android.presentation.screen.main.home.state.OnBoardingState
+import com.skymilk.socialapp.android.presentation.common.state.PostsState
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
 import com.skymilk.socialapp.android.ui.theme.MediumSpacing
 
@@ -33,8 +34,8 @@ import com.skymilk.socialapp.android.ui.theme.MediumSpacing
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onBoardingUiState: OnBoardingUiState,
-    postsUiState: PostsUiState,
+    onBoardingState: OnBoardingState,
+    postsState: PostsState,
     onEvent: (HomeEvent) -> Unit,
     onPostClick: (Post) -> Unit,
     onProfileClick: (Int) -> Unit,
@@ -44,36 +45,42 @@ fun HomeScreen(
     PullToRefreshBox(
         modifier = modifier
             .fillMaxSize(),
-        isRefreshing = onBoardingUiState.isLoading && postsUiState.isLoading,
+        isRefreshing = (onBoardingState is OnBoardingState.Loading) && (postsState is PostsState.Loading),
         onRefresh = { onEvent(HomeEvent.RetryData) }
     ) {
         LazyColumn(
             modifier = modifier.fillMaxSize(),
         ) {
-            if (onBoardingUiState.shouldShowOnBoarding) {
+            if (onBoardingState is OnBoardingState.Success) {
+                println("테스트 : ${onBoardingState.shouldShowOnBoarding}")
+
                 item(key = "onBoarding") {
-                    OnBoardingSection(
-                        users = onBoardingUiState.users,
-                        onUserClick = { onProfileClick(it.id) },
-                        onFollowClick = { user, isFollow ->
-                            onEvent(HomeEvent.FollowUser(user, isFollow))
-                        },
-                        onBoardingFinish = {
-                            onEvent(HomeEvent.DismissOnBoarding)
-                        }
-                    )
+                    AnimatedVisibility(visible = onBoardingState.shouldShowOnBoarding) {
+                        OnBoardingSection(
+                            users = onBoardingState.users,
+                            onUserClick = { onProfileClick(it.id) },
+                            onFollowClick = { user, isFollow ->
+                                onEvent(HomeEvent.FollowUser(user, isFollow))
+                            },
+                            onBoardingDismiss = {
+                                onEvent(HomeEvent.DismissOnBoarding)
+                            }
+                        )
+                    }
                 }
 
             }
 
-            items(items = postsUiState.posts, key = { post -> post.id }) {
-                PostItem(
-                    post = it,
-                    onPostClick = onPostClick,
-                    onProfileClick = onProfileClick,
-                    onLikeClick = onLikeClick,
-                    onCommentClick = onCommentClick,
-                )
+            if ((postsState is PostsState.Success)) {
+                items(items = postsState.posts, key = { post -> post.id }) {
+                    PostItem(
+                        post = it,
+                        onPostClick = onPostClick,
+                        onProfileClick = onProfileClick,
+                        onLikeClick = onLikeClick,
+                        onCommentClick = onCommentClick,
+                    )
+                }
             }
         }
     }
@@ -86,7 +93,7 @@ fun OnBoardingSection(
     users: List<FollowsUser> = emptyList(),
     onUserClick: (FollowsUser) -> Unit,
     onFollowClick: (FollowsUser, Boolean) -> Unit,
-    onBoardingFinish: () -> Unit
+    onBoardingDismiss: () -> Unit
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
         Text(
@@ -116,7 +123,7 @@ fun OnBoardingSection(
                 .fillMaxWidth(fraction = 0.5f)
                 .align(Alignment.CenterHorizontally)
                 .padding(vertical = LargeSpacing),
-            onClick = onBoardingFinish,
+            onClick = onBoardingDismiss,
             shape = RoundedCornerShape(percent = 50)
         ) {
             Text(text = stringResource(R.string.onboarding_finish_button))

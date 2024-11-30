@@ -32,6 +32,8 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.skymilk.socialapp.R
 import com.skymilk.socialapp.android.presentation.common.component.CustomTextField
+import com.skymilk.socialapp.android.presentation.common.state.AuthState
+import com.skymilk.socialapp.android.presentation.screen.auth.signUp.state.SignUpUIState
 import com.skymilk.socialapp.android.ui.theme.ButtonHeight
 import com.skymilk.socialapp.android.ui.theme.ExtraLargeSpacing
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
@@ -41,13 +43,14 @@ import com.skymilk.socialapp.android.ui.theme.MediumSpacing
 fun SignUpScreen(
     modifier: Modifier = Modifier,
     uiState: SignUpUIState,
+    authState: AuthState,
     onEvent: (SignUpEvent) -> Unit,
     onNavigateToSignIn: () -> Unit,
     onNavigateToHome: () -> Unit,
 ) {
     //로그인 처리가 되었다면 이동
-    LaunchedEffect(key1 = uiState.authenticationSuccess) {
-        if (uiState.authenticationSuccess) onNavigateToHome()
+    LaunchedEffect(key1 = authState) {
+        if (authState is AuthState.Authenticated) onNavigateToHome()
     }
 
     Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -124,7 +127,7 @@ fun SignUpScreen(
             CreateSection(onNavigateToSignIn = onNavigateToSignIn)
         }
 
-        if (uiState.isAuthenticating) CircularProgressIndicator()
+        if (authState is AuthState.Loading) CircularProgressIndicator()
     }
 }
 

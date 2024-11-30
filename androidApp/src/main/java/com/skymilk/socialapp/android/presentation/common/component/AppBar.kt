@@ -17,11 +17,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import com.ramcosta.composedestinations.utils.currentDestinationAsState
 import com.skymilk.socialapp.R
+import com.skymilk.socialapp.android.presentation.screen.destinations.FollowersDestination
+import com.skymilk.socialapp.android.presentation.screen.destinations.FollowingDestination
 import com.skymilk.socialapp.android.presentation.screen.destinations.HomeDestination
 import com.skymilk.socialapp.android.presentation.screen.destinations.PostDetailDestination
 import com.skymilk.socialapp.android.presentation.screen.destinations.ProfileDestination
+import com.skymilk.socialapp.android.presentation.screen.destinations.ProfileEditDestination
 import com.skymilk.socialapp.android.presentation.screen.destinations.SignInDestination
 import com.skymilk.socialapp.android.presentation.screen.destinations.SignUpDestination
+import com.skymilk.socialapp.android.presentation.screen.main.follows.Following
 import com.skymilk.socialapp.android.ui.theme.SmallElevation
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -78,7 +82,9 @@ private fun getAppBarTitle(currentDestinationRoute: String?): Int {
         HomeDestination.route -> R.string.home_destination_title
         PostDetailDestination.route -> R.string.post_detail_destination_title
         ProfileDestination.route -> R.string.profile_destination_title
-
+        ProfileEditDestination.route -> R.string.profile_edit_destination_title
+        FollowersDestination.route -> R.string.followers_title
+        FollowingDestination.route -> R.string.following_title
         else -> R.string.no_destination_title
     }
 }

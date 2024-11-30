@@ -3,6 +3,7 @@ package com.skymilk.socialapp.android.presentation.common.dummy
 data class FollowsUser(
     val id: Int = -1,
     val name: String = "",
+    val bio: String = "안녕하십니까, 저의 페이지에 오신 것을 환영합니다.",
     val profileUrl: String = "",
     val isFollowing: Boolean = false,
 )

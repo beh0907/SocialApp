@@ -1,10 +1,14 @@
 package com.skymilk.socialapp.android.presentation.screen.main.profile
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.skymilk.socialapp.android.presentation.screen.destinations.FollowersDestination
+import com.skymilk.socialapp.android.presentation.screen.destinations.FollowingDestination
 import com.skymilk.socialapp.android.presentation.screen.destinations.PostDetailDestination
-import com.skymilk.socialapp.android.presentation.screen.main.profile.ProfileScreen
+import com.skymilk.socialapp.android.presentation.screen.destinations.ProfileEditDestination
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -14,16 +18,18 @@ fun Profile(
     navigator: DestinationsNavigator,
     userId: Int
 ) {
-    val profileViewModel: ProfileViewModel =
-        koinViewModel(parameters = { parametersOf(userId) })
+    val profileViewModel: ProfileViewModel = koinViewModel(parameters = { parametersOf(userId) })
+
+    val profileState by profileViewModel.profileState.collectAsStateWithLifecycle()
+    val postsState by profileViewModel.postsState.collectAsStateWithLifecycle()
 
     ProfileScreen(
-        userInfoUiState = profileViewModel.userInfoUiState,
-        userPostsUiState = profileViewModel.userPostsUiState,
+        profileState = profileState,
+        postsState = postsState,
         onEvent = profileViewModel::onEvent,
-        onFollowersClick = {},
-        onFollowingClick = {},
-        onFollowClick = {},
+        onProfileClick = { navigator.navigate(ProfileEditDestination(userId)) },
+        onFollowersClick = { navigator.navigate(FollowersDestination(userId)) },
+        onFollowingClick = { navigator.navigate(FollowingDestination(userId)) },
         onPostClick = {
             navigator.navigate(PostDetailDestination(it.id))
         },
