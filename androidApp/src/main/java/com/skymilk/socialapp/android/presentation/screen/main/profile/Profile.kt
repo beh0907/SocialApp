@@ -27,7 +27,7 @@ fun Profile(
         profileState = profileState,
         postsState = postsState,
         onEvent = profileViewModel::onEvent,
-        onProfileClick = { navigator.navigate(ProfileEditDestination(userId)) },
+        onNavigateToProfile = { navigator.navigate(ProfileEditDestination(userId)) },
         onFollowersClick = { navigator.navigate(FollowersDestination(userId)) },
         onFollowingClick = { navigator.navigate(FollowingDestination(userId)) },
         onPostClick = {

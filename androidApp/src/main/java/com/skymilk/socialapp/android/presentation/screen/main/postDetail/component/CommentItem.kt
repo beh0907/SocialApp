@@ -25,7 +25,7 @@ import com.skymilk.socialapp.android.ui.theme.MediumSpacing
 fun CommentItem(
     modifier: Modifier = Modifier,
     comment: Comment,
-    onProfileClick: (Int) -> Unit,
+    onNavigateToProfile: (Int) -> Unit,
     onCommentMoreClick: () -> Unit,
 ) {
     Row(
@@ -37,7 +37,7 @@ fun CommentItem(
         CircleImage(
             modifier = Modifier.size(30.dp),
             imageUrl = comment.authorImageUrl,
-            onClick = { onProfileClick(comment.authorId) }
+            onClick = { onNavigateToProfile(comment.authorId) }
         )
 
         Column(

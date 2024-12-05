@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -37,10 +36,6 @@ import com.skymilk.socialapp.android.presentation.common.component.PostItem
 import com.skymilk.socialapp.android.presentation.common.dummy.Post
 import com.skymilk.socialapp.android.presentation.common.dummy.Profile
 import com.skymilk.socialapp.android.presentation.common.state.PostsState
-import com.skymilk.socialapp.android.presentation.screen.main.postDetail.HeaderSection
-import com.skymilk.socialapp.android.presentation.screen.main.postDetail.component.CommentItem
-import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.CommentsState
-import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.PostState
 import com.skymilk.socialapp.android.presentation.screen.main.profile.state.ProfileState
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
 import com.skymilk.socialapp.android.ui.theme.MediumSpacing
@@ -52,7 +47,7 @@ fun ProfileScreen(
     profileState: ProfileState,
     postsState: PostsState,
     onEvent: (ProfileEvent) -> Unit,
-    onProfileClick: () -> Unit,
+    onNavigateToProfile: () -> Unit,
     onFollowersClick: () -> Unit,
     onFollowingClick: () -> Unit,
     onPostClick: (Post) -> Unit,
@@ -80,15 +75,15 @@ fun ProfileScreen(
                         profile = profileState.profile,
                         onFollowersClick = onFollowersClick,
                         onFollowingClick = onFollowingClick,
-                        onFollowClick = onProfileClick
+                        onFollowClick = onNavigateToProfile
                     )
                 }
 
                 items(items = postsState.posts, key = { post -> post.id }) {
                     PostItem(
                         post = it,
-                        onPostClick = onPostClick,
-                        onProfileClick = { },
+                        onNavigateToPost = onPostClick,
+                        onNavigateToProfile = { },
                         onLikeClick = onLikeClick,
                         onCommentClick = onCommentClick,
                     )

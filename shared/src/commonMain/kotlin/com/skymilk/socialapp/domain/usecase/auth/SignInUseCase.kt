@@ -3,11 +3,10 @@ package com.skymilk.socialapp.domain.usecase.auth
 import com.skymilk.socialapp.domain.model.AuthResultData
 import com.skymilk.socialapp.domain.repository.AuthRepository
 import com.skymilk.socialapp.util.Result
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
-class SignInUseCase: KoinComponent {
-    val authRepository by inject<AuthRepository>()
+class SignInUseCase(
+    private val authRepository: AuthRepository
+) {
 
     suspend operator fun invoke(email: String, password: String): Result<AuthResultData> {
 

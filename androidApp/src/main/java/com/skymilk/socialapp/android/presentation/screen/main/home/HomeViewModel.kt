@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.skymilk.socialapp.android.presentation.common.dummy.FollowsUser
 import com.skymilk.socialapp.android.presentation.common.dummy.sampleFollowsUser
 import com.skymilk.socialapp.android.presentation.common.dummy.samplePosts
-import com.skymilk.socialapp.android.presentation.screen.main.home.state.OnBoardingState
 import com.skymilk.socialapp.android.presentation.common.state.PostsState
+import com.skymilk.socialapp.android.presentation.screen.main.home.state.OnBoardingState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -39,6 +39,7 @@ class HomeViewModel() : ViewModel() {
         _onBoardingState.update { OnBoardingState.Loading }
         _postsState.update { PostsState.Loading }
 
+        //추천 유저 목록 불러오기
         viewModelScope.launch {
             delay(1000)
 
@@ -50,6 +51,7 @@ class HomeViewModel() : ViewModel() {
             }
         }
 
+        //게시글 목록 불러오기
         viewModelScope.launch {
             delay(1000)
 
@@ -60,14 +62,9 @@ class HomeViewModel() : ViewModel() {
     }
 
     private fun dismissOnBoarding() {
-        println("dismissOnBoarding")
-
-        if (_onBoardingState is OnBoardingState.Success) {
-            _onBoardingState.update {
-                _onBoardingState.copy(shouldShowOnBoarding = false)
-            }
-
-
+        //데이터가 로드 된 Success 상태일때 숨김 처리한다
+        _onBoardingState.update {
+            (it as? OnBoardingState.Success)?.copy(shouldShowOnBoarding = false) ?: it
         }
     }
 

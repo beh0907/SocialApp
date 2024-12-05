@@ -29,7 +29,6 @@ import com.skymilk.socialapp.android.presentation.common.dummy.Comment
 import com.skymilk.socialapp.android.presentation.screen.main.postDetail.component.CommentItem
 import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.CommentsState
 import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.PostState
-import com.skymilk.socialapp.android.presentation.screen.main.profile.HeaderSection
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
 import com.skymilk.socialapp.android.ui.theme.MediumSpacing
 import com.skymilk.socialapp.android.ui.theme.White
@@ -40,7 +39,7 @@ fun PostDetailScreen(
     postState: PostState,
     commentsState: CommentsState,
     onEvent: (PostDetailEvent) -> Unit,
-    onProfileClick: (Int) -> Unit,
+    onNavigateToProfile: (Int) -> Unit,
     onCommentMoreClick: (Comment) -> Unit,
     onAddCommentClick: () -> Unit,
 ) {
@@ -66,8 +65,8 @@ fun PostDetailScreen(
                 item(key = "post") {
                     PostItem(
                         post = postState.post,
-                        onPostClick = { },
-                        onProfileClick = onProfileClick,
+                        onNavigateToPost = { },
+                        onNavigateToProfile = onNavigateToProfile,
                         onLikeClick = { },
                         onCommentClick = { },
                         isDetailScreen = true
@@ -86,7 +85,7 @@ fun PostDetailScreen(
 
                     CommentItem(
                         comment = comment,
-                        onProfileClick = onProfileClick,
+                        onNavigateToProfile = onNavigateToProfile,
                         onCommentMoreClick = { onCommentMoreClick(comment) }
                     )
                 }

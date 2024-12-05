@@ -39,8 +39,8 @@ import com.skymilk.socialapp.android.ui.theme.MediumSpacing
 fun PostItem(
     modifier: Modifier = Modifier,
     post: Post,
-    onPostClick: (Post) -> Unit,
-    onProfileClick: (Int) -> Unit,
+    onNavigateToPost: (Post) -> Unit,
+    onNavigateToProfile: (Int) -> Unit,
     onLikeClick: (String) -> Unit,
     onCommentClick: (String) -> Unit,
     isDetailScreen: Boolean = false
@@ -50,7 +50,7 @@ fun PostItem(
         modifier = modifier
             .fillMaxWidth()
             .background(color = MaterialTheme.colorScheme.surface)
-            .clickable { onPostClick(post) }
+            .clickable { onNavigateToPost(post) }
             .padding(bottom = ExtraLargeSpacing)
     ) {
         //헤더 유저 정보
@@ -58,7 +58,7 @@ fun PostItem(
             name = post.authorName,
             profileUrl = post.authorImage,
             date = post.createdAt,
-            onProfileClick = { onProfileClick(post.authorId) }
+            onProfileClick = { onNavigateToProfile(post.authorId) }
         )
 
         //메인 이미지

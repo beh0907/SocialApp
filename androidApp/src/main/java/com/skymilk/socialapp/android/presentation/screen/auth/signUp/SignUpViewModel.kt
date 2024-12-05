@@ -6,12 +6,12 @@ import androidx.compose.runtime.setValue
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.skymilk.socialapp.android.presentation.common.datastore.UserSettings
-import com.skymilk.socialapp.android.presentation.common.datastore.toUserSettings
 import com.skymilk.socialapp.android.presentation.common.state.AuthState
 import com.skymilk.socialapp.android.presentation.screen.auth.signUp.state.SignUpUIState
 import com.skymilk.socialapp.android.presentation.util.Event
 import com.skymilk.socialapp.android.presentation.util.sendEvent
+import com.skymilk.socialapp.data.model.UserSettings
+import com.skymilk.socialapp.domain.usecase.auth.AuthUseCase
 import com.skymilk.socialapp.domain.usecase.auth.SignUpUseCase
 import com.skymilk.socialapp.util.Result
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,8 +19,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SignUpViewModel(
-    private val signUpUseCase: SignUpUseCase,
-    private val dataStore: DataStore<UserSettings>
+    private val authUseCase: AuthUseCase
 ) : ViewModel() {
     var uiState by mutableStateOf(SignUpUIState())
         private set
@@ -72,7 +71,7 @@ class SignUpViewModel(
         viewModelScope.launch {
             authState.update { AuthState.Loading }
 
-            val authResultData = signUpUseCase(
+            val authResultData = authUseCase.signUpUseCase(
                 name = uiState.name,
                 email = uiState.email,
                 password = uiState.password,
@@ -88,12 +87,7 @@ class SignUpViewModel(
                         AuthState.Error(message)
                     }
 
-                    is Result.Success -> {
-                        //datastore 유저정보 저장
-                        dataStore.updateData { authResultData.data!!.toUserSettings() }
-
-                        AuthState.Authenticated
-                    }
+                    is Result.Success -> AuthState.Authenticated
                 }
             }
         }

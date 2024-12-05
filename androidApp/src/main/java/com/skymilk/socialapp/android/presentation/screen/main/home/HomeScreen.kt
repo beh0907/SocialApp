@@ -1,6 +1,11 @@
 package com.skymilk.socialapp.android.presentation.screen.main.home
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleOut
+import androidx.compose.animation.shrinkOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,17 +23,20 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.TransformOrigin.Companion
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import com.skymilk.socialapp.R
 import com.skymilk.socialapp.android.presentation.common.component.PostItem
 import com.skymilk.socialapp.android.presentation.common.dummy.FollowsUser
 import com.skymilk.socialapp.android.presentation.common.dummy.Post
+import com.skymilk.socialapp.android.presentation.common.state.PostsState
 import com.skymilk.socialapp.android.presentation.screen.main.home.component.OnBoardingUserList
 import com.skymilk.socialapp.android.presentation.screen.main.home.state.OnBoardingState
-import com.skymilk.socialapp.android.presentation.common.state.PostsState
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
 import com.skymilk.socialapp.android.ui.theme.MediumSpacing
+import java.lang.System.exit
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,8 +45,8 @@ fun HomeScreen(
     onBoardingState: OnBoardingState,
     postsState: PostsState,
     onEvent: (HomeEvent) -> Unit,
-    onPostClick: (Post) -> Unit,
-    onProfileClick: (Int) -> Unit,
+    onNavigateToPost: (Post) -> Unit,
+    onNavigateToProfile: (Int) -> Unit,
     onLikeClick: (String) -> Unit,
     onCommentClick: (String) -> Unit,
 ) {
@@ -49,16 +57,17 @@ fun HomeScreen(
         onRefresh = { onEvent(HomeEvent.RetryData) }
     ) {
         LazyColumn(
-            modifier = modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize()
         ) {
             if (onBoardingState is OnBoardingState.Success) {
-                println("테스트 : ${onBoardingState.shouldShowOnBoarding}")
-
                 item(key = "onBoarding") {
-                    AnimatedVisibility(visible = onBoardingState.shouldShowOnBoarding) {
+                    AnimatedVisibility(
+                        visible = onBoardingState.shouldShowOnBoarding,
+                        exit = shrinkVertically()
+                    ) {
                         OnBoardingSection(
                             users = onBoardingState.users,
-                            onUserClick = { onProfileClick(it.id) },
+                            onUserClick = { onNavigateToProfile(it.id) },
                             onFollowClick = { user, isFollow ->
                                 onEvent(HomeEvent.FollowUser(user, isFollow))
                             },
@@ -75,8 +84,8 @@ fun HomeScreen(
                 items(items = postsState.posts, key = { post -> post.id }) {
                     PostItem(
                         post = it,
-                        onPostClick = onPostClick,
-                        onProfileClick = onProfileClick,
+                        onNavigateToPost = onNavigateToPost,
+                        onNavigateToProfile = onNavigateToProfile,
                         onLikeClick = onLikeClick,
                         onCommentClick = onCommentClick,
                     )

@@ -25,10 +25,10 @@ fun Home(
         onBoardingState = onBoardingUiState,
         postsState = postsUiState,
         onEvent = homeViewModel::onEvent,
-        onPostClick = {
+        onNavigateToPost = {
             navigator.navigate(PostDetailDestination(it.id))
         },
-        onProfileClick = {
+        onNavigateToProfile = {
             navigator.navigate(ProfileDestination(it))
         },
         onLikeClick = {},

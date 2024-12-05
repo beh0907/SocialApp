@@ -24,7 +24,7 @@ fun PostDetail(
         postState = postState,
         commentsState = commentsState,
         onEvent = postDetailViewModel::onEvent,
-        onProfileClick = { },
+        onNavigateToProfile = { },
         onCommentMoreClick = { },
         onAddCommentClick = { },
     )
