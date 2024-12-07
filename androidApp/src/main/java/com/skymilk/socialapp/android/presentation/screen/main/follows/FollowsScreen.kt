@@ -16,7 +16,7 @@ fun FollowsScreen(
     modifier: Modifier = Modifier,
     followsUsersState: FollowsState,
     onEvent: (FollowsEvent) -> Unit,
-    onNavigateToProfile: (Int) -> Unit
+    onNavigateToProfile: (Long) -> Unit
 ) {
     Box(
         modifier = modifier.fillMaxSize(),

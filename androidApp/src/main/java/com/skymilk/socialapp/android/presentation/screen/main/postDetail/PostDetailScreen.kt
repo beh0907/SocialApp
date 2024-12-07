@@ -39,7 +39,7 @@ fun PostDetailScreen(
     postState: PostState,
     commentsState: CommentsState,
     onEvent: (PostDetailEvent) -> Unit,
-    onNavigateToProfile: (Int) -> Unit,
+    onNavigateToProfile: (Long) -> Unit,
     onCommentMoreClick: (Comment) -> Unit,
     onAddCommentClick: () -> Unit,
 ) {

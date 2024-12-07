@@ -12,7 +12,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun ProfileEdit(
     navigator: DestinationsNavigator,
-    userId: Int
+    userId: Long
 ) {
     val profileEditViewModel: ProfileEditViewModel = koinViewModel(parameters = { parametersOf(userId) })
 

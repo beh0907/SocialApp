@@ -16,7 +16,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PostDetailViewModel(
-    private val postId: String
+    private val postId: Long
 ): ViewModel() {
 
     private val _postState = MutableStateFlow<PostState>(PostState.Initial)

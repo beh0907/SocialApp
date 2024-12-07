@@ -16,9 +16,9 @@ val appModule = module {
     viewModel { SignUpViewModel(get()) }
     viewModel { MainViewModel(get()) }
     viewModel { HomeViewModel() }
-    viewModel { (postId: String) -> PostDetailViewModel(postId) }
-    viewModel { (userId: Int) -> ProfileViewModel(userId) }
-    viewModel { (userId: Int) -> ProfileEditViewModel(userId) }
-    viewModel { (userId: Int, followsType: Int) -> FollowsViewModel(userId, followsType) }
+    viewModel { (postId: Long) -> PostDetailViewModel(postId) }
+    viewModel { (userId: Long) -> ProfileViewModel(userId) }
+    viewModel { (userId: Long) -> ProfileEditViewModel(userId) }
+    viewModel { (userId: Long, followsType: Int) -> FollowsViewModel(userId, followsType) }
 }
 

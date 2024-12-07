@@ -40,9 +40,9 @@ fun PostItem(
     modifier: Modifier = Modifier,
     post: Post,
     onNavigateToPost: (Post) -> Unit,
-    onNavigateToProfile: (Int) -> Unit,
-    onLikeClick: (String) -> Unit,
-    onCommentClick: (String) -> Unit,
+    onNavigateToProfile: (Long) -> Unit,
+    onLikeClick: (Long) -> Unit,
+    onCommentClick: (Long) -> Unit,
     isDetailScreen: Boolean = false
 ) {
 
@@ -82,7 +82,7 @@ fun PostItem(
         //하단 정보
         PostFooterLikesSection(
             likesCount = post.likesCount,
-            commentsCount = post.commentCount,
+            commentsCount = post.commentsCount,
             onLikeClick = { onLikeClick(post.id) },
             onCommentClick = { onCommentClick((post.id)) },
         )

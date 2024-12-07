@@ -1,7 +1,7 @@
 package com.skymilk.socialapp.android.presentation.common.dummy
 
 data class Profile(
-    val id: Int,
+    val id: Long,
     val name: String,
     val bio: String,
     val profileUrl: String,

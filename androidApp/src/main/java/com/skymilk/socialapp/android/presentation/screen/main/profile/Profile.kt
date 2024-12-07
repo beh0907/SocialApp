@@ -16,7 +16,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun Profile(
     navigator: DestinationsNavigator,
-    userId: Int
+    userId: Long
 ) {
     val profileViewModel: ProfileViewModel = koinViewModel(parameters = { parametersOf(userId) })
 

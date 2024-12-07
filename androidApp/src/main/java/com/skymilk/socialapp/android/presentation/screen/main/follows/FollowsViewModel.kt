@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class FollowsViewModel(
-    private val userId: Int,
+    private val userId: Long,
     private val followsType: Int,
 ) : ViewModel() {
 

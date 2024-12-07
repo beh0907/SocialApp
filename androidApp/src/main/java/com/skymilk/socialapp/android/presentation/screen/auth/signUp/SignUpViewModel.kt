@@ -3,16 +3,13 @@ package com.skymilk.socialapp.android.presentation.screen.auth.signUp
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.skymilk.socialapp.android.presentation.common.state.AuthState
 import com.skymilk.socialapp.android.presentation.screen.auth.signUp.state.SignUpUIState
 import com.skymilk.socialapp.android.presentation.util.Event
 import com.skymilk.socialapp.android.presentation.util.sendEvent
-import com.skymilk.socialapp.data.model.UserSettings
 import com.skymilk.socialapp.domain.usecase.auth.AuthUseCase
-import com.skymilk.socialapp.domain.usecase.auth.SignUpUseCase
 import com.skymilk.socialapp.util.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update

@@ -9,7 +9,7 @@ internal fun AuthResponseData.toAuthResultData(): AuthResultData {
         name = name,
         email = email,
         bio = bio,
-        avatar = avatar,
+        imageUrl = imageUrl,
         token = token,
         followersCount = followersCount,
         followingCount = followingCount

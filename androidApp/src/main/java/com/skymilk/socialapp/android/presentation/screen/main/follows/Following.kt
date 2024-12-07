@@ -13,7 +13,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun Following(
     navigator: DestinationsNavigator,
-    userId: Int,
+    userId: Long,
 ) {
     val followsViewModel: FollowsViewModel = koinViewModel(parameters = { parametersOf(userId, 2) })
     val followsUsersState by followsViewModel.followsUsersState.collectAsStateWithLifecycle()

@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.TransformOrigin.Companion
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import com.skymilk.socialapp.R
 import com.skymilk.socialapp.android.presentation.common.component.PostItem
@@ -46,9 +47,9 @@ fun HomeScreen(
     postsState: PostsState,
     onEvent: (HomeEvent) -> Unit,
     onNavigateToPost: (Post) -> Unit,
-    onNavigateToProfile: (Int) -> Unit,
-    onLikeClick: (String) -> Unit,
-    onCommentClick: (String) -> Unit,
+    onNavigateToProfile: (Long) -> Unit,
+    onLikeClick: (Long) -> Unit,
+    onCommentClick: (Long) -> Unit,
 ) {
     PullToRefreshBox(
         modifier = modifier
@@ -108,15 +109,6 @@ fun OnBoardingSection(
         Text(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = MediumSpacing),
-            text = stringResource(R.string.onboarding_title),
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.titleLarge
-        )
-
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
                 .padding(horizontal = LargeSpacing),
             text = stringResource(R.string.onboarding_description),
             textAlign = TextAlign.Center,
@@ -135,7 +127,7 @@ fun OnBoardingSection(
             onClick = onBoardingDismiss,
             shape = RoundedCornerShape(percent = 50)
         ) {
-            Text(text = stringResource(R.string.onboarding_finish_button))
+            Text(text = stringResource(R.string.onboarding_finish_button), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
         }
     }
 }

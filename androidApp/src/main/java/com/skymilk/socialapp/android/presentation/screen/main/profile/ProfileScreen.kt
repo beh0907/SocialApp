@@ -51,8 +51,8 @@ fun ProfileScreen(
     onFollowersClick: () -> Unit,
     onFollowingClick: () -> Unit,
     onPostClick: (Post) -> Unit,
-    onLikeClick: (String) -> Unit,
-    onCommentClick: (String) -> Unit,
+    onLikeClick: (Long) -> Unit,
+    onCommentClick: (Long) -> Unit,
 ) {
     when {
         profileState is ProfileState.Loading || postsState is PostsState.Loading -> {

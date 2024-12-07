@@ -4,14 +4,14 @@ import com.skymilk.socialapp.domain.model.AuthResultData
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SignUpRequest(
+data class SignUpParams(
     val name: String,
     val email: String,
     val password: String
 )
 
 @Serializable
-data class SignInRequest(
+data class SignInParams(
     val email: String,
     val password: String
 )
@@ -19,16 +19,16 @@ data class SignInRequest(
 @Serializable
 data class AuthResponse(
     val data: AuthResponseData? = null,
-    val errorMessage: String? = null
+    val message: String? = null
 )
 
 @Serializable
 data class AuthResponseData(
-    val id: Int,
+    val id: Long,
     val name: String,
     val email: String,
     val bio: String,
-    val avatar: String? = null,
+    val imageUrl: String? = null,
     val token: String,
     val followersCount: Int = 0,
     val followingCount: Int = 0,
@@ -36,11 +36,11 @@ data class AuthResponseData(
 
 @Serializable
 data class UserSettings(
-    val id: Int = -1,
+    val id: Long = -1,
     val name: String = "",
     val email: String = "",
     val bio: String = "",
-    val avatar: String? = null,
+    val imageUrl: String? = null,
     val token: String = "",
     val followersCount: Int = 0,
     val followingCount: Int = 0,
@@ -52,20 +52,7 @@ fun AuthResultData.toUserSettings(): UserSettings {
         name = name,
         email = email,
         bio = bio,
-        avatar = avatar,
-        token = token,
-        followersCount = followersCount,
-        followingCount = followingCount
-    )
-}
-
-fun UserSettings.toAuthResultData(): AuthResultData {
-    return AuthResultData(
-        id = id,
-        name = name,
-        email = email,
-        bio = bio,
-        avatar = avatar,
+        imageUrl = imageUrl,
         token = token,
         followersCount = followersCount,
         followingCount = followingCount

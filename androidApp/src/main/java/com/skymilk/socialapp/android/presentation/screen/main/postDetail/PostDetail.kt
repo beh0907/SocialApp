@@ -12,7 +12,7 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun PostDetail(
     navigator: DestinationsNavigator,
-    postId: String
+    postId: Long
 ) {
     val postDetailViewModel: PostDetailViewModel =
         koinViewModel(parameters = { parametersOf(postId) })

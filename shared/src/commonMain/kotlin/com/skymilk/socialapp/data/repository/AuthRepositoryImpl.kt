@@ -2,10 +2,10 @@ package com.skymilk.socialapp.data.repository
 
 import com.skymilk.socialapp.data.local.UserPreferences
 import com.skymilk.socialapp.data.mapper.toAuthResultData
-import com.skymilk.socialapp.data.model.SignInRequest
-import com.skymilk.socialapp.data.model.SignUpRequest
+import com.skymilk.socialapp.data.model.SignInParams
+import com.skymilk.socialapp.data.model.SignUpParams
 import com.skymilk.socialapp.data.model.toUserSettings
-import com.skymilk.socialapp.data.remote.AuthService
+import com.skymilk.socialapp.data.remote.AuthApiService
 import com.skymilk.socialapp.domain.model.AuthResultData
 import com.skymilk.socialapp.domain.repository.AuthRepository
 import com.skymilk.socialapp.util.DispatcherProvider
@@ -14,7 +14,7 @@ import kotlinx.coroutines.withContext
 
 internal class AuthRepositoryImpl(
     private val dispatcher: DispatcherProvider,
-    private val authService: AuthService,
+    private val authApiService: AuthApiService,
     private val userPreferences: UserPreferences
 ): AuthRepository {
     override suspend fun signUp(
@@ -24,11 +24,11 @@ internal class AuthRepositoryImpl(
     ): Result<AuthResultData> {
         return withContext(dispatcher.io) {
             try {
-                val request = SignUpRequest(name,email,password)
-                val authResponse = authService.signUp(request)
+                val request = SignUpParams(name,email,password)
+                val authResponse = authApiService.signUp(request)
 
                 if (authResponse.data == null) {
-                    Result.Error(message = authResponse.errorMessage)
+                    Result.Error(message = authResponse.message)
                 } else {
                     val authResultData = authResponse.data.toAuthResultData()
 
@@ -50,11 +50,11 @@ internal class AuthRepositoryImpl(
     ): Result<AuthResultData> {
         return withContext(dispatcher.io) {
             try {
-                val request = SignInRequest(email,password)
-                val authResponse = authService.signIn(request)
+                val request = SignInParams(email,password)
+                val authResponse = authApiService.signIn(request)
 
                 if (authResponse.data == null) {
-                    Result.Error(message = authResponse.errorMessage)
+                    Result.Error(message = authResponse.message)
                 } else {
                     val authResultData = authResponse.data.toAuthResultData()
 

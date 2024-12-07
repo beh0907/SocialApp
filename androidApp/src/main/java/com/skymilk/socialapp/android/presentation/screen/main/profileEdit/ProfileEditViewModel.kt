@@ -17,7 +17,7 @@ import androidx.compose.runtime.setValue
 import kotlinx.coroutines.flow.update
 
 class ProfileEditViewModel(
-    private val userId: Int
+    private val userId: Long
 ) : ViewModel() {
     var uiState by mutableStateOf(ProfileEditUiState())
         private set

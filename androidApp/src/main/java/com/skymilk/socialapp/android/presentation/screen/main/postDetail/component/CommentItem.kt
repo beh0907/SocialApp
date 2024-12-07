@@ -25,7 +25,7 @@ import com.skymilk.socialapp.android.ui.theme.MediumSpacing
 fun CommentItem(
     modifier: Modifier = Modifier,
     comment: Comment,
-    onNavigateToProfile: (Int) -> Unit,
+    onNavigateToProfile: (Long) -> Unit,
     onCommentMoreClick: () -> Unit,
 ) {
     Row(
