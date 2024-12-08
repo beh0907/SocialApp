@@ -63,7 +63,7 @@ internal class PostApiService : KtorApi() {
 
     //유저 게시물 목록
     suspend fun getUserPosts(
-        token: String,
+        userToken: String,
         userId: Long,
         currentUserId: Long,
         page: Int,
@@ -74,7 +74,7 @@ internal class PostApiService : KtorApi() {
             parameter(key = Constants.CURRENT_USER_ID_PARAMETER, value = currentUserId)
             parameter(key = Constants.PAGE_QUERY_PARAMETER, value = page)
             parameter(key = Constants.PAGE_SIZE_QUERY_PARAMETER, value = pageSize)
-            setToken(token = token)
+            setToken(token = userToken)
         }
         return PostsResponse(code = httpResponse.status, data = httpResponse.body())
     }

@@ -1,6 +1,6 @@
 package com.skymilk.socialapp.android.presentation.common.dummy
 
-data class Profile(
+data class SampleProfile(
     val id: Long,
     val name: String,
     val bio: String,
@@ -12,7 +12,7 @@ data class Profile(
 )
 
 val sampleProfiles = listOf(
-    Profile(
+    SampleProfile(
         id = 1,
         name = "박사장",
         bio = "반갑다",
@@ -22,7 +22,7 @@ val sampleProfiles = listOf(
         isOwnProfile = true,
         isFollowing = true
     ),
-    Profile(
+    SampleProfile(
         id = 2,
         name = "김펭귄",
         bio = "반갑다",
@@ -32,7 +32,7 @@ val sampleProfiles = listOf(
         isOwnProfile = true,
         isFollowing = true
     ),
-    Profile(
+    SampleProfile(
         id = 3,
         name = "정상호",
         bio = "반갑다",
@@ -42,7 +42,7 @@ val sampleProfiles = listOf(
         isOwnProfile = true,
         isFollowing = true
     ),
-    Profile(
+    SampleProfile(
         id = 4,
         name = "김창수",
         bio = "반갑다",
@@ -52,7 +52,7 @@ val sampleProfiles = listOf(
         isOwnProfile = true,
         isFollowing = true
     ),
-    Profile(
+    SampleProfile(
         id = 5,
         name = "최선욱",
         bio = "반갑다",

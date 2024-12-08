@@ -1,14 +1,10 @@
 package com.skymilk.socialapp.android.presentation.screen.main.profile
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.skymilk.socialapp.android.presentation.common.dummy.samplePosts
 import com.skymilk.socialapp.android.presentation.common.dummy.sampleProfiles
 import com.skymilk.socialapp.android.presentation.common.state.PostsState
-import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.PostState
 import com.skymilk.socialapp.android.presentation.screen.main.profile.state.ProfileState
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

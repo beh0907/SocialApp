@@ -1,9 +1,6 @@
 package com.skymilk.socialapp.android.presentation.screen.main.postDetail
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewModelScope
 import com.skymilk.socialapp.android.presentation.common.dummy.sampleComments
 import com.skymilk.socialapp.android.presentation.common.dummy.samplePosts
@@ -45,7 +42,7 @@ class PostDetailViewModel(
             delay(500)
 
             _postState.update {
-                val post = samplePosts.find { it.id == postId }
+                val post = samplePosts.find { it.postId == postId }
 
                 if (post != null) PostState.Success(post = post)
                 else PostState.Error("게시글을 찾을 수 없습니다.")

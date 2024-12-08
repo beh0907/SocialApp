@@ -20,23 +20,22 @@ import androidx.compose.ui.unit.dp
 import com.skymilk.socialapp.R
 import com.skymilk.socialapp.android.presentation.common.component.CircleImage
 import com.skymilk.socialapp.android.presentation.common.component.FollowsButton
-import com.skymilk.socialapp.android.presentation.common.dummy.FollowsUser
 import com.skymilk.socialapp.android.ui.theme.MediumSpacing
 import com.skymilk.socialapp.android.ui.theme.SmallSpacing
+import com.skymilk.socialapp.domain.model.FollowsUser
 
 @Composable
 fun OnBoardingUserItem(
     modifier: Modifier = Modifier,
     followsUser: FollowsUser,
-    onUserClick: (FollowsUser) -> Unit,
-    isFollowing: Boolean = false,
-    onFollowClick: (FollowsUser, Boolean) -> Unit
+    onNavigateToProfile: (FollowsUser) -> Unit,
+    onFollowClick: (FollowsUser) -> Unit
 ) {
 
     Card(
         modifier = modifier
             .width(130.dp),
-        onClick = { onUserClick(followsUser) },
+        onClick = { onNavigateToProfile(followsUser) },
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         )
@@ -50,8 +49,8 @@ fun OnBoardingUserItem(
         ) {
             CircleImage(
                 modifier = Modifier.size(50.dp),
-                imageUrl = followsUser.profileUrl,
-                onClick = { onUserClick(followsUser) }
+                imageUrl = followsUser.imageUrl,
+                onClick = { onNavigateToProfile(followsUser) }
             )
 
             Spacer(Modifier.height(SmallSpacing))
@@ -68,11 +67,11 @@ fun OnBoardingUserItem(
             FollowsButton(
                 modifier = Modifier
                     .fillMaxWidth(),
-                text = R.string.follow_button_text,
+                text = if (followsUser.isFollowing) R.string.unfollow_button_text else R.string.follow_button_text,
                 onFollowClick = {
-                    onFollowClick(followsUser, !isFollowing)
+                    onFollowClick(followsUser)
                 },
-                isOutline = false
+                isOutline = followsUser.isFollowing
             )
         }
     }

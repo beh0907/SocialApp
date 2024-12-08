@@ -33,13 +33,13 @@ import com.skymilk.socialapp.R
 import com.skymilk.socialapp.android.presentation.common.component.CircleImage
 import com.skymilk.socialapp.android.presentation.common.component.FollowsButton
 import com.skymilk.socialapp.android.presentation.common.component.PostItem
-import com.skymilk.socialapp.android.presentation.common.dummy.Post
-import com.skymilk.socialapp.android.presentation.common.dummy.Profile
+import com.skymilk.socialapp.android.presentation.common.dummy.SampleProfile
 import com.skymilk.socialapp.android.presentation.common.state.PostsState
 import com.skymilk.socialapp.android.presentation.screen.main.profile.state.ProfileState
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
 import com.skymilk.socialapp.android.ui.theme.MediumSpacing
 import com.skymilk.socialapp.android.ui.theme.SmallSpacing
+import com.skymilk.socialapp.domain.model.Post
 
 @Composable
 fun ProfileScreen(
@@ -68,24 +68,25 @@ fun ProfileScreen(
 
         profileState is ProfileState.Success && postsState is PostsState.Success -> {
             LazyColumn(
-                modifier = modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.background)
             ) {
                 item("header") {
                     HeaderSection(
-                        profile = profileState.profile,
+                        sampleProfile = profileState.profile,
                         onFollowersClick = onFollowersClick,
                         onFollowingClick = onFollowingClick,
                         onFollowClick = onNavigateToProfile
                     )
                 }
 
-                items(items = postsState.posts, key = { post -> post.id }) {
+                items(items = postsState.posts, key = { post -> post.postId }) {
                     PostItem(
                         post = it,
-                        onNavigateToPost = onPostClick,
+                        onClickPost = onPostClick,
                         onNavigateToProfile = { },
-                        onLikeClick = onLikeClick,
-                        onCommentClick = onCommentClick,
+                        onLikeClick = { onEvent(ProfileEvent.LikePost(it)) },
                     )
                 }
             }
@@ -98,7 +99,7 @@ fun ProfileScreen(
 @Composable
 fun HeaderSection(
     modifier: Modifier = Modifier,
-    profile: Profile,
+    sampleProfile: SampleProfile,
     isCurrentUser: Boolean = false,
     isFollowing: Boolean = false,
     onFollowersClick: () -> Unit,
@@ -114,21 +115,21 @@ fun HeaderSection(
     ) {
         CircleImage(
             modifier = Modifier.size(90.dp),
-            imageUrl = profile.profileUrl,
+            imageUrl = sampleProfile.profileUrl,
             onClick = {}
         )
 
         Spacer(modifier = Modifier.height(SmallSpacing))
 
         Text(
-            text = profile.name,
+            text = sampleProfile.name,
             style = MaterialTheme.typography.titleMedium,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
 
         Text(
-            text = profile.bio,
+            text = sampleProfile.bio,
             style = MaterialTheme.typography.bodyMedium,
         )
 
@@ -142,7 +143,7 @@ fun HeaderSection(
                 modifier = Modifier.weight(1f)
             ) {
                 FollowText(
-                    count = profile.followersCount,
+                    count = sampleProfile.followersCount,
                     title = R.string.followers_title,
                     onClick = onFollowersClick
                 )
@@ -150,14 +151,14 @@ fun HeaderSection(
                 Spacer(modifier = Modifier.width(MediumSpacing))
 
                 FollowText(
-                    count = profile.followingCount,
+                    count = sampleProfile.followingCount,
                     title = R.string.following_title,
                     onClick = onFollowingClick
                 )
             }
 
             FollowsButton(
-                text = R.string.follow_button_text,
+                text = if (isFollowing) R.string.unfollow_button_text else R.string.follow_button_text,
                 onFollowClick = onFollowClick,
                 isOutline = isCurrentUser || isFollowing
             )

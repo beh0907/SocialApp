@@ -4,6 +4,8 @@ agp = "8.7.2"
 coil-version = "3.0.3"
 kotlinxCoroutinesCore = "1.9.0"
 kotlinxDatetime = "0.6.1"
+kmp-paging3 = "3.3.0-alpha02-0.5.1"
+paging3 = "3.3.4"
 splash = "1.0.1"
 datastorePreferences = "1.1.1"
 koin-version = "4.0.0"
@@ -18,6 +20,8 @@ ktor-version="3.0.1"
 lifecycleRuntimeCompose = "2.8.7"
 serialization-version = "1.9.24"
 uiAndroid = "1.7.5"
+kmp-compose-version = "1.7.1"
+kmp-compose-navigation-version = "2.8.0-alpha10"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -25,6 +29,8 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastorePreferences" }
 androidx-material3-window-size = { group = "androidx.compose.material3", name = "material3-window-size-class" }
 androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtended" }
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "paging3" }
+androidx-paging-runtime = { module = "androidx.paging:paging-runtime", version.ref = "paging3" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil-version" }
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil-version" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
@@ -34,6 +40,8 @@ ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "k
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor-version" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-version" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
+paging-compose-common = { module = "app.cash.paging:paging-compose-common", version.ref = "kmp-paging3" }
+paging-common = { module = "app.cash.paging:paging-common", version.ref = "kmp-paging3" }
 splash-screen = { module = "androidx.core:core-splashscreen", version.ref = "splash" }
 androidx-lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycleRuntimeCompose" }
 compose-destinations-ksp = { module = "io.github.raamcosta.compose-destinations:ksp", version.ref = "compose-destinations" }
@@ -48,6 +56,12 @@ compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview"
 compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "compose" }
 compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
 androidx-ui-android = { group = "androidx.compose.ui", name = "ui-android", version.ref = "uiAndroid" }
+
+kmp-compose-runtime = { group = "org.jetbrains.compose.runtime", name = "runtime", version.ref = "kmp-compose-version" }
+kmp-compose-foundation = { group = "org.jetbrains.compose.foundation", name = "foundation", version.ref = "kmp-compose-version" }
+kmp-compose-material3 = { group = "org.jetbrains.compose.material3", name = "material3", version.ref = "kmp-compose-version" }
+kmp-compose-ui = { group = "org.jetbrains.compose.ui", name = "ui", version.ref = "kmp-compose-version" }
+kmp-compose-navigation = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "kmp-compose-navigation-version" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

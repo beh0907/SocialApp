@@ -1,10 +1,15 @@
 package com.skymilk.socialapp.data.repository
 
+import app.cash.paging.Pager
+import app.cash.paging.PagingConfig
+import app.cash.paging.PagingData
 import com.skymilk.socialapp.data.local.UserPreferences
 import com.skymilk.socialapp.data.model.CreatePostParams
 import com.skymilk.socialapp.data.model.PostLikesParams
 import com.skymilk.socialapp.data.model.PostsResponse
 import com.skymilk.socialapp.data.model.UserSettings
+import com.skymilk.socialapp.data.paging.FeedPagingSource
+import com.skymilk.socialapp.data.paging.UserPostsPagingSource
 import com.skymilk.socialapp.data.remote.PostApiService
 import com.skymilk.socialapp.domain.model.Post
 import com.skymilk.socialapp.domain.repository.PostRepository
@@ -12,6 +17,8 @@ import com.skymilk.socialapp.util.Constants
 import com.skymilk.socialapp.util.DispatcherProvider
 import com.skymilk.socialapp.util.Result
 import io.ktor.http.HttpStatusCode
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import kotlinx.io.IOException
 import kotlinx.serialization.json.Json
@@ -21,17 +28,34 @@ internal class PostRepositoryImpl(
     private val userPreferences: UserPreferences,
     private val dispatcher: DispatcherProvider
 ) : PostRepository {
-    override suspend fun getFeedPosts(page: Int, pageSize: Int): Result<List<Post>> {
-        return fetchPosts(
-            apiCall = { currentUserData ->
-                postApiService.getFeedPosts(
-                    userToken = currentUserData.token,
-                    currentUserId = currentUserData.id,
-                    page = page,
-                    pageSize = pageSize
+
+    override fun getFeedPosts(): Flow<PagingData<Post>> {
+        return Pager(
+            config = PagingConfig(pageSize = Constants.PAGE_SIZE),
+            pagingSourceFactory = {
+                FeedPagingSource(
+                    postApiService = postApiService,
+                    userPreferences = userPreferences
                 )
             }
         )
+            .flow
+            .flowOn(dispatcher.io)
+    }
+
+    override fun getUserPosts(userId: Long): Flow<PagingData<Post>> {
+        return Pager(
+            config = PagingConfig(pageSize = Constants.PAGE_SIZE),
+            pagingSourceFactory = {
+                UserPostsPagingSource(
+                    postApiService = postApiService,
+                    userPreferences = userPreferences,
+                    userId = userId
+                )
+            }
+        )
+            .flow
+            .flowOn(dispatcher.io)
     }
 
     override suspend fun likeOrDislikePost(postId: Long, shouldLike: Boolean): Result<Boolean> {
@@ -49,7 +73,7 @@ internal class PostRepositoryImpl(
                 if (apiResponse.code == HttpStatusCode.OK) {
                     Result.Success(data = apiResponse.data.success)
                 } else {
-                    Result.Error(data = false, message = "${apiResponse.data.message}")
+                    Result.Error(message = "${apiResponse.data.message}")
                 }
             } catch (ioException: IOException) {
                 Result.Error(message = Constants.NO_INTERNET_ERROR_MESSAGE)
@@ -59,20 +83,6 @@ internal class PostRepositoryImpl(
                 )
             }
         }
-    }
-
-    override suspend fun getUserPosts(userId: Long, page: Int, pageSize: Int): Result<List<Post>> {
-        return fetchPosts(
-            apiCall = { currentUserData ->
-                postApiService.getUserPosts(
-                    token = currentUserData.token,
-                    userId = userId,
-                    currentUserId = currentUserData.id,
-                    page = page,
-                    pageSize = pageSize
-                )
-            }
-        )
     }
 
     private suspend fun fetchPosts(

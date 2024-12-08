@@ -16,6 +16,7 @@ import com.skymilk.socialapp.domain.usecase.follows.FollowOrUnFollow
 import com.skymilk.socialapp.domain.usecase.follows.FollowsUseCase
 import com.skymilk.socialapp.domain.usecase.follows.GetFollowableUsers
 import com.skymilk.socialapp.domain.usecase.post.GetFeedPosts
+import com.skymilk.socialapp.domain.usecase.post.GetUserPosts
 import com.skymilk.socialapp.domain.usecase.post.LikeOrDislikePost
 import com.skymilk.socialapp.domain.usecase.post.PostUseCase
 import com.skymilk.socialapp.util.provideDispatcher
@@ -52,6 +53,7 @@ private val postModule = module {
     single {
         PostUseCase(
             GetFeedPosts(get()),
+            GetUserPosts(get()),
             LikeOrDislikePost(get())
         )
     }

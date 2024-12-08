@@ -1,6 +1,6 @@
 package com.skymilk.socialapp.android.presentation.common.state
 
-import com.skymilk.socialapp.android.presentation.common.dummy.Post
+import com.skymilk.socialapp.domain.model.Post
 
 sealed interface PostsState {
 

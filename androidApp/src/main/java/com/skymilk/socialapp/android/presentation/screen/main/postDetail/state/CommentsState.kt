@@ -1,6 +1,6 @@
 package com.skymilk.socialapp.android.presentation.screen.main.postDetail.state
 
-import com.skymilk.socialapp.android.presentation.common.dummy.Comment
+import com.skymilk.socialapp.android.presentation.common.dummy.SampleComment
 
 sealed interface CommentsState {
 
@@ -8,7 +8,7 @@ sealed interface CommentsState {
 
     data object Loading : CommentsState // 로딩 상태
 
-    data class Success(val comments: List<Comment>) : CommentsState // 데이터 로드 성공
+    data class Success(val comments: List<SampleComment>) : CommentsState // 데이터 로드 성공
 
     data class Error(val message: String) : CommentsState // 오류
 }

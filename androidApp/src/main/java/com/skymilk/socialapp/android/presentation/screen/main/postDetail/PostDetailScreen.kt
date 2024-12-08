@@ -25,7 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.skymilk.socialapp.R
 import com.skymilk.socialapp.android.presentation.common.component.PostItem
-import com.skymilk.socialapp.android.presentation.common.dummy.Comment
+import com.skymilk.socialapp.android.presentation.common.dummy.SampleComment
 import com.skymilk.socialapp.android.presentation.screen.main.postDetail.component.CommentItem
 import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.CommentsState
 import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.PostState
@@ -40,7 +40,7 @@ fun PostDetailScreen(
     commentsState: CommentsState,
     onEvent: (PostDetailEvent) -> Unit,
     onNavigateToProfile: (Long) -> Unit,
-    onCommentMoreClick: (Comment) -> Unit,
+    onCommentMoreClick: (SampleComment) -> Unit,
     onAddCommentClick: () -> Unit,
 ) {
     when {
@@ -65,10 +65,9 @@ fun PostDetailScreen(
                 item(key = "post") {
                     PostItem(
                         post = postState.post,
-                        onNavigateToPost = { },
+                        onClickPost = { },
                         onNavigateToProfile = onNavigateToProfile,
-                        onLikeClick = { },
-                        onCommentClick = { },
+                        onLikeClick = { onEvent(PostDetailEvent.LikePost(it)) },
                         isDetailScreen = true
                     )
                 }
@@ -84,7 +83,7 @@ fun PostDetailScreen(
                     HorizontalDivider()
 
                     CommentItem(
-                        comment = comment,
+                        sampleComment = comment,
                         onNavigateToProfile = onNavigateToProfile,
                         onCommentMoreClick = { onCommentMoreClick(comment) }
                     )

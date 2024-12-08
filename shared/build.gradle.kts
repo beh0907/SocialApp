@@ -32,6 +32,13 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
+                //compose
+                implementation(libs.kmp.compose.runtime)
+                implementation(libs.kmp.compose.foundation)
+                implementation(libs.kmp.compose.material3)
+                implementation(libs.kmp.compose.ui)
+                implementation(libs.kmp.compose.navigation)
+
                 //ktor
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.ktor.client.core)
@@ -46,6 +53,10 @@ kotlin {
 
                 //datetime
                 implementation(libs.kotlinx.datetime)
+
+                //paging3
+                implementation(libs.paging.common)
+                implementation(libs.paging.compose.common)
             }
         }
 
@@ -68,8 +79,6 @@ kotlin {
         val iosX64Main by getting
         val iosArm64Main by getting
         val iosSimulatorArm64Main by getting
-
-
         val iosMain by creating {
             dependsOn(commonMain)
             iosX64Main.dependsOn(this)

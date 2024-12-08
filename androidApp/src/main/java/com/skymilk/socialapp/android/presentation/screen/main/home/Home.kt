@@ -3,6 +3,7 @@ package com.skymilk.socialapp.android.presentation.screen.main.home
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -19,19 +20,17 @@ fun Home(
     val homeViewModel: HomeViewModel = koinViewModel()
 
     val onBoardingUiState by homeViewModel.onBoardingUiState.collectAsStateWithLifecycle()
-    val postsUiState by homeViewModel.postsUiState.collectAsStateWithLifecycle()
+    val feedPosts = homeViewModel.feedPosts.collectAsLazyPagingItems()
 
     HomeScreen(
         onBoardingState = onBoardingUiState,
-        postsState = postsUiState,
+        feedPosts = feedPosts,
         onEvent = homeViewModel::onEvent,
-        onNavigateToPost = {
-            navigator.navigate(PostDetailDestination(it.id))
+        onNavigateToPostDetail = {
+            navigator.navigate(PostDetailDestination(it.postId))
         },
         onNavigateToProfile = {
             navigator.navigate(ProfileDestination(it))
-        },
-        onLikeClick = {},
-        onCommentClick = {},
+        }
     )
 }

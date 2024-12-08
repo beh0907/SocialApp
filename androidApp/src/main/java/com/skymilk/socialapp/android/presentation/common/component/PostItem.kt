@@ -30,19 +30,18 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil3.compose.SubcomposeAsyncImage
 import com.skymilk.socialapp.R
-import com.skymilk.socialapp.android.presentation.common.dummy.Post
 import com.skymilk.socialapp.android.ui.theme.ExtraLargeSpacing
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
 import com.skymilk.socialapp.android.ui.theme.MediumSpacing
+import com.skymilk.socialapp.domain.model.Post
 
 @Composable
 fun PostItem(
     modifier: Modifier = Modifier,
     post: Post,
-    onNavigateToPost: (Post) -> Unit,
+    onClickPost: (Post) -> Unit,
     onNavigateToProfile: (Long) -> Unit,
-    onLikeClick: (Long) -> Unit,
-    onCommentClick: (Long) -> Unit,
+    onLikeClick: (Post) -> Unit,
     isDetailScreen: Boolean = false
 ) {
 
@@ -50,15 +49,15 @@ fun PostItem(
         modifier = modifier
             .fillMaxWidth()
             .background(color = MaterialTheme.colorScheme.surface)
-            .clickable { onNavigateToPost(post) }
+            .clickable { onClickPost(post) }
             .padding(bottom = ExtraLargeSpacing)
     ) {
         //헤더 유저 정보
         PostHeaderSection(
-            name = post.authorName,
-            profileUrl = post.authorImage,
+            name = post.userName,
+            profileUrl = post.imageUrl,
             date = post.createdAt,
-            onProfileClick = { onNavigateToProfile(post.authorId) }
+            onProfileClick = { onNavigateToProfile(post.userId) }
         )
 
         //메인 이미지
@@ -83,16 +82,17 @@ fun PostItem(
         PostFooterLikesSection(
             likesCount = post.likesCount,
             commentsCount = post.commentsCount,
-            onLikeClick = { onLikeClick(post.id) },
-            onCommentClick = { onCommentClick((post.id)) },
+            onLikeClick = { onLikeClick(post) },
+            onCommentClick = { onNavigateToProfile(post.postId) },
+            isPostLiked = post.isLiked
         )
 
         //게시물 설명
         Text(
+            text = post.caption,
             modifier = Modifier.padding(horizontal = LargeSpacing),
             maxLines = if (isDetailScreen) 20 else 2,
             overflow = TextOverflow.Ellipsis,
-            text = post.text,
             style = MaterialTheme.typography.bodyMedium,
         )
     }
@@ -164,6 +164,7 @@ fun PostFooterLikesSection(
     modifier: Modifier = Modifier,
     likesCount: Int,
     commentsCount: Int,
+    isPostLiked: Boolean,
     onLikeClick: () -> Unit,
     onCommentClick: () -> Unit
 ) {
@@ -178,9 +179,12 @@ fun PostFooterLikesSection(
             onClick = onLikeClick
         ) {
             Icon(
-                painter = painterResource(R.drawable.like_icon_outlined),
+                painter = painterResource(
+                    if (isPostLiked) R.drawable.like_icon_filled
+                    else R.drawable.like_icon_outlined
+                ),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.surfaceVariant
+//                tint = MaterialTheme.colorScheme.surfaceVariant
             )
         }
 

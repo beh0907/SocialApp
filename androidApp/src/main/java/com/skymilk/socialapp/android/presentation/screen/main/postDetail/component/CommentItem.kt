@@ -17,14 +17,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.skymilk.socialapp.R
 import com.skymilk.socialapp.android.presentation.common.component.CircleImage
-import com.skymilk.socialapp.android.presentation.common.dummy.Comment
+import com.skymilk.socialapp.android.presentation.common.dummy.SampleComment
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
 import com.skymilk.socialapp.android.ui.theme.MediumSpacing
 
 @Composable
 fun CommentItem(
     modifier: Modifier = Modifier,
-    comment: Comment,
+    sampleComment: SampleComment,
     onNavigateToProfile: (Long) -> Unit,
     onCommentMoreClick: () -> Unit,
 ) {
@@ -36,8 +36,8 @@ fun CommentItem(
     ) {
         CircleImage(
             modifier = Modifier.size(30.dp),
-            imageUrl = comment.authorImageUrl,
-            onClick = { onNavigateToProfile(comment.authorId) }
+            imageUrl = sampleComment.userImageUrl,
+            onClick = { onNavigateToProfile(sampleComment.userId) }
         )
 
         Column(
@@ -48,7 +48,7 @@ fun CommentItem(
             ) {
                 Text(
                     modifier = Modifier.alignByBaseline(),
-                    text = comment.authorName,
+                    text = sampleComment.userName,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -57,7 +57,7 @@ fun CommentItem(
                     modifier = Modifier
                         .alignByBaseline()
                         .weight(1f),
-                    text = comment.date,
+                    text = sampleComment.date,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.surfaceVariant
                 )
@@ -71,7 +71,7 @@ fun CommentItem(
             }
 
             Text(
-                text = comment.comment, style = MaterialTheme.typography.bodyMedium
+                text = sampleComment.comment, style = MaterialTheme.typography.bodyMedium
             )
         }
     }

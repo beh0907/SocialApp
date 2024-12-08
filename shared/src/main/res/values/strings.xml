@@ -25,4 +25,5 @@
     <string name="could_not_load_profile">프로필을 불러오지 못하였습니다.</string>
     <string name="retry_button_text">다시 시도</string>
     <string name="profile_edit_destination_title">Profile Edit</string>
+    <string name="unfollow_button_text">UnFollow</string>
 </resources>

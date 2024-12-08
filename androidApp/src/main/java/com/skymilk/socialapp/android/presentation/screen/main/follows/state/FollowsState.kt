@@ -1,6 +1,6 @@
 package com.skymilk.socialapp.android.presentation.screen.main.follows.state
 
-import com.skymilk.socialapp.android.presentation.common.dummy.FollowsUser
+import com.skymilk.socialapp.domain.model.FollowsUser
 
 sealed interface FollowsState {
 

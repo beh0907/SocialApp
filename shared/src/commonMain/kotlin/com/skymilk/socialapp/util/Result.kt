@@ -1,9 +1,6 @@
 package com.skymilk.socialapp.util
 
-sealed class Result<T>(
-    val data:T? = null,
-    val message: String? = null
-) {
-    class Error<T>(data:T? = null, message: String?): Result<T>(data, message)
-    class Success<T>(data:T): Result<T>(data)
+sealed class Result<T> {
+    data class Success<T>(val data: T) : Result<T>()
+    data class Error<T>(val message: String? = null) : Result<T>()
 }

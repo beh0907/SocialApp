@@ -6,15 +6,15 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.skymilk.socialapp.android.presentation.common.dummy.FollowsUser
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
+import com.skymilk.socialapp.domain.model.FollowsUser
 
 @Composable
 fun OnBoardingUserList(
     modifier: Modifier = Modifier,
     users: List<FollowsUser>,
-    onUserClick: (FollowsUser) -> Unit,
-    onFollowClick: (FollowsUser, Boolean) -> Unit
+    onNavigateToProfile: (FollowsUser) -> Unit,
+    onFollowClick: (FollowsUser) -> Unit
 ) {
     LazyRow(
         modifier = modifier,
@@ -25,7 +25,7 @@ fun OnBoardingUserList(
         items(users, key = { it.id }) {
             OnBoardingUserItem(
                 followsUser = it,
-                onUserClick = onUserClick,
+                onNavigateToProfile = onNavigateToProfile,
                 onFollowClick = onFollowClick
             )
         }

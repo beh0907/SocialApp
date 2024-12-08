@@ -1,11 +1,7 @@
 package com.skymilk.socialapp.android.presentation.screen.main.home
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.shrinkOut
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideOut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -23,43 +18,39 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.TransformOrigin.Companion
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.paging.compose.LazyPagingItems
 import com.skymilk.socialapp.R
-import com.skymilk.socialapp.android.presentation.common.component.PostItem
-import com.skymilk.socialapp.android.presentation.common.dummy.FollowsUser
-import com.skymilk.socialapp.android.presentation.common.dummy.Post
-import com.skymilk.socialapp.android.presentation.common.state.PostsState
+import com.skymilk.socialapp.android.presentation.common.component.postsList
 import com.skymilk.socialapp.android.presentation.screen.main.home.component.OnBoardingUserList
 import com.skymilk.socialapp.android.presentation.screen.main.home.state.OnBoardingState
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
 import com.skymilk.socialapp.android.ui.theme.MediumSpacing
-import java.lang.System.exit
+import com.skymilk.socialapp.domain.model.FollowsUser
+import com.skymilk.socialapp.domain.model.Post
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     onBoardingState: OnBoardingState,
-    postsState: PostsState,
+    feedPosts: LazyPagingItems<Post>,
     onEvent: (HomeEvent) -> Unit,
-    onNavigateToPost: (Post) -> Unit,
     onNavigateToProfile: (Long) -> Unit,
-    onLikeClick: (Long) -> Unit,
-    onCommentClick: (Long) -> Unit,
+    onNavigateToPostDetail: (Post) -> Unit,
 ) {
     PullToRefreshBox(
         modifier = modifier
             .fillMaxSize(),
-        isRefreshing = (onBoardingState is OnBoardingState.Loading) && (postsState is PostsState.Loading),
+        isRefreshing = (onBoardingState is OnBoardingState.Loading) /*|| (feedPosts.loadState.source.isIdle)*/,
         onRefresh = { onEvent(HomeEvent.RetryData) }
     ) {
         LazyColumn(
             modifier = modifier.fillMaxSize()
         ) {
+            //온보딩 처리
             if (onBoardingState is OnBoardingState.Success) {
                 item(key = "onBoarding") {
                     AnimatedVisibility(
@@ -68,30 +59,24 @@ fun HomeScreen(
                     ) {
                         OnBoardingSection(
                             users = onBoardingState.users,
-                            onUserClick = { onNavigateToProfile(it.id) },
-                            onFollowClick = { user, isFollow ->
-                                onEvent(HomeEvent.FollowUser(user, isFollow))
+                            onNavigateToProfile = { onNavigateToProfile(it.id) },
+                            onFollowClick = { user ->
+                                onEvent(HomeEvent.FollowUser(user))
                             },
-                            onBoardingDismiss = {
-                                onEvent(HomeEvent.DismissOnBoarding)
-                            }
+                            onBoardingDismiss = { onEvent(HomeEvent.DismissOnBoarding) }
                         )
                     }
                 }
 
             }
 
-            if ((postsState is PostsState.Success)) {
-                items(items = postsState.posts, key = { post -> post.id }) {
-                    PostItem(
-                        post = it,
-                        onNavigateToPost = onNavigateToPost,
-                        onNavigateToProfile = onNavigateToProfile,
-                        onLikeClick = onLikeClick,
-                        onCommentClick = onCommentClick,
-                    )
-                }
-            }
+            //피드 게시물 목록
+            postsList(
+                posts = feedPosts,
+                onClickPost = onNavigateToPostDetail,
+                onNavigateToProfile = onNavigateToProfile,
+                onLikeClick = { onEvent(HomeEvent.LikePost(it)) }
+            )
         }
     }
 
@@ -101,8 +86,8 @@ fun HomeScreen(
 fun OnBoardingSection(
     modifier: Modifier = Modifier,
     users: List<FollowsUser> = emptyList(),
-    onUserClick: (FollowsUser) -> Unit,
-    onFollowClick: (FollowsUser, Boolean) -> Unit,
+    onNavigateToProfile: (FollowsUser) -> Unit,
+    onFollowClick: (FollowsUser) -> Unit,
     onBoardingDismiss: () -> Unit
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
@@ -117,7 +102,11 @@ fun OnBoardingSection(
 
         Spacer(modifier = Modifier.height(MediumSpacing))
 
-        OnBoardingUserList(users = users, onUserClick = onUserClick, onFollowClick = onFollowClick)
+        OnBoardingUserList(
+            users = users,
+            onNavigateToProfile = onNavigateToProfile,
+            onFollowClick = onFollowClick
+        )
 
         OutlinedButton(
             modifier = Modifier
@@ -127,7 +116,11 @@ fun OnBoardingSection(
             onClick = onBoardingDismiss,
             shape = RoundedCornerShape(percent = 50)
         ) {
-            Text(text = stringResource(R.string.onboarding_finish_button), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            Text(
+                text = stringResource(R.string.onboarding_finish_button),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
         }
     }
 }

@@ -22,23 +22,23 @@ data class RemotePost(
     val createdAt: String,
     val likesCount: Int,
     val commentsCount: Int,
-    val authorId: Long,
-    val authorName: String,
-    val authorImage: String,
+    val userId: Long,
+    val userName: String,
+    val userImageUrl: String,
     val isLiked: Boolean = false,
     val isOwnPost: Boolean = false,
 ) {
     fun toDomainPost(): Post {
         return Post(
-            id = id,
-            text = text,
+            postId = id,
+            caption = text,
             imageUrl = imageUrl,
             createdAt = DateFormatter.parseDate(createdAt),
             likesCount = likesCount,
             commentsCount = commentsCount,
-            authorId = authorId,
-            authorName = authorName,
-            authorImage = authorImage,
+            userId = userId,
+            userName = userName,
+            userImageUrl = userImageUrl,
             isLiked = isLiked,
             isOwnPost = isOwnPost
         )

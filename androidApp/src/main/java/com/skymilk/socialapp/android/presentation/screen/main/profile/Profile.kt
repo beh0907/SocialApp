@@ -31,7 +31,7 @@ fun Profile(
         onFollowersClick = { navigator.navigate(FollowersDestination(userId)) },
         onFollowingClick = { navigator.navigate(FollowingDestination(userId)) },
         onPostClick = {
-            navigator.navigate(PostDetailDestination(it.id))
+            navigator.navigate(PostDetailDestination(it.postId))
         },
         onLikeClick = {},
         onCommentClick = {}

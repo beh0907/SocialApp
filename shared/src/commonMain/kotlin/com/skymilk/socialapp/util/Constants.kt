@@ -17,4 +17,8 @@ object Constants {
     //네트워크 에러 메시지
     const val NO_INTERNET_ERROR_MESSAGE = "네트워크 연결 상태를 확인해주세요."
     const val UNEXPECTED_ERROR = "예상치 못한 오류가 발생했습니다. 다시 시도해 주세요!"
+
+    // API 페이징
+    const val FIRST_PAGE_INDEX = 1
+    const val PAGE_SIZE = 20
 }

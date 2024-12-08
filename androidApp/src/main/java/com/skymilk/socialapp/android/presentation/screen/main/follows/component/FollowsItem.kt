@@ -15,9 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.skymilk.socialapp.android.presentation.common.component.CircleImage
-import com.skymilk.socialapp.android.presentation.common.dummy.FollowsUser
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
 import com.skymilk.socialapp.android.ui.theme.MediumSpacing
+import com.skymilk.socialapp.domain.model.FollowsUser
 
 @Composable
 fun FollowsItem(
@@ -36,7 +36,7 @@ fun FollowsItem(
     ) {
         CircleImage(
             modifier = Modifier.size(50.dp),
-            imageUrl = user.profileUrl,
+            imageUrl = user.imageUrl,
             onClick = {}
         )
 
