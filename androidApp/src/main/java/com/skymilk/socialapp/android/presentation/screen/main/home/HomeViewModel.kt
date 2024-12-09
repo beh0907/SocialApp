@@ -6,6 +6,8 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.skymilk.socialapp.android.presentation.screen.main.home.state.OnBoardingState
+import com.skymilk.socialapp.android.presentation.util.EventBus.postEvents
+import com.skymilk.socialapp.android.presentation.util.PostEvent
 import com.skymilk.socialapp.domain.model.FollowsUser
 import com.skymilk.socialapp.domain.model.Post
 import com.skymilk.socialapp.domain.usecase.follows.FollowsUseCase
@@ -13,6 +15,8 @@ import com.skymilk.socialapp.domain.usecase.post.PostUseCase
 import com.skymilk.socialapp.util.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -31,6 +35,15 @@ class HomeViewModel(
 
     init {
         loadData()
+        onPostEvent()
+    }
+
+    fun onPostEvent() {
+        postEvents.onEach {
+            when(it) {
+                is PostEvent.UpdatedPost -> updatePost(it.post)
+            }
+        }.launchIn(viewModelScope)
     }
 
     fun onEvent(event: HomeEvent) {
@@ -107,24 +120,33 @@ class HomeViewModel(
         }
     }
 
+    //좋아요 처리
     private fun likeOrDislikePost(currentPost: Post) {
         viewModelScope.launch {
             val count = if (currentPost.isLiked) -1 else 1
+            val updatedPost = currentPost.copy(
+                isLiked = !currentPost.isLiked,
+                likesCount = currentPost.likesCount.plus(count)
+            )
+
             val result = postUseCase.likeOrDislikePost(currentPost)
 
             when (result) {
                 is Result.Success -> {
-                    _feedPosts.value.map {
-                        if (it.postId == currentPost.postId) it.copy(
-                            isLiked = !it.isLiked,
-                            likesCount = it.likesCount.plus(count)
-                        )
-                        else it
-                    }
+                    //메인 화면에 있는 일치한 게시글을 찾아 상태를 반영한다
+                    updatePost(updatedPost)
                 }
 
                 is Result.Error -> {}
             }
+        }
+    }
+
+    //메인 화면 게시글에 일치한 것을 찾아 갱신한다
+    private fun updatePost(post: Post) {
+        _feedPosts.value = _feedPosts.value.map {
+            if (it.postId == post.postId) post
+            else it
         }
     }
 }

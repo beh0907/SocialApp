@@ -28,7 +28,7 @@ internal class FeedPagingSource(
         return try {
             val userData = userPreferences.getUserData()
             val response = postApiService.getFeedPosts(
-                userToken = userData.token,
+                token = userData.token,
                 currentUserId = userData.id,
                 page = currentPage,
                 pageSize = params.loadSize
@@ -36,7 +36,7 @@ internal class FeedPagingSource(
 
             when (response.code) {
                 HttpStatusCode.OK -> {
-                    val posts = response.data.posts.map { it.toDomainPost() }
+                    val posts = response.data.posts.map { it.toPost() }
                     LoadResult.Page(
                         data = posts,
                         prevKey = if (currentPage == 1) null else currentPage - 1,

@@ -95,7 +95,7 @@ fun ProfileEditScreen(
                     Box {
                         CircleImage(
                             modifier = Modifier.size(120.dp),
-                            imageUrl = profileState.profile.profileUrl,
+                            imageUrl = profileState.profile.imageUrl,
                             onClick = { }
                         )
 

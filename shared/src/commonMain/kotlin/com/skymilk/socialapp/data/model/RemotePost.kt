@@ -28,7 +28,7 @@ data class RemotePost(
     val isLiked: Boolean = false,
     val isOwnPost: Boolean = false,
 ) {
-    fun toDomainPost(): Post {
+    fun toPost(): Post {
         return Post(
             postId = id,
             caption = text,
@@ -59,13 +59,13 @@ internal data class PostsResponseData(
 )
 
 //게시글 응답
-internal data class PostApiResponse(
+internal data class PostResponse(
     val code: HttpStatusCode,
-    val data: PostApiResponseData
+    val data: PostResponseData
 )
 
 @Serializable
-internal data class PostApiResponseData(
+internal data class PostResponseData(
     val success: Boolean,
     val post: RemotePost? = null,
     val message: String? = null

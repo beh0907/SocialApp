@@ -1,5 +1,6 @@
 package com.skymilk.socialapp.android.presentation.screen.main.profile
 
+import android.R.attr.text
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,33 +29,31 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.compose.LazyPagingItems
 import com.skymilk.socialapp.R
 import com.skymilk.socialapp.android.presentation.common.component.CircleImage
 import com.skymilk.socialapp.android.presentation.common.component.FollowsButton
-import com.skymilk.socialapp.android.presentation.common.component.PostItem
-import com.skymilk.socialapp.android.presentation.common.dummy.SampleProfile
-import com.skymilk.socialapp.android.presentation.common.state.PostsState
+import com.skymilk.socialapp.android.presentation.common.component.postsList
 import com.skymilk.socialapp.android.presentation.screen.main.profile.state.ProfileState
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
 import com.skymilk.socialapp.android.ui.theme.MediumSpacing
 import com.skymilk.socialapp.android.ui.theme.SmallSpacing
 import com.skymilk.socialapp.domain.model.Post
+import com.skymilk.socialapp.domain.model.Profile
 
 @Composable
 fun ProfileScreen(
     modifier: Modifier = Modifier,
     profileState: ProfileState,
-    postsState: PostsState,
+    feedPosts: LazyPagingItems<Post>,
     onEvent: (ProfileEvent) -> Unit,
-    onNavigateToProfile: () -> Unit,
-    onFollowersClick: () -> Unit,
-    onFollowingClick: () -> Unit,
-    onPostClick: (Post) -> Unit,
-    onLikeClick: (Long) -> Unit,
-    onCommentClick: (Long) -> Unit,
+    onNavigateToProfileEdit: () -> Unit,
+    onNavigateToFollowers: () -> Unit,
+    onNavigateToFollowing: () -> Unit,
+    onNavigateToPostDetail: (Post) -> Unit,
 ) {
-    when {
-        profileState is ProfileState.Loading || postsState is PostsState.Loading -> {
+    when (profileState) {
+        is ProfileState.Loading -> {
             Box(
                 modifier = modifier
                     .fillMaxSize()
@@ -66,7 +64,7 @@ fun ProfileScreen(
             }
         }
 
-        profileState is ProfileState.Success && postsState is PostsState.Success -> {
+        is ProfileState.Success -> {
             LazyColumn(
                 modifier = modifier
                     .fillMaxSize()
@@ -74,21 +72,24 @@ fun ProfileScreen(
             ) {
                 item("header") {
                     HeaderSection(
-                        sampleProfile = profileState.profile,
-                        onFollowersClick = onFollowersClick,
-                        onFollowingClick = onFollowingClick,
-                        onFollowClick = onNavigateToProfile
+                        profile = profileState.profile,
+                        onFollowersClick = onNavigateToFollowers,
+                        onFollowingClick = onNavigateToFollowing,
+                        onFollowClick = {
+                            //팔로우 버튼 클릭
+                            if (profileState.profile.isOwnProfile) onNavigateToProfileEdit() //내 정보일땐 정보 수정 화면으로 이동
+                            else onEvent(ProfileEvent.FollowUser(profileState.profile)) // 다른 회원이라면 팔로우 처리
+                        }
                     )
                 }
 
-                items(items = postsState.posts, key = { post -> post.postId }) {
-                    PostItem(
-                        post = it,
-                        onClickPost = onPostClick,
-                        onNavigateToProfile = { },
-                        onLikeClick = { onEvent(ProfileEvent.LikePost(it)) },
-                    )
-                }
+                //피드 게시물 목록
+                postsList(
+                    posts = feedPosts,
+                    onClickPost = onNavigateToPostDetail,
+                    onNavigateToProfile = { },
+                    onLikeClick = { onEvent(ProfileEvent.LikePost(it)) }
+                )
             }
         }
 
@@ -99,7 +100,7 @@ fun ProfileScreen(
 @Composable
 fun HeaderSection(
     modifier: Modifier = Modifier,
-    sampleProfile: SampleProfile,
+    profile: Profile,
     isCurrentUser: Boolean = false,
     isFollowing: Boolean = false,
     onFollowersClick: () -> Unit,
@@ -115,21 +116,21 @@ fun HeaderSection(
     ) {
         CircleImage(
             modifier = Modifier.size(90.dp),
-            imageUrl = sampleProfile.profileUrl,
+            imageUrl = profile.imageUrl,
             onClick = {}
         )
 
         Spacer(modifier = Modifier.height(SmallSpacing))
 
         Text(
-            text = sampleProfile.name,
+            text = profile.name,
             style = MaterialTheme.typography.titleMedium,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
 
         Text(
-            text = sampleProfile.bio,
+            text = profile.bio,
             style = MaterialTheme.typography.bodyMedium,
         )
 
@@ -143,7 +144,7 @@ fun HeaderSection(
                 modifier = Modifier.weight(1f)
             ) {
                 FollowText(
-                    count = sampleProfile.followersCount,
+                    count = profile.followersCount,
                     title = R.string.followers_title,
                     onClick = onFollowersClick
                 )
@@ -151,13 +152,14 @@ fun HeaderSection(
                 Spacer(modifier = Modifier.width(MediumSpacing))
 
                 FollowText(
-                    count = sampleProfile.followingCount,
+                    count = profile.followingCount,
                     title = R.string.following_title,
                     onClick = onFollowingClick
                 )
             }
 
             FollowsButton(
+                modifier = Modifier.width(100.dp),
                 text = if (isFollowing) R.string.unfollow_button_text else R.string.follow_button_text,
                 onFollowClick = onFollowClick,
                 isOutline = isCurrentUser || isFollowing

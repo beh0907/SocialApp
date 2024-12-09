@@ -55,7 +55,7 @@ fun PostItem(
         //헤더 유저 정보
         PostHeaderSection(
             name = post.userName,
-            profileUrl = post.imageUrl,
+            imageUrl = post.imageUrl,
             date = post.createdAt,
             onProfileClick = { onNavigateToProfile(post.userId) }
         )
@@ -102,7 +102,7 @@ fun PostItem(
 fun PostHeaderSection(
     modifier: Modifier = Modifier,
     name: String,
-    profileUrl: String,
+    imageUrl: String,
     date: String,
     onProfileClick: () -> Unit
 ) {
@@ -117,7 +117,7 @@ fun PostHeaderSection(
         //프로필
         CircleImage(
             modifier = Modifier.size(30.dp),
-            imageUrl = profileUrl,
+            imageUrl = imageUrl,
             onClick = onProfileClick
         )
 

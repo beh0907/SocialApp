@@ -15,8 +15,8 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.skymilk.socialapp.android.presentation.navigation.SocialApp
-import com.skymilk.socialapp.android.presentation.util.Event
-import com.skymilk.socialapp.android.presentation.util.EventBus.events
+import com.skymilk.socialapp.android.presentation.util.MessageEvent
+import com.skymilk.socialapp.android.presentation.util.EventBus.messageEvents
 import com.skymilk.socialapp.android.ui.theme.SocialAppTheme
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -60,9 +60,9 @@ class MainActivity : ComponentActivity() {
             //앱이 실행중일 경우에만 수집한다
             repeatOnLifecycle(state = Lifecycle.State.STARTED) {
                 //알림 이벤트 수집 시 처리
-                events.collectLatest { event ->
+                messageEvents.collect { event ->
                     when (event) {
-                        is Event.Toast -> {
+                        is MessageEvent.Toast -> {
                             Toast.makeText(
                                 this@MainActivity,
                                 event.message,
@@ -70,7 +70,9 @@ class MainActivity : ComponentActivity() {
                             ).show()
                         }
 
-                        is Event.SnackBar -> {}
+                        is MessageEvent.SnackBar -> {}
+
+                        else -> Unit
                     }
                 }
             }

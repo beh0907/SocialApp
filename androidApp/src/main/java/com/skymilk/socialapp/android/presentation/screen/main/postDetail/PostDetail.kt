@@ -3,6 +3,7 @@ package com.skymilk.socialapp.android.presentation.screen.main.postDetail
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import org.koin.androidx.compose.koinViewModel
@@ -18,11 +19,11 @@ fun PostDetail(
         koinViewModel(parameters = { parametersOf(postId) })
 
     val postState by postDetailViewModel.postState.collectAsStateWithLifecycle()
-    val commentsState by postDetailViewModel.commentsState.collectAsStateWithLifecycle()
+    val postComments = postDetailViewModel.postComments.collectAsLazyPagingItems()
 
     PostDetailScreen(
         postState = postState,
-        commentsState = commentsState,
+        postComments = postComments,
         onEvent = postDetailViewModel::onEvent,
         onNavigateToProfile = { },
         onCommentMoreClick = { },

@@ -17,14 +17,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.skymilk.socialapp.R
 import com.skymilk.socialapp.android.presentation.common.component.CircleImage
-import com.skymilk.socialapp.android.presentation.common.dummy.SampleComment
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
 import com.skymilk.socialapp.android.ui.theme.MediumSpacing
+import com.skymilk.socialapp.domain.model.PostComment
 
 @Composable
 fun CommentItem(
     modifier: Modifier = Modifier,
-    sampleComment: SampleComment,
+    comment: PostComment,
     onNavigateToProfile: (Long) -> Unit,
     onCommentMoreClick: () -> Unit,
 ) {
@@ -36,8 +36,8 @@ fun CommentItem(
     ) {
         CircleImage(
             modifier = Modifier.size(30.dp),
-            imageUrl = sampleComment.userImageUrl,
-            onClick = { onNavigateToProfile(sampleComment.userId) }
+            imageUrl = comment.userImageUrl,
+            onClick = { onNavigateToProfile(comment.userId) }
         )
 
         Column(
@@ -48,7 +48,7 @@ fun CommentItem(
             ) {
                 Text(
                     modifier = Modifier.alignByBaseline(),
-                    text = sampleComment.userName,
+                    text = comment.userName,
                     style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold
                 )
@@ -57,7 +57,7 @@ fun CommentItem(
                     modifier = Modifier
                         .alignByBaseline()
                         .weight(1f),
-                    text = sampleComment.date,
+                    text = comment.createAt,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.surfaceVariant
                 )
@@ -71,7 +71,7 @@ fun CommentItem(
             }
 
             Text(
-                text = sampleComment.comment, style = MaterialTheme.typography.bodyMedium
+                text = comment.content, style = MaterialTheme.typography.bodyMedium
             )
         }
     }

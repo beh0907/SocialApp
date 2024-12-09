@@ -13,33 +13,33 @@ import io.ktor.client.request.setBody
 internal class FollowApiService : KtorApi() {
 
     //팔로우
-    suspend fun followUser(userToken: String, params: FollowsParams): FollowOrUnFollowResponse {
+    suspend fun followUser(token: String, params: FollowsParams): FollowOrUnFollowResponse {
         val response = client.post {
             endPoint(path = "follows/follow")
             setBody(params)
-            setToken(userToken)
+            setToken(token)
         }
 
         return FollowOrUnFollowResponse(code = response.status, data = response.body())
     }
 
     //팔로우
-    suspend fun unFollowUser(userToken: String, params: FollowsParams): FollowOrUnFollowResponse {
+    suspend fun unFollowUser(token: String, params: FollowsParams): FollowOrUnFollowResponse {
         val response = client.post {
             endPoint(path = "follows/unfollow")
             setBody(params)
-            setToken(userToken)
+            setToken(token)
         }
 
         return FollowOrUnFollowResponse(code = response.status, data = response.body())
     }
 
     //팔로우
-    suspend fun getFollowableUsers(userToken: String, userId: Long): FollowsResponse {
+    suspend fun getFollowableUsers(token: String, userId: Long): FollowsResponse {
         val response = client.get {
             endPoint(path = "follows/suggestions")
             parameter(key = Constants.USER_ID_PARAMETER, value = userId)
-            setToken(userToken)
+            setToken(token)
         }
 
         return FollowsResponse(code = response.status, data = response.body())

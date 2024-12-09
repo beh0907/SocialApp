@@ -21,4 +21,7 @@ object Constants {
     // API 페이징
     const val FIRST_PAGE_INDEX = 1
     const val PAGE_SIZE = 20
+
+    //이벤트 버퍼 사이즈
+    const val EVENT_BUS_BUFFER_CAPACITY = 5
 }

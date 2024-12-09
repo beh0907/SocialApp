@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.skymilk.socialapp.android.presentation.common.state.AuthState
 import com.skymilk.socialapp.android.presentation.screen.auth.signUp.state.SignUpUIState
-import com.skymilk.socialapp.android.presentation.util.Event
+import com.skymilk.socialapp.android.presentation.util.MessageEvent
 import com.skymilk.socialapp.android.presentation.util.sendEvent
 import com.skymilk.socialapp.domain.usecase.auth.AuthUseCase
 import com.skymilk.socialapp.util.Result
@@ -79,7 +79,7 @@ class SignUpViewModel(
                 when (authResultData) {
                     is Result.Error -> {
                         val message = authResultData.message.toString()
-                        sendEvent(Event.Toast(message = message))
+                        sendEvent(MessageEvent.Toast(message = message))
 
                         AuthState.Error(message)
                     }

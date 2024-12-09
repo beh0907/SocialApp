@@ -1,13 +1,9 @@
 package com.skymilk.socialapp.data.repository
 
-import app.cash.paging.Pager
-import app.cash.paging.PagingConfig
 import app.cash.paging.PagingData
 import com.skymilk.socialapp.data.local.UserPreferences
 import com.skymilk.socialapp.data.model.CreatePostParams
 import com.skymilk.socialapp.data.model.PostLikesParams
-import com.skymilk.socialapp.data.model.PostsResponse
-import com.skymilk.socialapp.data.model.UserSettings
 import com.skymilk.socialapp.data.paging.FeedPagingSource
 import com.skymilk.socialapp.data.paging.UserPostsPagingSource
 import com.skymilk.socialapp.data.remote.PostApiService
@@ -64,16 +60,16 @@ internal class PostRepositoryImpl(
                 val userData = userPreferences.getUserData()
                 val likeParams = PostLikesParams(postId = postId, userId = userData.id)
 
-                val apiResponse = if (shouldLike) {
+                val response = if (shouldLike) {
                     postApiService.likePost(userData.token, likeParams)
                 } else {
                     postApiService.dislikePost(userData.token, likeParams)
                 }
 
-                if (apiResponse.code == HttpStatusCode.OK) {
-                    Result.Success(data = apiResponse.data.success)
+                if (response.code == HttpStatusCode.OK) {
+                    Result.Success(data = response.data.success)
                 } else {
-                    Result.Error(message = "${apiResponse.data.message}")
+                    Result.Error(message = "${response.data.message}")
                 }
             } catch (ioException: IOException) {
                 Result.Error(message = Constants.NO_INTERNET_ERROR_MESSAGE)
@@ -85,46 +81,21 @@ internal class PostRepositoryImpl(
         }
     }
 
-    private suspend fun fetchPosts(
-        apiCall: suspend (UserSettings) -> PostsResponse
-    ): Result<List<Post>> {
-        return withContext(dispatcher.io) {
-            try {
-                val currentUserData = userPreferences.getUserData()
-                val apiResponse = apiCall(currentUserData)
-
-                when (apiResponse.code) {
-                    HttpStatusCode.OK -> {
-                        Result.Success(data = apiResponse.data.posts.map { it.toDomainPost() })
-                    }
-
-                    else -> {
-                        Result.Error(message = Constants.UNEXPECTED_ERROR)
-                    }
-                }
-            } catch (ioException: IOException) {
-                Result.Error(message = Constants.NO_INTERNET_ERROR_MESSAGE)
-            } catch (exception: Throwable) {
-                Result.Error(message = "${exception.cause}")
-            }
-        }
-    }
-
     override suspend fun getPost(postId: Long): Result<Post> {
         return withContext(dispatcher.io) {
             try {
                 val userData = userPreferences.getUserData()
 
-                val apiResponse = postApiService.getPost(
+                val response = postApiService.getPost(
                     token = userData.token,
                     currentUserId = userData.id,
                     postId = postId
                 )
 
-                if (apiResponse.code == HttpStatusCode.OK) {
-                    Result.Success(data = apiResponse.data.post!!.toDomainPost())
+                if (response.code == HttpStatusCode.OK) {
+                    Result.Success(data = response.data.post!!.toPost())
                 } else {
-                    Result.Error(message = apiResponse.data.message!!)
+                    Result.Error(message = response.data.message!!)
                 }
             } catch (ioException: IOException) {
                 Result.Error(message = Constants.NO_INTERNET_ERROR_MESSAGE)
@@ -143,16 +114,16 @@ internal class PostRepositoryImpl(
                 value = CreatePostParams(text = text, userId = currentUserData.id)
             )
 
-            val apiResponse = postApiService.createPost(
+            val response = postApiService.createPost(
                 token = currentUserData.token,
-                newPostData = postData,
+                postData = postData,
                 imageBytes = imageBytes
             )
 
-            if (apiResponse.code == HttpStatusCode.OK) {
-                Result.Success(data = apiResponse.data.post!!.toDomainPost())
+            if (response.code == HttpStatusCode.OK) {
+                Result.Success(data = response.data.post!!.toPost())
             } else {
-                Result.Error(message = apiResponse.data.message ?: Constants.UNEXPECTED_ERROR)
+                Result.Error(message = response.data.message ?: Constants.UNEXPECTED_ERROR)
             }
         }
     }

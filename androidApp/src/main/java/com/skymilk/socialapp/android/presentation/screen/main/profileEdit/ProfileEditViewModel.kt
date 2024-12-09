@@ -6,7 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.skymilk.socialapp.android.presentation.common.dummy.sampleProfiles
 import com.skymilk.socialapp.android.presentation.screen.main.profile.state.ProfileState
 import com.skymilk.socialapp.android.presentation.screen.main.profileEdit.state.ProfileEditUiState
-import com.skymilk.socialapp.android.presentation.util.Event
+import com.skymilk.socialapp.android.presentation.util.MessageEvent
 import com.skymilk.socialapp.android.presentation.util.sendEvent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -66,7 +66,7 @@ class ProfileEditViewModel(
 
             delay(1000)
 
-            sendEvent(Event.Toast("프로필이 갱신되었습니다."))
+            sendEvent(MessageEvent.Toast("프로필이 갱신되었습니다."))
 
             uiState = uiState.copy(isUpdateProfile = false)
         }

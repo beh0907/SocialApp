@@ -1,6 +1,6 @@
 package com.skymilk.socialapp.data.remote
 
-import com.skymilk.socialapp.data.model.PostApiResponse
+import com.skymilk.socialapp.data.model.PostResponse
 import com.skymilk.socialapp.data.model.PostLikesParams
 import com.skymilk.socialapp.data.model.PostLikesResponse
 import com.skymilk.socialapp.data.model.PostsResponse
@@ -20,7 +20,7 @@ import io.ktor.http.HttpMethod
 internal class PostApiService : KtorApi() {
     //게시물 목록
     suspend fun getFeedPosts(
-        userToken: String,
+        token: String,
         currentUserId: Long,
         page: Int,
         pageSize: Int
@@ -30,40 +30,40 @@ internal class PostApiService : KtorApi() {
             parameter(key = Constants.CURRENT_USER_ID_PARAMETER, value = currentUserId)
             parameter(key = Constants.PAGE_QUERY_PARAMETER, value = page)
             parameter(key = Constants.PAGE_SIZE_QUERY_PARAMETER, value = pageSize)
-            setToken(token = userToken)
+            setToken(token = token)
         }
         return PostsResponse(code = httpResponse.status, data = httpResponse.body())
     }
 
     //좋아요
     suspend fun likePost(
-        userToken: String,
+        token: String,
         params: PostLikesParams
     ): PostLikesResponse {
         val httpResponse = client.post {
             endPoint(path = "/post/likes/add")
             setBody(params)
-            setToken(token = userToken)
+            setToken(token = token)
         }
         return PostLikesResponse(code = httpResponse.status, data = httpResponse.body())
     }
 
     //좋아요 해제
     suspend fun dislikePost(
-        userToken: String,
+        token: String,
         params: PostLikesParams
     ): PostLikesResponse {
         val httpResponse = client.delete {
             endPoint(path = "/post/likes/remove")
             setBody(params)
-            setToken(token = userToken)
+            setToken(token = token)
         }
         return PostLikesResponse(code = httpResponse.status, data = httpResponse.body())
     }
 
     //유저 게시물 목록
     suspend fun getUserPosts(
-        userToken: String,
+        token: String,
         userId: Long,
         currentUserId: Long,
         page: Int,
@@ -74,7 +74,7 @@ internal class PostApiService : KtorApi() {
             parameter(key = Constants.CURRENT_USER_ID_PARAMETER, value = currentUserId)
             parameter(key = Constants.PAGE_QUERY_PARAMETER, value = page)
             parameter(key = Constants.PAGE_SIZE_QUERY_PARAMETER, value = pageSize)
-            setToken(token = userToken)
+            setToken(token = token)
         }
         return PostsResponse(code = httpResponse.status, data = httpResponse.body())
     }
@@ -84,24 +84,24 @@ internal class PostApiService : KtorApi() {
         token: String,
         postId: Long,
         currentUserId: Long
-    ): PostApiResponse {
+    ): PostResponse {
         val httpResponse = client.get {
             endPoint(path = "/post/$postId")
             parameter(key = Constants.CURRENT_USER_ID_PARAMETER, value = currentUserId)
             setToken(token = token)
         }
-        return PostApiResponse(code = httpResponse.status, data = httpResponse.body())
+        return PostResponse(code = httpResponse.status, data = httpResponse.body())
     }
 
     //게시물 생성
     suspend fun createPost(
         token: String,
-        newPostData: String,
+        postData: String,
         imageBytes: ByteArray
-    ): PostApiResponse {
+    ): PostResponse {
         val httpResponse = client.submitFormWithBinaryData(
             formData = formData {
-                append(key = "post_data", value = newPostData)
+                append(key = "post_data", value = postData)
                 append(
                     key = "post_image",
                     value = imageBytes,
@@ -117,6 +117,6 @@ internal class PostApiService : KtorApi() {
             setupMultipartRequest()
             method = HttpMethod.Post
         }
-        return PostApiResponse(code = httpResponse.status, data = httpResponse.body())
+        return PostResponse(code = httpResponse.status, data = httpResponse.body())
     }
 }

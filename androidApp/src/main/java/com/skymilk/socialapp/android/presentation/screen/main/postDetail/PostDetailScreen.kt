@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
@@ -23,28 +23,29 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.paging.compose.LazyPagingItems
 import com.skymilk.socialapp.R
 import com.skymilk.socialapp.android.presentation.common.component.PostItem
-import com.skymilk.socialapp.android.presentation.common.dummy.SampleComment
 import com.skymilk.socialapp.android.presentation.screen.main.postDetail.component.CommentItem
-import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.CommentsState
+import com.skymilk.socialapp.android.presentation.screen.main.postDetail.component.postCommentsList
 import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.PostState
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
 import com.skymilk.socialapp.android.ui.theme.MediumSpacing
 import com.skymilk.socialapp.android.ui.theme.White
+import com.skymilk.socialapp.domain.model.PostComment
 
 @Composable
 fun PostDetailScreen(
     modifier: Modifier = Modifier,
     postState: PostState,
-    commentsState: CommentsState,
+    postComments: LazyPagingItems<PostComment>,
     onEvent: (PostDetailEvent) -> Unit,
     onNavigateToProfile: (Long) -> Unit,
-    onCommentMoreClick: (SampleComment) -> Unit,
+    onCommentMoreClick: (PostComment) -> Unit,
     onAddCommentClick: () -> Unit,
 ) {
     when {
-        postState is PostState.Loading || commentsState is CommentsState.Loading -> {
+        postState is PostState.Loading -> {
             Box(
                 modifier = modifier
                     .fillMaxSize()
@@ -56,7 +57,7 @@ fun PostDetailScreen(
         }
 
 
-        postState is PostState.Success && commentsState is CommentsState.Success -> {
+        postState is PostState.Success -> {
             LazyColumn(
                 modifier = modifier
                     .fillMaxSize()
@@ -79,21 +80,15 @@ fun PostDetailScreen(
                 }
 
 
-                items(items = commentsState.comments, key = { it.id }) { comment ->
-                    HorizontalDivider()
-
-                    CommentItem(
-                        sampleComment = comment,
-                        onNavigateToProfile = onNavigateToProfile,
-                        onCommentMoreClick = { onCommentMoreClick(comment) }
-                    )
-                }
+                postCommentsList(postComments, onNavigateToProfile, onCommentMoreClick)
             }
         }
 
         else -> Unit
     }
 }
+
+
 
 @Composable
 fun HeaderSection(
