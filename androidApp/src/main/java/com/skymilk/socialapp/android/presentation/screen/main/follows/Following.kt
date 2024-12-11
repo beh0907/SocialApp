@@ -1,8 +1,7 @@
 package com.skymilk.socialapp.android.presentation.screen.main.follows
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.skymilk.socialapp.android.presentation.screen.destinations.ProfileDestination
@@ -16,10 +15,10 @@ fun Following(
     userId: Long,
 ) {
     val followsViewModel: FollowsViewModel = koinViewModel(parameters = { parametersOf(userId, 2) })
-    val followsUsersState by followsViewModel.followsUsersState.collectAsStateWithLifecycle()
+    val follows = followsViewModel.follows.collectAsLazyPagingItems()
 
     FollowsScreen(
-        followsUsersState = followsUsersState,
+        follows = follows,
         onEvent = followsViewModel::onEvent,
         onNavigateToProfile = {
             navigator.navigate(ProfileDestination(it))

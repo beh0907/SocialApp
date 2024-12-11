@@ -6,40 +6,36 @@ import com.skymilk.socialapp.data.model.SignInParams
 import com.skymilk.socialapp.data.model.SignUpParams
 import com.skymilk.socialapp.data.model.toUserSettings
 import com.skymilk.socialapp.data.remote.AuthApiService
+import com.skymilk.socialapp.util.DispatcherProvider
+import com.skymilk.socialapp.data.util.Result
+import com.skymilk.socialapp.data.util.safeApiRequest
 import com.skymilk.socialapp.domain.model.AuthResultData
 import com.skymilk.socialapp.domain.repository.AuthRepository
-import com.skymilk.socialapp.util.DispatcherProvider
-import com.skymilk.socialapp.util.Result
-import kotlinx.coroutines.withContext
 
 internal class AuthRepositoryImpl(
     private val dispatcher: DispatcherProvider,
     private val authApiService: AuthApiService,
     private val userPreferences: UserPreferences
-): AuthRepository {
+) : AuthRepository {
     override suspend fun signUp(
         name: String,
         email: String,
         password: String
     ): Result<AuthResultData> {
-        return withContext(dispatcher.io) {
-            try {
-                val request = SignUpParams(name,email,password)
-                val authResponse = authApiService.signUp(request)
+        return safeApiRequest(dispatcher) {
+            val request = SignUpParams(name, email, password)
+            val authResponse = authApiService.signUp(request)
 
-                if (authResponse.data == null) {
-                    Result.Error(message = authResponse.message)
-                } else {
-                    val authResultData = authResponse.data.toAuthResultData()
+            if (authResponse.data == null) {
+                Result.Error(message = authResponse.message)
+            } else {
+                val authResultData = authResponse.data.toAuthResultData()
 
-                    //dataStore 저장
-                    userPreferences.setUserData(authResultData.toUserSettings())
+                //dataStore 저장
+                userPreferences.setUserData(authResultData.toUserSettings())
 
-                    //결과 리턴
-                    Result.Success(data = authResultData)
-                }
-            } catch (e: Exception) {
-                Result.Error(message = "서버와 통신할 수 없습니다. 다시 시도 해주세요.")
+                //결과 리턴
+                Result.Success(data = authResultData)
             }
         }
     }
@@ -48,24 +44,20 @@ internal class AuthRepositoryImpl(
         email: String,
         password: String
     ): Result<AuthResultData> {
-        return withContext(dispatcher.io) {
-            try {
-                val request = SignInParams(email,password)
-                val authResponse = authApiService.signIn(request)
+        return safeApiRequest(dispatcher) {
+            val request = SignInParams(email, password)
+            val authResponse = authApiService.signIn(request)
 
-                if (authResponse.data == null) {
-                    Result.Error(message = authResponse.message)
-                } else {
-                    val authResultData = authResponse.data.toAuthResultData()
+            if (authResponse.data == null) {
+                Result.Error(message = authResponse.message)
+            } else {
+                val authResultData = authResponse.data.toAuthResultData()
 
-                    //dataStore 저장
-                    userPreferences.setUserData(authResultData.toUserSettings())
+                //dataStore 저장
+                userPreferences.setUserData(authResultData.toUserSettings())
 
-                    //결과 리턴
-                    Result.Success(data = authResultData)
-                }
-            } catch (e: Exception) {
-                Result.Error(message = "서버와 통신할 수 없습니다. 다시 시도 해주세요.")
+                //결과 리턴
+                Result.Success(data = authResultData)
             }
         }
     }

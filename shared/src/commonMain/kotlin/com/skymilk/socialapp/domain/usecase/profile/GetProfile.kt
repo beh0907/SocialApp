@@ -2,7 +2,7 @@ package com.skymilk.socialapp.domain.usecase.profile
 
 import com.skymilk.socialapp.domain.model.Profile
 import com.skymilk.socialapp.domain.repository.ProfileRepository
-import com.skymilk.socialapp.util.Result
+import com.skymilk.socialapp.data.util.Result
 import kotlinx.coroutines.flow.Flow
 
 class GetProfile(

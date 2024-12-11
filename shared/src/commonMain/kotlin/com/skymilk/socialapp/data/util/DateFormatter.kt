@@ -1,4 +1,4 @@
-package com.skymilk.socialapp.util
+package com.skymilk.socialapp.data.util
 
 import kotlinx.datetime.LocalDateTime
 

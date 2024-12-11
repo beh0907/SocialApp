@@ -2,8 +2,7 @@ package com.skymilk.socialapp.domain.usecase.postComments
 
 import com.skymilk.socialapp.domain.model.PostComment
 import com.skymilk.socialapp.domain.repository.PostCommentsRepository
-import com.skymilk.socialapp.util.Result
-import kotlinx.serialization.json.JsonNull.content
+import com.skymilk.socialapp.data.util.Result
 
 class RemovePostComment(
     private val postCommentsRepository: PostCommentsRepository

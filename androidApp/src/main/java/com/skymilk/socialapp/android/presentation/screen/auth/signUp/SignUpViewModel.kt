@@ -10,7 +10,7 @@ import com.skymilk.socialapp.android.presentation.screen.auth.signUp.state.SignU
 import com.skymilk.socialapp.android.presentation.util.MessageEvent
 import com.skymilk.socialapp.android.presentation.util.sendEvent
 import com.skymilk.socialapp.domain.usecase.auth.AuthUseCase
-import com.skymilk.socialapp.util.Result
+import com.skymilk.socialapp.data.util.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch

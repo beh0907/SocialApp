@@ -7,16 +7,15 @@ import com.skymilk.socialapp.data.model.PostLikesParams
 import com.skymilk.socialapp.data.paging.FeedPagingSource
 import com.skymilk.socialapp.data.paging.UserPostsPagingSource
 import com.skymilk.socialapp.data.remote.PostApiService
-import com.skymilk.socialapp.domain.model.Post
-import com.skymilk.socialapp.domain.repository.PostRepository
 import com.skymilk.socialapp.util.Constants
 import com.skymilk.socialapp.util.DispatcherProvider
-import com.skymilk.socialapp.util.Result
+import com.skymilk.socialapp.data.util.Result
+import com.skymilk.socialapp.data.util.safeApiRequest
+import com.skymilk.socialapp.domain.model.Post
+import com.skymilk.socialapp.domain.repository.PostRepository
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.withContext
-import kotlinx.io.IOException
 import kotlinx.serialization.json.Json
 
 internal class PostRepositoryImpl(
@@ -55,58 +54,44 @@ internal class PostRepositoryImpl(
     }
 
     override suspend fun likeOrDislikePost(postId: Long, shouldLike: Boolean): Result<Boolean> {
-        return withContext(dispatcher.io) {
-            try {
-                val userData = userPreferences.getUserData()
-                val likeParams = PostLikesParams(postId = postId, userId = userData.id)
+        return safeApiRequest(dispatcher) {
+            val userData = userPreferences.getUserData()
+            val likeParams = PostLikesParams(postId = postId, userId = userData.id)
 
-                val response = if (shouldLike) {
-                    postApiService.likePost(userData.token, likeParams)
-                } else {
-                    postApiService.dislikePost(userData.token, likeParams)
-                }
+            val response = if (shouldLike) {
+                postApiService.likePost(userData.token, likeParams)
+            } else {
+                postApiService.dislikePost(userData.token, likeParams)
+            }
 
-                if (response.code == HttpStatusCode.OK) {
-                    Result.Success(data = response.data.success)
-                } else {
-                    Result.Error(message = "${response.data.message}")
-                }
-            } catch (ioException: IOException) {
-                Result.Error(message = Constants.NO_INTERNET_ERROR_MESSAGE)
-            } catch (exception: Throwable) {
-                Result.Error(
-                    message = "${exception.message}"
-                )
+            if (response.code == HttpStatusCode.OK) {
+                Result.Success(data = response.data.success)
+            } else {
+                Result.Error(message = "${response.data.message}")
             }
         }
     }
 
     override suspend fun getPost(postId: Long): Result<Post> {
-        return withContext(dispatcher.io) {
-            try {
-                val userData = userPreferences.getUserData()
+        return safeApiRequest(dispatcher) {
+            val userData = userPreferences.getUserData()
 
-                val response = postApiService.getPost(
-                    token = userData.token,
-                    currentUserId = userData.id,
-                    postId = postId
-                )
+            val response = postApiService.getPost(
+                token = userData.token,
+                currentUserId = userData.id,
+                postId = postId
+            )
 
-                if (response.code == HttpStatusCode.OK) {
-                    Result.Success(data = response.data.post!!.toPost())
-                } else {
-                    Result.Error(message = response.data.message!!)
-                }
-            } catch (ioException: IOException) {
-                Result.Error(message = Constants.NO_INTERNET_ERROR_MESSAGE)
-            } catch (exception: Throwable) {
-                Result.Error(message = Constants.UNEXPECTED_ERROR)
+            if (response.code == HttpStatusCode.OK) {
+                Result.Success(data = response.data.post!!.toPost())
+            } else {
+                Result.Error(message = response.data.message!!)
             }
         }
     }
 
     override suspend fun createPost(text: String, imageBytes: ByteArray): Result<Post> {
-        return withContext(dispatcher.io) {
+        return safeApiRequest(dispatcher) {
             val currentUserData = userPreferences.getUserData()
 
             val postData = Json.encodeToString(

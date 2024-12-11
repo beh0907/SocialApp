@@ -1,7 +1,7 @@
 package com.skymilk.socialapp.domain.usecase.follows
 
 import com.skymilk.socialapp.domain.repository.FollowsRepository
-import com.skymilk.socialapp.util.Result
+import com.skymilk.socialapp.data.util.Result
 
 class FollowOrUnFollow(
     private val followsRepository: FollowsRepository

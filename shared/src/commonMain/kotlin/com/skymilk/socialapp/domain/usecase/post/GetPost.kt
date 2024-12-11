@@ -2,7 +2,7 @@ package com.skymilk.socialapp.domain.usecase.post
 
 import com.skymilk.socialapp.domain.model.Post
 import com.skymilk.socialapp.domain.repository.PostRepository
-import com.skymilk.socialapp.util.Result
+import com.skymilk.socialapp.data.util.Result
 
 class GetPost(
     private val postRepository: PostRepository

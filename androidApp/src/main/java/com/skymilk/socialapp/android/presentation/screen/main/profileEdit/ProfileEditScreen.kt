@@ -79,7 +79,6 @@ fun ProfileEditScreen(
                             fontWeight = FontWeight.Bold
                         )
                     }
-
                 }
             }
             is ProfileState.Success -> {

@@ -14,6 +14,7 @@
     <string name="post_detail_destination_title">Post Detail</string>
     <string name="comments_header_label">Comments</string>
     <string name="add_comment_button_label">댓글 추가</string>
+    <string name="send_comment_button">전송</string>
     <string name="profile_destination_title">Profile</string>
     <string name="followers_title">팔로워</string>
     <string name="following_title">팔로윙</string>
@@ -26,4 +27,7 @@
     <string name="retry_button_text">다시 시도</string>
     <string name="profile_edit_destination_title">Profile Edit</string>
     <string name="unfollow_button_text">UnFollow</string>
+    <string name="comment_option_title">댓글 옵션</string>
+    <string name="delete_comment_option">댓글 삭제</string>
+    <string name="navigate_profile_option">프로필 이동</string>
 </resources>

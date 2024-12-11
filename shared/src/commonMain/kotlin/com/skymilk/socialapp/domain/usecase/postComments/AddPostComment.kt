@@ -2,7 +2,7 @@ package com.skymilk.socialapp.domain.usecase.postComments
 
 import com.skymilk.socialapp.domain.model.PostComment
 import com.skymilk.socialapp.domain.repository.PostCommentsRepository
-import com.skymilk.socialapp.util.Result
+import com.skymilk.socialapp.data.util.Result
 
 class AddPostComment(
     private val postCommentsRepository: PostCommentsRepository

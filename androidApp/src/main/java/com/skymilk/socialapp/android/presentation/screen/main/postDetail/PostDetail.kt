@@ -20,14 +20,14 @@ fun PostDetail(
 
     val postState by postDetailViewModel.postState.collectAsStateWithLifecycle()
     val postComments = postDetailViewModel.postComments.collectAsLazyPagingItems()
+    val postDetailUiState = postDetailViewModel.postDetailUiState
 
     PostDetailScreen(
-        postState = postState,
+        postDetailUiState = postDetailUiState,
+        postDetailState = postState,
         postComments = postComments,
         onEvent = postDetailViewModel::onEvent,
         onNavigateToProfile = { },
-        onCommentMoreClick = { },
-        onAddCommentClick = { },
     )
 
 }

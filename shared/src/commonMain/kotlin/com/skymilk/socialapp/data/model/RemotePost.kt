@@ -1,7 +1,7 @@
 package com.skymilk.socialapp.data.model
 
 import com.skymilk.socialapp.domain.model.Post
-import com.skymilk.socialapp.util.DateFormatter
+import com.skymilk.socialapp.data.util.DateFormatter
 import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.Serializable
 

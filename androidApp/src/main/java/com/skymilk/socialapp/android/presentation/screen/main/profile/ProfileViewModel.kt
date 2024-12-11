@@ -6,7 +6,6 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.skymilk.socialapp.android.presentation.screen.main.profile.state.ProfileState
-import com.skymilk.socialapp.android.presentation.util.EventBus
 import com.skymilk.socialapp.android.presentation.util.PostEvent
 import com.skymilk.socialapp.android.presentation.util.sendEvent
 import com.skymilk.socialapp.domain.model.Post
@@ -14,7 +13,7 @@ import com.skymilk.socialapp.domain.model.Profile
 import com.skymilk.socialapp.domain.usecase.follows.FollowsUseCase
 import com.skymilk.socialapp.domain.usecase.post.PostUseCase
 import com.skymilk.socialapp.domain.usecase.profile.ProfileUseCase
-import com.skymilk.socialapp.util.Result
+import com.skymilk.socialapp.data.util.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update

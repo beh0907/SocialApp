@@ -1,46 +1,30 @@
 package com.skymilk.socialapp.android.presentation.screen.main.follows
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.paging.compose.LazyPagingItems
 import com.skymilk.socialapp.android.presentation.screen.main.follows.component.FollowsItem
-import com.skymilk.socialapp.android.presentation.screen.main.follows.state.FollowsState
+import com.skymilk.socialapp.domain.model.FollowsUser
 
 @Composable
 fun FollowsScreen(
     modifier: Modifier = Modifier,
-    followsUsersState: FollowsState,
+    follows: LazyPagingItems<FollowsUser>,
     onEvent: (FollowsEvent) -> Unit,
     onNavigateToProfile: (Long) -> Unit
 ) {
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center,
-    ) {
+    LazyColumn(modifier = modifier.fillMaxSize()) {
+        items(count = follows.itemCount) {
+            val user = follows[it] ?: return@items
 
-        when (followsUsersState) {
-            is FollowsState.Initial -> Unit
-            is FollowsState.Loading -> CircularProgressIndicator()
-            is FollowsState.Success -> {
-                LazyColumn(modifier = modifier.fillMaxSize()) {
-                    items(items = followsUsersState.followsUsers, key = { it.id }) {
-                        FollowsItem(
-                            user = it,
-                            onItemClick = {
-                                onNavigateToProfile(it.id)
-                            }
-                        )
-                    }
+            FollowsItem(
+                user = user,
+                onItemClick = {
+                    onNavigateToProfile(user.id)
                 }
-            }
-
-            else -> Unit
+            )
         }
-
     }
 }

@@ -1,22 +1,24 @@
 package com.skymilk.socialapp.android.presentation.screen.main.profileEdit
 
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.skymilk.socialapp.android.presentation.common.dummy.sampleProfiles
 import com.skymilk.socialapp.android.presentation.screen.main.profile.state.ProfileState
 import com.skymilk.socialapp.android.presentation.screen.main.profileEdit.state.ProfileEditUiState
 import com.skymilk.socialapp.android.presentation.util.MessageEvent
 import com.skymilk.socialapp.android.presentation.util.sendEvent
+import com.skymilk.socialapp.domain.usecase.profile.ProfileUseCase
+import com.skymilk.socialapp.data.util.Result
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.launch
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 class ProfileEditViewModel(
+    private val profileUseCase: ProfileUseCase,
     private val userId: Long
 ) : ViewModel() {
     var uiState by mutableStateOf(ProfileEditUiState())
@@ -42,20 +44,25 @@ class ProfileEditViewModel(
     }
 
     private fun loadProfile() {
+        _profileState.update { ProfileState.Loading }
+
         viewModelScope.launch {
-            _profileState.update { ProfileState.Loading }
+            profileUseCase.getProfile(userId).collect { result ->
+                when (result) {
+                    is Result.Success -> {
+                        val profile = result.data
 
-            delay(500)
+                        //UI 수정
+                        uiState = ProfileEditUiState(bio = profile.bio, name = profile.name)
 
-            _profileState.update {
-                val profile = sampleProfiles.find { it.id == userId }
+                        //유저 정보 반영
+                        _profileState.update { ProfileState.Success(profile = profile) }
+                    }
 
-                if (profile != null) {
-                    uiState = ProfileEditUiState(bio = profile.bio, name = profile.name)
-
-                    ProfileState.Success(profile = profile)
+                    is Result.Error -> {
+                        ProfileState.Error("프로필을 찾을 수 없습니다.")
+                    }
                 }
-                else ProfileState.Error("프로필을 찾을 수 없습니다.")
             }
         }
     }

@@ -1,7 +1,7 @@
 package com.skymilk.socialapp.domain.repository
 
 import com.skymilk.socialapp.domain.model.AuthResultData
-import com.skymilk.socialapp.util.Result
+import com.skymilk.socialapp.data.util.Result
 
 interface AuthRepository {
     suspend fun signUp(

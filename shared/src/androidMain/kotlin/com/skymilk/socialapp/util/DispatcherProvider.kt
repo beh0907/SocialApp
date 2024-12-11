@@ -1,6 +1,5 @@
 package com.skymilk.socialapp.util
 
-import com.skymilk.socialapp.util.DispatcherProvider
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 

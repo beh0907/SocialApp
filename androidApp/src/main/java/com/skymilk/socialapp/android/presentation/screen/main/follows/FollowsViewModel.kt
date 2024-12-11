@@ -2,21 +2,22 @@ package com.skymilk.socialapp.android.presentation.screen.main.follows
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.skymilk.socialapp.android.presentation.common.dummy.sampleFollowsUser
-import com.skymilk.socialapp.android.presentation.screen.main.follows.state.FollowsState
-import kotlinx.coroutines.delay
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
+import com.skymilk.socialapp.domain.model.FollowsUser
+import com.skymilk.socialapp.domain.usecase.follows.FollowsUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class FollowsViewModel(
+    private val followsUseCase: FollowsUseCase,
     private val userId: Long,
     private val followsType: Int,
 ) : ViewModel() {
-
-    private val _followsState = MutableStateFlow<FollowsState>(FollowsState.Initial)
-    val followsUsersState = _followsState.asStateFlow()
+    //팔로우 유저 목록
+    private val _follows = MutableStateFlow<PagingData<FollowsUser>>(PagingData.empty())
+    val follows = _follows.asStateFlow()
 
     init {
         loadFollows()
@@ -30,11 +31,11 @@ class FollowsViewModel(
 
     private fun loadFollows() {
         viewModelScope.launch {
-            _followsState.update { FollowsState.Loading }
+            val follows = followsUseCase.getMyFollows(userId, followsType).cachedIn(viewModelScope)
 
-            delay(1000)
-
-            _followsState.update { FollowsState.Success(followsUsers = sampleFollowsUser) }
+            follows.collect {
+                _follows.value = it
+            }
         }
     }
 

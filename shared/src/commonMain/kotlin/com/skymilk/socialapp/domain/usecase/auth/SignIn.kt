@@ -2,7 +2,8 @@ package com.skymilk.socialapp.domain.usecase.auth
 
 import com.skymilk.socialapp.domain.model.AuthResultData
 import com.skymilk.socialapp.domain.repository.AuthRepository
-import com.skymilk.socialapp.util.Result
+import com.skymilk.socialapp.data.util.Result
+import com.skymilk.socialapp.util.Constants
 
 class SignIn(
     private val authRepository: AuthRepository
@@ -11,11 +12,11 @@ class SignIn(
     suspend operator fun invoke(email: String, password: String): Result<AuthResultData> {
 
         if (email.isBlank() || "@" !in email) {
-            return Result.Error(message = "이메일 형식이 올바르지 않습니다.")
+            return Result.Error(message = Constants.INVALID_INPUT_EMAIL_MESSAGE)
         }
 
         if (password.isBlank() || password.length < 8) {
-            return Result.Error(message = "비밀번호는 8자리 이상으로 입력해주세요.")
+            return Result.Error(message = Constants.INVALID_INPUT_PASSWORD_MESSAGE)
         }
 
         return authRepository.signIn(email, password)

@@ -29,6 +29,15 @@ internal data class RemoteProfile(
     }
 }
 
+//프로필 정보 갱신 파라미터
+@Serializable
+data class UpdateProfileParams(
+    val userId: Long,
+    val name: String,
+    val bio: String,
+    val imageUrl: String? = null
+)
+
 //프로필 정보 응답
 internal data class ProfileResponse(
     val code: HttpStatusCode,

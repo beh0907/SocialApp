@@ -2,7 +2,7 @@ package com.skymilk.socialapp.domain.repository
 
 import app.cash.paging.PagingData
 import com.skymilk.socialapp.domain.model.Post
-import com.skymilk.socialapp.util.Result
+import com.skymilk.socialapp.data.util.Result
 import kotlinx.coroutines.flow.Flow
 
 interface PostRepository {

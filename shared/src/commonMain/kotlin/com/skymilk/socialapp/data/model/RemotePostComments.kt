@@ -1,7 +1,7 @@
 package com.skymilk.socialapp.data.model
 
 import com.skymilk.socialapp.domain.model.PostComment
-import com.skymilk.socialapp.util.DateFormatter
+import com.skymilk.socialapp.data.util.DateFormatter
 import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.Serializable
 
@@ -16,7 +16,7 @@ data class RemotePostComment(
     val userImageUrl: String?,
     val createAt: String,
 ) {
-    fun toPostComment(): PostComment {
+    fun toPostComment(isOwner: Boolean): PostComment {
         return PostComment(
             commentId = commentId,
             content = content,
@@ -25,6 +25,7 @@ data class RemotePostComment(
             userName = userName,
             userImageUrl = userImageUrl,
             createAt = DateFormatter.parseDate(createAt),
+            isOwner = isOwner
         )
     }
 }

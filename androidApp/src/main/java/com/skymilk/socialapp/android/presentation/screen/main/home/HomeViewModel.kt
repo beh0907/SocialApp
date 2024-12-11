@@ -12,7 +12,7 @@ import com.skymilk.socialapp.domain.model.FollowsUser
 import com.skymilk.socialapp.domain.model.Post
 import com.skymilk.socialapp.domain.usecase.follows.FollowsUseCase
 import com.skymilk.socialapp.domain.usecase.post.PostUseCase
-import com.skymilk.socialapp.util.Result
+import com.skymilk.socialapp.data.util.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -80,8 +80,8 @@ class HomeViewModel(
 
         //게시글 목록 불러오기
         viewModelScope.launch {
-            val feed = postUseCase.getFeedPosts().cachedIn(viewModelScope)
-            feed.collect {
+            val feeds = postUseCase.getFeedPosts().cachedIn(viewModelScope)
+            feeds.collect {
                 _feedPosts.value = it
             }
         }

@@ -1,4 +1,4 @@
-package com.skymilk.socialapp.util
+package com.skymilk.socialapp.data.util
 
 sealed class Result<T> {
     data class Success<T>(val data: T) : Result<T>()
