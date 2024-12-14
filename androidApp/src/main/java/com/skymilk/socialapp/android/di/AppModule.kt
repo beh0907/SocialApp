@@ -5,9 +5,12 @@ import com.skymilk.socialapp.android.presentation.screen.auth.signIn.SignInViewM
 import com.skymilk.socialapp.android.presentation.screen.auth.signUp.SignUpViewModel
 import com.skymilk.socialapp.android.presentation.screen.main.follows.FollowsViewModel
 import com.skymilk.socialapp.android.presentation.screen.main.home.HomeViewModel
+import com.skymilk.socialapp.android.presentation.screen.main.postCreate.PostCreateViewModel
 import com.skymilk.socialapp.android.presentation.screen.main.postDetail.PostDetailViewModel
 import com.skymilk.socialapp.android.presentation.screen.main.profile.ProfileViewModel
 import com.skymilk.socialapp.android.presentation.screen.main.profileEdit.ProfileEditViewModel
+import com.skymilk.socialapp.android.presentation.util.ImageBytesReader
+import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -16,9 +19,12 @@ val appModule = module {
     viewModel { SignUpViewModel(get()) }
     viewModel { MainViewModel(get()) }
     viewModel { HomeViewModel(get(), get()) }
+    viewModel { PostCreateViewModel(get(), get()) }
     viewModel { (postId: Long) -> PostDetailViewModel(get(), get(), postId) }
     viewModel { (userId: Long) -> ProfileViewModel(get(), get(), get(), userId) }
-    viewModel { (userId: Long) -> ProfileEditViewModel(get(), userId) }
+    viewModel { (userId: Long) -> ProfileEditViewModel(get(), get(), userId) }
     viewModel { (userId: Long, followsType: Int) -> FollowsViewModel(get(), userId, followsType) }
+
+    single { ImageBytesReader(androidContext()) }
 }
 

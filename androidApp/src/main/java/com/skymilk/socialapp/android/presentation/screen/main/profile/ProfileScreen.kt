@@ -1,6 +1,5 @@
 package com.skymilk.socialapp.android.presentation.screen.main.profile
 
-import android.R.attr.text
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -116,7 +115,7 @@ fun HeaderSection(
     ) {
         CircleImage(
             modifier = Modifier.size(90.dp),
-            imageUrl = profile.imageUrl,
+            image = profile.imageUrl,
             onClick = {}
         )
 

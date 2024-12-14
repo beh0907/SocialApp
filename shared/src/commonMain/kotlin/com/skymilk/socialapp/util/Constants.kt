@@ -24,6 +24,12 @@ object Constants {
     const val INVALID_INPUT_EMAIL_MESSAGE = "이메일 형식이 올바르지 않습니다."
     const val INVALID_INPUT_PASSWORD_MESSAGE = "비밀번호는 8자리 이상으로 입력해주세요."
     const val INVALID_INPUT_PASSWORD_CONFIRM_MESSAGE = "비밀번호가 일치하지 않습니다."
+    const val INVALID_INPUT_CAPTION_MESSAGE = "게시글 내용을 입력해주세요."
+    const val INVALID_UPLOAD_POST_IMAGE_MESSAGE = "이미지를 업로드해주세요."
+
+    //표현 레이어 메시지
+    const val READING_IMAGE_BYTES_ERROR_MESSAGE = "이미지를 읽을 수 없습니다."
+
 
     // API 페이징
     const val FIRST_PAGE_INDEX = 1

@@ -10,16 +10,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import coil3.compose.SubcomposeAsyncImage
+import com.skymilk.socialapp.R
 
 @Composable
 fun CircleImage(
     modifier: Modifier = Modifier,
-    imageUrl: String?,
+    image: Any?,
     onClick: () -> Unit
 ) {
     SubcomposeAsyncImage(
-        modifier = modifier.clip(CircleShape).clickable { onClick() },
-        model = imageUrl,
+        modifier = modifier
+            .clip(CircleShape)
+            .clickable { onClick() },
+        model = image ?: R.drawable.bg_default_profile,
         contentDescription = null,
         loading = {
             Box(

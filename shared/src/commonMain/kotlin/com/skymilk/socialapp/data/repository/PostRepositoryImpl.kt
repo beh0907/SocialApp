@@ -1,5 +1,7 @@
 package com.skymilk.socialapp.data.repository
 
+import app.cash.paging.Pager
+import app.cash.paging.PagingConfig
 import app.cash.paging.PagingData
 import com.skymilk.socialapp.data.local.UserPreferences
 import com.skymilk.socialapp.data.model.CreatePostParams

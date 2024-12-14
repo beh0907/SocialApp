@@ -36,7 +36,7 @@ fun CommentItem(
     ) {
         CircleImage(
             modifier = Modifier.size(30.dp),
-            imageUrl = comment.userImageUrl,
+            image = comment.userImageUrl,
             onClick = { onNavigateToProfile(comment.userId) }
         )
 

@@ -36,7 +36,7 @@ fun FollowsItem(
     ) {
         CircleImage(
             modifier = Modifier.size(50.dp),
-            imageUrl = user.imageUrl,
+            image = user.imageUrl,
             onClick = {}
         )
 

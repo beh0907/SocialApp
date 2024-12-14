@@ -117,7 +117,7 @@ fun PostHeaderSection(
         //프로필
         CircleImage(
             modifier = Modifier.size(30.dp),
-            imageUrl = imageUrl,
+            image = imageUrl,
             onClick = onProfileClick
         )
 

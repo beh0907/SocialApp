@@ -9,18 +9,23 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
 import androidx.paging.insertHeaderItem
+import androidx.paging.map
 import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.PostDetailState
 import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.PostUiState
+import com.skymilk.socialapp.android.presentation.util.EventBus.postEvents
 import com.skymilk.socialapp.android.presentation.util.MessageEvent
-import com.skymilk.socialapp.android.presentation.util.PostEvent
+import com.skymilk.socialapp.android.presentation.util.DataEvent
 import com.skymilk.socialapp.android.presentation.util.sendEvent
+import com.skymilk.socialapp.data.util.Result
 import com.skymilk.socialapp.domain.model.Post
 import com.skymilk.socialapp.domain.model.PostComment
+import com.skymilk.socialapp.domain.model.Profile
 import com.skymilk.socialapp.domain.usecase.post.PostUseCase
 import com.skymilk.socialapp.domain.usecase.postComments.PostCommentsUseCase
-import com.skymilk.socialapp.data.util.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -44,6 +49,21 @@ class PostDetailViewModel(
 
     init {
         loadData()
+
+        onUpdatedEvent()
+    }
+
+    //다른 화면에서 업데이트된 정보 반영
+    fun onUpdatedEvent() {
+        postEvents.onEach {
+            when (it) {
+                is DataEvent.CreatedPost -> Unit
+
+                is DataEvent.UpdatedPost -> updatePost(it.post)
+
+                is DataEvent.UpdatedProfile -> updateProfile(it.profile)
+            }
+        }.launchIn(viewModelScope)
     }
 
     fun onEvent(event: PostDetailEvent) {
@@ -104,7 +124,7 @@ class PostDetailViewModel(
             when (result) {
                 is Result.Success -> {
                     //메인 화면에 있는 일치한 게시글을 찾아 상태를 반영한다
-                    sendEvent(PostEvent.UpdatedPost(updatedPost))
+                    sendEvent(DataEvent.UpdatedPost(updatedPost))
                 }
 
                 is Result.Error -> {
@@ -118,9 +138,12 @@ class PostDetailViewModel(
     private fun removeComment(comment: PostComment) {
         viewModelScope.launch {
             var post = (_postDetailState.value as? PostDetailState.Success)?.post ?: return@launch
-            val result = postCommentUseCase.removePostComment(postId = comment.postId, commentId = comment.commentId)
+            val result = postCommentUseCase.removePostComment(
+                postId = comment.postId,
+                commentId = comment.commentId
+            )
 
-            when(result) {
+            when (result) {
                 is Result.Success -> {
                     // PagingData에서 해당 댓글 제거
                     _postComments.update { pagingData ->
@@ -131,13 +154,13 @@ class PostDetailViewModel(
 
                     //게시물 상태 정보 갱신
                     post = post.copy(commentsCount = post.commentsCount.minus(1))
-                    sendEvent(PostEvent.UpdatedPost(post))
+                    sendEvent(DataEvent.UpdatedPost(post))
 
                     //댓글 추가 알림
                     sendEvent(MessageEvent.Toast("댓글이 삭제되었습니다."))
                 }
 
-                is Result.Error ->  {
+                is Result.Error -> {
                     // 오류 알림
                     sendEvent(MessageEvent.Toast("댓글 삭제를 실패했습니다."))
                 }
@@ -166,7 +189,7 @@ class PostDetailViewModel(
 
                     //게시물 상태 정보 갱신
                     post = post.copy(commentsCount = post.commentsCount.plus(1))
-                    sendEvent(PostEvent.UpdatedPost(post))
+                    sendEvent(DataEvent.UpdatedPost(post))
 
                     //댓글 추가 알림
                     sendEvent(MessageEvent.Toast("댓글이 추가되었습니다."))
@@ -177,8 +200,37 @@ class PostDetailViewModel(
 
                 is Result.Error -> {
                     // 오류 알림
-                    sendEvent(MessageEvent.Toast("댓글 작성을 실패했습니다."))}
+                    sendEvent(MessageEvent.Toast("댓글 작성을 실패했습니다."))
+                }
             }
+        }
+    }
+
+    //상세 게시물 정보를 수정한다
+    private fun updatePost(post: Post) {
+        _postDetailState.update { PostDetailState.Success(post) }
+    }
+
+    private fun updateProfile(profile: Profile) {
+        val post = (_postDetailState.value as? PostDetailState.Success)?.post ?: return
+
+        //나의 게시물이라면 갱신
+        if (post.isOwnPost) {
+            val updatedPost = post.copy(
+                userName = profile.name,
+                userImageUrl = profile.imageUrl
+            )
+            updatePost(updatedPost)
+        }
+
+        _postComments.value.map {
+            //내가 작성한 댓글에 대한 수정 정보 반영
+            if (it.userId == profile.id) {
+                it.copy(
+                    userName = profile.name,
+                    userImageUrl = profile.imageUrl
+                )
+            } else it
         }
     }
 }

@@ -6,16 +6,19 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.map
 import com.skymilk.socialapp.android.presentation.screen.main.profile.state.ProfileState
-import com.skymilk.socialapp.android.presentation.util.PostEvent
+import com.skymilk.socialapp.android.presentation.util.EventBus.postEvents
+import com.skymilk.socialapp.android.presentation.util.DataEvent
 import com.skymilk.socialapp.android.presentation.util.sendEvent
+import com.skymilk.socialapp.data.util.Result
 import com.skymilk.socialapp.domain.model.Post
 import com.skymilk.socialapp.domain.model.Profile
 import com.skymilk.socialapp.domain.usecase.follows.FollowsUseCase
 import com.skymilk.socialapp.domain.usecase.post.PostUseCase
 import com.skymilk.socialapp.domain.usecase.profile.ProfileUseCase
-import com.skymilk.socialapp.data.util.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -35,6 +38,19 @@ class ProfileViewModel(
 
     init {
         loadData()
+
+        onUpdatedEvent()
+    }
+
+    //다른 화면에서 업데이트된 정보 반영
+    fun onUpdatedEvent() {
+        postEvents.onEach {
+            when (it) {
+                is DataEvent.UpdatedProfile -> updateProfile(it.profile)
+
+                else -> Unit
+            }
+        }.launchIn(viewModelScope)
     }
 
     fun onEvent(event: ProfileEvent) {
@@ -93,7 +109,7 @@ class ProfileViewModel(
                     }
 
                     //메인 화면에 있는 일치한 게시글을 찾아 상태를 반영한다
-                    sendEvent(PostEvent.UpdatedPost(updatedPost))
+                    sendEvent(DataEvent.UpdatedPost(updatedPost))
                 }
 
                 is Result.Error -> {}
@@ -125,6 +141,23 @@ class ProfileViewModel(
 
                 is Result.Error -> {}
             }
+        }
+    }
+
+
+    //프로필 화면의 내 정보들을 갱신한다
+    private fun updateProfile(profile: Profile) {
+        //내 정보 수정
+        _profileState.update { ProfileState.Success(profile) }
+
+        //게시물 정보 수정
+        _feedPosts.value = _feedPosts.value.map {
+            if (it.userId == profile.id)
+                it.copy(
+                    userName = profile.name,
+                    userImageUrl = profile.imageUrl
+                )
+            else it
         }
     }
 }

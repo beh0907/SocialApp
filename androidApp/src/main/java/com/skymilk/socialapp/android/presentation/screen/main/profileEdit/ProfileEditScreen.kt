@@ -1,5 +1,9 @@
 package com.skymilk.socialapp.android.presentation.screen.main.profileEdit
 
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,10 +27,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -49,6 +58,12 @@ fun ProfileEditScreen(
     profileState: ProfileState,
     onEvent: (ProfileEditEvent) -> Unit,
 ) {
+    val pickImage = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = { uri ->
+            if (uri != null) onEvent(ProfileEditEvent.UpdateImage(uri))
+        }
+    )
 
     Box(
         modifier = modifier.fillMaxSize(),
@@ -94,7 +109,7 @@ fun ProfileEditScreen(
                     Box {
                         CircleImage(
                             modifier = Modifier.size(120.dp),
-                            imageUrl = profileState.profile.imageUrl,
+                            image = uiState.imageBytes ?: profileState.profile.imageUrl,
                             onClick = { }
                         )
 
@@ -110,7 +125,13 @@ fun ProfileEditScreen(
                                     shape = RoundedCornerShape(percent = 25)
                                 )
                                 .size(40.dp)
-                                .clickable {}
+                                .clickable {
+                                    pickImage.launch(
+                                        PickVisualMediaRequest(
+                                            ActivityResultContracts.PickVisualMedia.ImageOnly
+                                        )
+                                    )
+                                }
                                 .padding(8.dp),
                             imageVector = Icons.Rounded.Edit,
                             contentDescription = null,
@@ -139,9 +160,7 @@ fun ProfileEditScreen(
                             defaultElevation = 0.dp
                         ),
                         shape = MaterialTheme.shapes.medium,
-                        onClick = {
-                            onEvent(ProfileEditEvent.UpdateProfile)
-                        }
+                        onClick = { onEvent(ProfileEditEvent.UpdateProfile) }
                     ) {
                         Text(
                             text = stringResource(id = R.string.profile_update_button_hint),

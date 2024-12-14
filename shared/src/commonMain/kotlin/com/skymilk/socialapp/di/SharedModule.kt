@@ -22,6 +22,7 @@ import com.skymilk.socialapp.domain.usecase.follows.FollowOrUnFollow
 import com.skymilk.socialapp.domain.usecase.follows.FollowsUseCase
 import com.skymilk.socialapp.domain.usecase.follows.GetFollowableUsers
 import com.skymilk.socialapp.domain.usecase.follows.GetMyFollows
+import com.skymilk.socialapp.domain.usecase.post.CreatePost
 import com.skymilk.socialapp.domain.usecase.post.GetFeedPosts
 import com.skymilk.socialapp.domain.usecase.post.GetPost
 import com.skymilk.socialapp.domain.usecase.post.GetUserPosts
@@ -31,9 +32,9 @@ import com.skymilk.socialapp.domain.usecase.postComments.AddPostComment
 import com.skymilk.socialapp.domain.usecase.postComments.GetPostComments
 import com.skymilk.socialapp.domain.usecase.postComments.PostCommentsUseCase
 import com.skymilk.socialapp.domain.usecase.postComments.RemovePostComment
-import com.skymilk.socialapp.domain.usecase.profile.UpdateProfile
 import com.skymilk.socialapp.domain.usecase.profile.GetProfile
 import com.skymilk.socialapp.domain.usecase.profile.ProfileUseCase
+import com.skymilk.socialapp.domain.usecase.profile.UpdateProfile
 import com.skymilk.socialapp.util.provideDispatcher
 import org.koin.dsl.module
 
@@ -71,7 +72,8 @@ private val postModule = module {
             GetPost(get()),
             GetFeedPosts(get()),
             GetUserPosts(get()),
-            LikeOrDislikePost(get())
+            LikeOrDislikePost(get()),
+            CreatePost(get())
         )
     }
 }

@@ -11,7 +11,7 @@ fun ViewModel.sendEvent(event: Any) {
     viewModelScope.launch {
         when (event) {
             is MessageEvent -> sendMessageEvent(event)
-            is PostEvent -> sendPostEvent(event)
+            is DataEvent -> sendPostEvent(event)
         }
     }
 }

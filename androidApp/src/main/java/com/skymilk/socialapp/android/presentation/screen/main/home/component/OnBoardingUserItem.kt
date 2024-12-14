@@ -49,7 +49,7 @@ fun OnBoardingUserItem(
         ) {
             CircleImage(
                 modifier = Modifier.size(50.dp),
-                imageUrl = followsUser.imageUrl,
+                image = followsUser.imageUrl,
                 onClick = { onNavigateToProfile(followsUser) }
             )
 

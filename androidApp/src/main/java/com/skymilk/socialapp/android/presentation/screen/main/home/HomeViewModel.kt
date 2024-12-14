@@ -4,15 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.insertHeaderItem
 import androidx.paging.map
 import com.skymilk.socialapp.android.presentation.screen.main.home.state.OnBoardingState
 import com.skymilk.socialapp.android.presentation.util.EventBus.postEvents
-import com.skymilk.socialapp.android.presentation.util.PostEvent
+import com.skymilk.socialapp.android.presentation.util.DataEvent
+import com.skymilk.socialapp.data.util.Result
 import com.skymilk.socialapp.domain.model.FollowsUser
 import com.skymilk.socialapp.domain.model.Post
+import com.skymilk.socialapp.domain.model.Profile
 import com.skymilk.socialapp.domain.usecase.follows.FollowsUseCase
 import com.skymilk.socialapp.domain.usecase.post.PostUseCase
-import com.skymilk.socialapp.data.util.Result
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -35,13 +37,19 @@ class HomeViewModel(
 
     init {
         loadData()
-        onPostEvent()
+
+        onUpdatedEvent()
     }
 
-    fun onPostEvent() {
+    //다른 화면에서 업데이트된 정보 반영
+    fun onUpdatedEvent() {
         postEvents.onEach {
-            when(it) {
-                is PostEvent.UpdatedPost -> updatePost(it.post)
+            when (it) {
+                is DataEvent.CreatedPost -> _feedPosts.value.insertHeaderItem(item = it.post)
+
+                is DataEvent.UpdatedPost -> updatePost(it.post)
+
+                is DataEvent.UpdatedProfile -> updateProfile(it.profile)
             }
         }.launchIn(viewModelScope)
     }
@@ -146,6 +154,17 @@ class HomeViewModel(
     private fun updatePost(post: Post) {
         _feedPosts.value = _feedPosts.value.map {
             if (it.postId == post.postId) post
+            else it
+        }
+    }
+
+    //메인 화면 게시글에 수정된 내 정보와 일치한 것을 찾아 갱신한다
+    private fun updateProfile(profile: Profile) {
+        _feedPosts.value = _feedPosts.value.map {
+            if (it.userId == profile.id) it.copy(
+                userName = profile.name,
+                userImageUrl = profile.imageUrl
+            )
             else it
         }
     }
