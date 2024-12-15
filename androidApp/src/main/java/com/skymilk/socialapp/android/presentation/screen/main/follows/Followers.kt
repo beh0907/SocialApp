@@ -1,6 +1,7 @@
 package com.skymilk.socialapp.android.presentation.screen.main.follows
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -12,6 +13,23 @@ import org.koin.core.parameter.parametersOf
 @Composable
 fun Followers(
     navigator: DestinationsNavigator,
+    userId: Long,
+) {
+    val followsViewModel: FollowsViewModel = koinViewModel(parameters = { parametersOf(userId, 1) })
+    val followsState = followsViewModel.follows.collectAsLazyPagingItems()
+
+    FollowsScreen(
+        follows = followsState,
+        onEvent = followsViewModel::onEvent,
+        onNavigateToProfile = {
+            navigator.navigate(ProfileDestination(it))
+        }
+    )
+}
+
+@Composable
+fun Followers2(
+    navigator: NavHostController,
     userId: Long,
 ) {
     val followsViewModel: FollowsViewModel = koinViewModel(parameters = { parametersOf(userId, 1) })

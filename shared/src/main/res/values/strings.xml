@@ -33,4 +33,5 @@
     <string name="post_caption_hint">게시글 내용 입력</string>
     <string name="select_post_image_label">이미지 선택</string>
     <string name="create_post_button_label">게시글 생성</string>
+    <string name="post_create_destination_title">Post Create</string>
 </resources>

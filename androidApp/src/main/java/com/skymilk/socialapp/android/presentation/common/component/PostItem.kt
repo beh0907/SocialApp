@@ -55,7 +55,7 @@ fun PostItem(
         //헤더 유저 정보
         PostHeaderSection(
             name = post.userName,
-            imageUrl = post.imageUrl,
+            imageUrl = post.userImageUrl,
             date = post.createdAt,
             onProfileClick = { onNavigateToProfile(post.userId) }
         )
@@ -102,7 +102,7 @@ fun PostItem(
 fun PostHeaderSection(
     modifier: Modifier = Modifier,
     name: String,
-    imageUrl: String,
+    imageUrl: String?,
     date: String,
     onProfileClick: () -> Unit
 ) {
@@ -132,7 +132,7 @@ fun PostHeaderSection(
             Modifier
                 .size(4.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .background(MaterialTheme.colorScheme.onSurface)
         )
 
         //날짜
@@ -140,7 +140,7 @@ fun PostHeaderSection(
             modifier = Modifier.weight(1f),
             text = date,
             style = MaterialTheme.typography.bodySmall.copy(
-                color = MaterialTheme.colorScheme.surfaceVariant,
+                color = MaterialTheme.colorScheme.onSurface,
                 textAlign = TextAlign.Start
             ),
         )
@@ -152,7 +152,7 @@ fun PostHeaderSection(
             Icon(
                 painter = painterResource(R.drawable.round_more_horiz_24),
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.surfaceVariant
+                tint = MaterialTheme.colorScheme.onSurface
             )
         }
 

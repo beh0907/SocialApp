@@ -5,10 +5,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.insertHeaderItem
+import androidx.paging.insertSeparators
 import androidx.paging.map
 import com.skymilk.socialapp.android.presentation.screen.main.home.state.OnBoardingState
-import com.skymilk.socialapp.android.presentation.util.EventBus.postEvents
 import com.skymilk.socialapp.android.presentation.util.DataEvent
+import com.skymilk.socialapp.android.presentation.util.EventBus.postEvents
 import com.skymilk.socialapp.data.util.Result
 import com.skymilk.socialapp.domain.model.FollowsUser
 import com.skymilk.socialapp.domain.model.Post
@@ -45,7 +46,9 @@ class HomeViewModel(
     fun onUpdatedEvent() {
         postEvents.onEach {
             when (it) {
-                is DataEvent.CreatedPost -> _feedPosts.value.insertHeaderItem(item = it.post)
+                is DataEvent.CreatedPost -> {
+                    _feedPosts.value.insertHeaderItem(item = it.post)
+                }
 
                 is DataEvent.UpdatedPost -> updatePost(it.post)
 

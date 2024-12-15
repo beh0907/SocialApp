@@ -9,12 +9,12 @@ import com.skymilk.socialapp.data.model.PostLikesParams
 import com.skymilk.socialapp.data.paging.FeedPagingSource
 import com.skymilk.socialapp.data.paging.UserPostsPagingSource
 import com.skymilk.socialapp.data.remote.PostApiService
-import com.skymilk.socialapp.util.Constants
-import com.skymilk.socialapp.util.DispatcherProvider
 import com.skymilk.socialapp.data.util.Result
 import com.skymilk.socialapp.data.util.safeApiRequest
 import com.skymilk.socialapp.domain.model.Post
 import com.skymilk.socialapp.domain.repository.PostRepository
+import com.skymilk.socialapp.util.Constants
+import com.skymilk.socialapp.util.DispatcherProvider
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -98,7 +98,7 @@ internal class PostRepositoryImpl(
 
             val postData = Json.encodeToString(
                 serializer = CreatePostParams.serializer(),
-                value = CreatePostParams(text = text, userId = currentUserData.id)
+                value = CreatePostParams(caption = text, userId = currentUserData.id)
             )
 
             val response = postApiService.createPost(

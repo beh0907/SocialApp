@@ -32,7 +32,7 @@ internal val LightColors = lightColorScheme(
     onBackground = Black87,
     surface = White76,
     onSurface = Black87,
-    surfaceVariant = LightGray
+    surfaceVariant = White87
 )
 
 internal val DarkColors = darkColorScheme(
@@ -42,5 +42,5 @@ internal val DarkColors = darkColorScheme(
     onBackground = White87,
     surface = Black24,
     onSurface = White87,
-    surfaceVariant = DarkGray
+    surfaceVariant = Black54
 )

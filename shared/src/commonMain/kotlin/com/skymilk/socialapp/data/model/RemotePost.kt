@@ -7,31 +7,25 @@ import kotlinx.serialization.Serializable
 
 
 
-//게시물 작성
-@Serializable
-internal data class CreatePostParams(
-    val text: String,
-    val userId: Long
-)
 
 @Serializable
 data class RemotePost(
-    val id: Long,
-    val text: String,
+    val postId: Long,
+    val caption: String,
     val imageUrl: String,
     val createdAt: String,
     val likesCount: Int,
     val commentsCount: Int,
     val userId: Long,
     val userName: String,
-    val userImageUrl: String,
+    val userImageUrl: String?,
     val isLiked: Boolean = false,
     val isOwnPost: Boolean = false,
 ) {
     fun toPost(): Post {
         return Post(
-            postId = id,
-            caption = text,
+            postId = postId,
+            caption = caption,
             imageUrl = imageUrl,
             createdAt = DateFormatter.parseDate(createdAt),
             likesCount = likesCount,
@@ -69,4 +63,12 @@ internal data class PostResponseData(
     val success: Boolean,
     val post: RemotePost? = null,
     val message: String? = null
+)
+
+
+//게시물 작성
+@Serializable
+internal data class CreatePostParams(
+    val caption: String,
+    val userId: Long
 )

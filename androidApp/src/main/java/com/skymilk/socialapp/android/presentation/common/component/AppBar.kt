@@ -20,6 +20,7 @@ import com.skymilk.socialapp.R
 import com.skymilk.socialapp.android.presentation.screen.destinations.FollowersDestination
 import com.skymilk.socialapp.android.presentation.screen.destinations.FollowingDestination
 import com.skymilk.socialapp.android.presentation.screen.destinations.HomeDestination
+import com.skymilk.socialapp.android.presentation.screen.destinations.PostCreateDestination
 import com.skymilk.socialapp.android.presentation.screen.destinations.PostDetailDestination
 import com.skymilk.socialapp.android.presentation.screen.destinations.ProfileDestination
 import com.skymilk.socialapp.android.presentation.screen.destinations.ProfileEditDestination
@@ -81,6 +82,7 @@ private fun getAppBarTitle(currentDestinationRoute: String?): Int {
         SignUpDestination.route -> R.string.signup_destination_title
         HomeDestination.route -> R.string.home_destination_title
         PostDetailDestination.route -> R.string.post_detail_destination_title
+        PostCreateDestination.route -> R.string.post_create_destination_title
         ProfileDestination.route -> R.string.profile_destination_title
         ProfileEditDestination.route -> R.string.profile_edit_destination_title
         FollowersDestination.route -> R.string.followers_title

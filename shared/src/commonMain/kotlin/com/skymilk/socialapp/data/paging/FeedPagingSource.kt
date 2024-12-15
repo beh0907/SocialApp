@@ -43,11 +43,14 @@ internal class FeedPagingSource(
                         nextKey = if (posts.isEmpty()) null else currentPage + 1
                     )
                 }
+
                 else -> LoadResult.Error(Exception(Constants.UNEXPECTED_ERROR))
             }
         } catch (ioException: IOException) {
+            println("error1")
             LoadResult.Error(Exception(Constants.NO_INTERNET_ERROR_MESSAGE))
         } catch (exception: Exception) {
+            println("error2 : " + exception.message.toString())
             LoadResult.Error(exception)
         }
     }

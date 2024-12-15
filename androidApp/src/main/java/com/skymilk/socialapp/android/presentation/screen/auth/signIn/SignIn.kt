@@ -3,6 +3,7 @@ package com.skymilk.socialapp.android.presentation.screen.auth.signIn
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavHostController
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.skymilk.socialapp.android.presentation.screen.destinations.HomeDestination
@@ -14,6 +15,34 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun SignIn(
     navigator: DestinationsNavigator
+) {
+    val viewModel: SignInViewModel = koinViewModel()
+    val authState by viewModel.authState.collectAsStateWithLifecycle()
+
+    SignInScreen(
+        uiState = viewModel.uiState,
+        authState = authState,
+        onEvent = viewModel::onEvent,
+        onNavigateToSignUp = {
+            navigator.navigate(SignUpDestination) {
+                popUpTo(SignInDestination) {
+                    inclusive = true
+                }
+            }
+        },
+        onNavigateToHome = {
+            navigator.navigate(HomeDestination) {
+                popUpTo(SignInDestination) {
+                    inclusive = true
+                }
+            }
+        }
+    )
+}
+
+@Composable
+fun SignIn2(
+    navigator: NavHostController,
 ) {
     val viewModel: SignInViewModel = koinViewModel()
     val authState by viewModel.authState.collectAsStateWithLifecycle()

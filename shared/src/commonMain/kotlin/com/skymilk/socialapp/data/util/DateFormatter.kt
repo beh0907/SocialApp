@@ -10,7 +10,7 @@ object DateFormatter {
             "${
                 parsedDateTime.month.name.lowercase()
                     .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
-            } ${parsedDateTime.dayOfMonth}, ${parsedDateTime.time.hour}:${parsedDateTime.time.minute}"
+            } ${parsedDateTime.dayOfMonth}, ${parsedDateTime.time.hour}:${parsedDateTime.time.minute.toString().padStart(2, '0')}"
         } catch (e: IllegalArgumentException) {
             dateTime
         }

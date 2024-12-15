@@ -32,6 +32,10 @@ internal class PostApiService : KtorApi() {
             parameter(key = Constants.PAGE_SIZE_QUERY_PARAMETER, value = pageSize)
             setToken(token = token)
         }
+
+        println(httpResponse)
+        println(httpResponse.status)
+
         return PostsResponse(code = httpResponse.status, data = httpResponse.body())
     }
 

@@ -74,7 +74,7 @@ fun PostDetailScreen(
             Column(modifier = modifier.fillMaxSize()) {
                 LazyColumn(
                     modifier = modifier
-                        .fillMaxSize()
+                        .weight(1f)
                         .background(MaterialTheme.colorScheme.surface)
                 ) {
                     item(key = "post") {
@@ -88,7 +88,7 @@ fun PostDetailScreen(
                     }
 
                     item(key = "commentHeaderSection") {
-                        HeaderSection()
+                        CommentHeaderSection()
                     }
 
                     postCommentsList(
@@ -123,7 +123,7 @@ fun PostDetailScreen(
 
 
 @Composable
-fun HeaderSection(
+fun CommentHeaderSection(
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -175,7 +175,7 @@ fun BottomSection(
             ) {
                 BasicTextField(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
                         .align(Alignment.CenterStart),
                     value = comment,
                     onValueChange = onCommentChange,

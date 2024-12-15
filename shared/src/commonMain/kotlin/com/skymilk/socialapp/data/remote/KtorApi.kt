@@ -2,6 +2,7 @@ package com.skymilk.socialapp.data.remote
 
 import com.skymilk.socialapp.util.Constants
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.headers
@@ -19,6 +20,18 @@ internal abstract class KtorApi {
                 ignoreUnknownKeys = true // 일치하지 않는 키 무시
                 useAlternativeNames = false // 주석 사용X
             })
+        }
+
+        //타임 아웃 설정
+        install(HttpTimeout) {
+            // 연결 타임아웃 (밀리초 단위)
+            connectTimeoutMillis = 5000 // 5초
+
+            // 요청 타임아웃 (밀리초 단위)
+            requestTimeoutMillis = 10000 // 10초
+
+            // 소켓 타임아웃 (밀리초 단위)
+            socketTimeoutMillis = 10000 // 10초
         }
     }
 
