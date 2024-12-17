@@ -10,7 +10,7 @@
     <string name="signin_destination_title">SignIn</string>
     <string name="signup_destination_title">SignUp</string>
     <string name="home_destination_title">Social App</string>
-    <string name="no_destination_title"> </string>
+    <string name="no_destination_title">알 수 없는 화면</string>
     <string name="post_detail_destination_title">Post Detail</string>
     <string name="comments_header_label">Comments</string>
     <string name="add_comment_button_label">댓글 추가</string>
@@ -27,6 +27,7 @@
     <string name="retry_button_text">다시 시도</string>
     <string name="profile_edit_destination_title">Profile Edit</string>
     <string name="unfollow_button_text">UnFollow</string>
+    <string name="edit_button_text">수정</string>
     <string name="comment_option_title">댓글 옵션</string>
     <string name="delete_comment_option">댓글 삭제</string>
     <string name="navigate_profile_option">프로필 이동</string>

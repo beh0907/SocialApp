@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -39,6 +38,7 @@ import com.skymilk.socialapp.android.presentation.screen.main.postCreate.state.P
 import com.skymilk.socialapp.android.ui.theme.ButtonHeight
 import com.skymilk.socialapp.android.ui.theme.ExtraLargeSpacing
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
+import com.skymilk.socialapp.android.ui.theme.White
 
 @Composable
 fun PostCreateScreen(
@@ -105,24 +105,20 @@ fun PostCreateScreen(
                         contentScale = ContentScale.Crop
                     )
                 } ?: run {
-                    IconButton(
-                        onClick = {
-                            pickImage.launch(
-                                PickVisualMediaRequest(
-                                    ActivityResultContracts.PickVisualMedia.ImageOnly
-                                )
-                            )
-                        },
+                    Icon(
                         modifier = modifier
-                            .size(32.dp)
-                    ) {
-                        Icon(
-                            imageVector = ImageVector.vectorResource(R.drawable.add_image_icon),
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary,
-                            modifier = modifier.fillMaxSize()
-                        )
-                    }
+                            .size(36.dp)
+                            .clickable {
+                                pickImage.launch(
+                                    PickVisualMediaRequest(
+                                        ActivityResultContracts.PickVisualMedia.ImageOnly
+                                    )
+                                )
+                            },
+                        imageVector = ImageVector.vectorResource(R.drawable.add_image_icon),
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                    )
                 }
             }
 
@@ -136,7 +132,10 @@ fun PostCreateScreen(
                 ),
                 shape = MaterialTheme.shapes.medium
             ) {
-                Text(text = stringResource(id = R.string.create_post_button_label))
+                Text(
+                    text = stringResource(id = R.string.create_post_button_label),
+                    color = White
+                )
             }
         }
     }

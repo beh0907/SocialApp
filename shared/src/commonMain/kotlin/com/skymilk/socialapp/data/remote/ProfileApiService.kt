@@ -19,8 +19,8 @@ internal class ProfileApiService : KtorApi() {
         currentUserId: Long
     ): ProfileResponse {
         val response = client.get {
-            endPoint(path = "profile/$profileId")
-            parameter(key = Constants.USER_ID_PARAMETER, value = currentUserId)
+            endPoint(path = "/profile/$profileId")
+            parameter(key = Constants.CURRENT_USER_ID_PARAMETER, value = currentUserId)
             setToken(token = token)
         }
 

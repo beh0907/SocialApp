@@ -13,7 +13,7 @@ object EventBus {
 
     private val _dataEvents =
         MutableSharedFlow<DataEvent>(extraBufferCapacity = Constants.EVENT_BUS_BUFFER_CAPACITY)
-    val postEvents = _dataEvents.asSharedFlow()
+    val dataEvents = _dataEvents.asSharedFlow()
 
     suspend fun sendMessageEvent(event: MessageEvent) {
         _messageEvents.emit(event)

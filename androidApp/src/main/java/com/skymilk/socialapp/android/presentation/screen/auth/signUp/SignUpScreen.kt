@@ -38,6 +38,7 @@ import com.skymilk.socialapp.android.ui.theme.ButtonHeight
 import com.skymilk.socialapp.android.ui.theme.ExtraLargeSpacing
 import com.skymilk.socialapp.android.ui.theme.LargeSpacing
 import com.skymilk.socialapp.android.ui.theme.MediumSpacing
+import com.skymilk.socialapp.android.ui.theme.White
 
 @Composable
 fun SignUpScreen(
@@ -120,7 +121,8 @@ fun SignUpScreen(
                 Text(
                     text = stringResource(id = R.string.signup_button_hint),
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = White
                 )
             }
 

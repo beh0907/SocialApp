@@ -65,8 +65,7 @@ fun OnBoardingUserItem(
             Spacer(Modifier.height(SmallSpacing))
 
             FollowsButton(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 text = if (followsUser.isFollowing) R.string.unfollow_button_text else R.string.follow_button_text,
                 onFollowClick = {
                     onFollowClick(followsUser)

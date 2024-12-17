@@ -23,8 +23,11 @@ internal class AuthRepositoryImpl(
         password: String
     ): Result<AuthResultData> {
         return safeApiRequest(dispatcher) {
+            println(1)
             val request = SignUpParams(name, email, password)
+            println("2 $request")
             val authResponse = authApiService.signUp(request)
+            println(3)
 
             if (authResponse.data == null) {
                 Result.Error(message = authResponse.message)

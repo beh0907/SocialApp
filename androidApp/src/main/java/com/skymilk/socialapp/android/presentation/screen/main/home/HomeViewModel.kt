@@ -5,11 +5,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.insertHeaderItem
-import androidx.paging.insertSeparators
 import androidx.paging.map
 import com.skymilk.socialapp.android.presentation.screen.main.home.state.OnBoardingState
 import com.skymilk.socialapp.android.presentation.util.DataEvent
-import com.skymilk.socialapp.android.presentation.util.EventBus.postEvents
+import com.skymilk.socialapp.android.presentation.util.EventBus.dataEvents
+import com.skymilk.socialapp.android.presentation.util.MessageEvent
+import com.skymilk.socialapp.android.presentation.util.sendEvent
 import com.skymilk.socialapp.data.util.Result
 import com.skymilk.socialapp.domain.model.FollowsUser
 import com.skymilk.socialapp.domain.model.Post
@@ -44,7 +45,7 @@ class HomeViewModel(
 
     //다른 화면에서 업데이트된 정보 반영
     fun onUpdatedEvent() {
-        postEvents.onEach {
+        dataEvents.onEach {
             when (it) {
                 is DataEvent.CreatedPost -> {
                     _feedPosts.value.insertHeaderItem(item = it.post)
@@ -126,7 +127,9 @@ class HomeViewModel(
                     }
                 }
 
-                is Result.Error -> {}
+                is Result.Error -> {
+                    sendEvent(MessageEvent.Toast(result.message ?: "팔로우 처리에 실패하였습니다."))
+                }
             }
         }
     }
@@ -148,7 +151,8 @@ class HomeViewModel(
                     updatePost(updatedPost)
                 }
 
-                is Result.Error -> {}
+                is Result.Error -> {
+                    sendEvent(MessageEvent.Toast(result.message ?: "좋아요 처리에 실패하였습니다."))}
             }
         }
     }

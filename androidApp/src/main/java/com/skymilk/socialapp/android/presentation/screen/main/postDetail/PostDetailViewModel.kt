@@ -12,7 +12,7 @@ import androidx.paging.insertHeaderItem
 import androidx.paging.map
 import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.PostDetailState
 import com.skymilk.socialapp.android.presentation.screen.main.postDetail.state.PostUiState
-import com.skymilk.socialapp.android.presentation.util.EventBus.postEvents
+import com.skymilk.socialapp.android.presentation.util.EventBus.dataEvents
 import com.skymilk.socialapp.android.presentation.util.MessageEvent
 import com.skymilk.socialapp.android.presentation.util.DataEvent
 import com.skymilk.socialapp.android.presentation.util.sendEvent
@@ -55,7 +55,7 @@ class PostDetailViewModel(
 
     //다른 화면에서 업데이트된 정보 반영
     fun onUpdatedEvent() {
-        postEvents.onEach {
+        dataEvents.onEach {
             when (it) {
                 is DataEvent.CreatedPost -> Unit
 

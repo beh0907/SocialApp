@@ -48,9 +48,6 @@ dependencies {
     implementation(libs.androidx.ui.android)
     debugImplementation(libs.compose.ui.tooling)
 
-    implementation (libs.compose.destinations.core)
-    ksp (libs.compose.destinations.ksp)
-
     // Material Icon Extended
     implementation(libs.androidx.material.icons.extended)
 
@@ -68,6 +65,7 @@ dependencies {
     implementation(libs.androidx.paging.runtime)
     implementation(libs.androidx.paging.compose)
 
+    //navigation
     implementation(libs.androidx.navigation.compose)
 
     implementation(libs.splash.screen)

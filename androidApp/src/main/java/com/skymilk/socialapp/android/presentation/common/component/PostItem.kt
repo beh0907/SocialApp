@@ -49,7 +49,7 @@ fun PostItem(
         modifier = modifier
             .fillMaxWidth()
             .background(color = MaterialTheme.colorScheme.surface)
-            .clickable { onClickPost(post) }
+            .clickable(enabled =  !isDetailScreen) { onClickPost(post) }
             .padding(bottom = ExtraLargeSpacing)
     ) {
         //헤더 유저 정보

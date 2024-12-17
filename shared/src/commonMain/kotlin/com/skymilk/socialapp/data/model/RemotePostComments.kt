@@ -14,7 +14,7 @@ data class RemotePostComment(
     val userId: Long,
     val userName: String,
     val userImageUrl: String?,
-    val createAt: String,
+    val createdAt: String,
 ) {
     fun toPostComment(isOwner: Boolean): PostComment {
         return PostComment(
@@ -24,7 +24,7 @@ data class RemotePostComment(
             userId = userId,
             userName = userName,
             userImageUrl = userImageUrl,
-            createAt = DateFormatter.parseDate(createAt),
+            createAt = DateFormatter.parseDate(createdAt),
             isOwner = isOwner
         )
     }

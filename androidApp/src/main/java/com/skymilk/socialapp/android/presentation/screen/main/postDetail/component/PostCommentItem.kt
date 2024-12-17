@@ -59,14 +59,14 @@ fun CommentItem(
                         .weight(1f),
                     text = comment.createAt,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.surfaceVariant
+                    color = MaterialTheme.colorScheme.onSurface
                 )
 
                 Icon(
                     modifier = Modifier.clickable { onCommentMoreClick },
                     painter = painterResource(id = R.drawable.round_more_horiz_24),
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.surfaceVariant
+                    tint = MaterialTheme.colorScheme.onSurface
                 )
             }
 

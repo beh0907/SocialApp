@@ -74,7 +74,7 @@ fun ProfileScreen(
                         profile = profileState.profile,
                         onFollowersClick = onNavigateToFollowers,
                         onFollowingClick = onNavigateToFollowing,
-                        onFollowClick = {
+                        onButtonClick = {
                             //팔로우 버튼 클릭
                             if (profileState.profile.isOwnProfile) onNavigateToProfileEdit() //내 정보일땐 정보 수정 화면으로 이동
                             else onEvent(ProfileEvent.FollowUser(profileState.profile)) // 다른 회원이라면 팔로우 처리
@@ -101,10 +101,9 @@ fun HeaderSection(
     modifier: Modifier = Modifier,
     profile: Profile,
     isCurrentUser: Boolean = false,
-    isFollowing: Boolean = false,
     onFollowersClick: () -> Unit,
     onFollowingClick: () -> Unit,
-    onFollowClick: () -> Unit,
+    onButtonClick: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -159,9 +158,10 @@ fun HeaderSection(
 
             FollowsButton(
                 modifier = Modifier.width(100.dp),
-                text = if (isFollowing) R.string.unfollow_button_text else R.string.follow_button_text,
-                onFollowClick = onFollowClick,
-                isOutline = isCurrentUser || isFollowing
+                text = if (profile.isOwnProfile) R.string.edit_button_text
+                else if (profile.isFollowing) R.string.unfollow_button_text else R.string.follow_button_text,
+                onFollowClick = onButtonClick,
+                isOutline = isCurrentUser || profile.isFollowing
             )
         }
     }

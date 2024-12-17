@@ -5,35 +5,12 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.skymilk.socialapp.android.presentation.navigation.routes.Routes
 import org.koin.androidx.compose.koinViewModel
 import org.koin.core.parameter.parametersOf
 
-@Destination
 @Composable
 fun PostDetail(
-    navigator: DestinationsNavigator,
-    postId: Long
-) {
-    val postDetailViewModel: PostDetailViewModel =
-        koinViewModel(parameters = { parametersOf(postId) })
-
-    val postState by postDetailViewModel.postState.collectAsStateWithLifecycle()
-    val postComments = postDetailViewModel.postComments.collectAsLazyPagingItems()
-    val postDetailUiState = postDetailViewModel.postDetailUiState
-
-    PostDetailScreen(
-        postDetailUiState = postDetailUiState,
-        postDetailState = postState,
-        postComments = postComments,
-        onEvent = postDetailViewModel::onEvent,
-        onNavigateToProfile = { },
-    )
-}
-
-@Composable
-fun PostDetail2(
     navigator: NavHostController,
     postId: Long
 ) {
@@ -49,6 +26,8 @@ fun PostDetail2(
         postDetailState = postState,
         postComments = postComments,
         onEvent = postDetailViewModel::onEvent,
-        onNavigateToProfile = { },
+        onNavigateToProfile = {
+            navigator.navigate(Routes.ProfileScreen(it))
+        },
     )
 }

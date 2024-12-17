@@ -3,7 +3,7 @@ package com.skymilk.socialapp.util
 object Constants {
 
     //API 서버 URL
-    const val BASE_URL = "http://192.168.0.10:8888/"
+    const val BASE_URL = "http://inhyeop.iptime.org:88/"
 
     //DataStore 파일명
     const val PREFERENCE_FILE_NAME = "user_settings.preferences_pb"

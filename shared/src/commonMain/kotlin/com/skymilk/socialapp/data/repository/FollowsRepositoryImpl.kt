@@ -65,11 +65,16 @@ internal class FollowsRepositoryImpl(
         shouldFollow: Boolean
     ): Result<Boolean> {
         return safeApiRequest(dispatcher) {
+            println("1")
             //팔로우 파라미터 생성 후 shouldFollow에 따라 처리
             val userData = userPreferences.getUserData()
+            println("2 - $userData")
             val params = FollowsParams(userData.id, followedUserId)
+            println("3 - $params")
+
             val response = if (shouldFollow) followApiService.followUser(userData.token, params)
             else followApiService.unFollowUser(userData.token, params)
+            println("4 - $response")
 
             //코드 상태에 따라 리턴
             when (response.code) {

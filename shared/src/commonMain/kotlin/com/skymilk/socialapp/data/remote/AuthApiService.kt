@@ -9,13 +9,23 @@ import io.ktor.client.request.setBody
 
 internal class AuthApiService: KtorApi() {
 
-    suspend fun signUp(params: SignUpParams): AuthResponse = client.post {
-        endPoint(path = "signUp")
-        setBody(params)
-    }.body()
+    suspend fun signUp(params: SignUpParams): AuthResponse  {
+        val response = client.post {
+            endPoint(path = "auth/signUp")
+            setBody(params)
+        }
+        println()
 
-    suspend fun signIn(params: SignInParams): AuthResponse = client.post {
-        endPoint(path = "signIn")
-        setBody(params)
-    }.body()
+        return response.body()
+    }
+
+    suspend fun signIn(params: SignInParams): AuthResponse {
+        println("params : $params")
+        val response = client.post {
+            endPoint(path = "auth/signIn")
+            setBody(params)
+        }
+
+        return response.body()
+    }
 }

@@ -10,43 +10,46 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.utils.currentDestinationAsState
 import com.skymilk.socialapp.android.MainAuthState
 import com.skymilk.socialapp.android.presentation.common.component.AppBar
 import com.skymilk.socialapp.android.presentation.navigation.routes.Routes
-import com.skymilk.socialapp.android.presentation.screen.NavGraphs
-import com.skymilk.socialapp.android.presentation.screen.auth.signIn.SignIn2
-import com.skymilk.socialapp.android.presentation.screen.auth.signUp.SignUp2
-import com.skymilk.socialapp.android.presentation.screen.destinations.HomeDestination
-import com.skymilk.socialapp.android.presentation.screen.destinations.PostCreateDestination
-import com.skymilk.socialapp.android.presentation.screen.destinations.SignInDestination
-import com.skymilk.socialapp.android.presentation.screen.main.follows.Followers2
-import com.skymilk.socialapp.android.presentation.screen.main.follows.Following2
-import com.skymilk.socialapp.android.presentation.screen.main.home.Home2
-import com.skymilk.socialapp.android.presentation.screen.main.postCreate.PostCreate2
-import com.skymilk.socialapp.android.presentation.screen.main.postDetail.PostDetail2
-import com.skymilk.socialapp.android.presentation.screen.main.profile.Profile2
-import com.skymilk.socialapp.android.presentation.screen.main.profileEdit.ProfileEdit2
+import com.skymilk.socialapp.android.presentation.screen.auth.signIn.SignIn
+import com.skymilk.socialapp.android.presentation.screen.auth.signUp.SignUp
+import com.skymilk.socialapp.android.presentation.screen.main.follows.Followers
+import com.skymilk.socialapp.android.presentation.screen.main.follows.Following
+import com.skymilk.socialapp.android.presentation.screen.main.home.Home
+import com.skymilk.socialapp.android.presentation.screen.main.postCreate.PostCreate
+import com.skymilk.socialapp.android.presentation.screen.main.postDetail.PostDetail
+import com.skymilk.socialapp.android.presentation.screen.main.profile.Profile
+import com.skymilk.socialapp.android.presentation.screen.main.profileEdit.ProfileEdit
 import com.skymilk.socialapp.android.ui.theme.White
 
 @Composable
 fun SocialApp(mainAuthState: MainAuthState) {
-    val navHostController = rememberNavController()
+    val navController = rememberNavController()
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    val isVisibleFloating = remember(navBackStackEntry) {
+        currentRoute == Routes.HomeScreen::class.qualifiedName
+    }
 
     when (mainAuthState) {
         is MainAuthState.Success -> {
             //토큰이 제거 되었다면 로그인 화면으로 이동
             LaunchedEffect(Unit) {
                 if (mainAuthState.currentUser.token.isBlank()) {
-                    navHostController.navigate(SignInDestination.route) {
-                        popUpTo(HomeDestination.route) {
+                    navController.navigate(Routes.SignInScreen) {
+                        popUpTo(Routes.HomeScreen) {
                             inclusive = true
                         }
                     }
@@ -58,65 +61,15 @@ fun SocialApp(mainAuthState: MainAuthState) {
     }
 
     Scaffold(
-        topBar = { AppBar(navHostController = navHostController) },
+        topBar = { AppBar(
+            navController = navController
+        ) },
         floatingActionButton = {
-            AnimatedVisibility(
-                navHostController.currentDestinationAsState().value == HomeDestination
-            ) {
+            AnimatedVisibility(isVisibleFloating) {
                 FloatingActionButton(
                     containerColor = MaterialTheme.colorScheme.primary,
                     onClick = {
-                        navHostController.navigate(PostCreateDestination.route)
-                    }
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Add,
-                        contentDescription = null,
-                        tint = White
-                    )
-                }
-            }
-        }
-    ) { innerPadding ->
-        DestinationsNavHost(
-            modifier = Modifier.padding(innerPadding),
-            navGraph = NavGraphs.root,
-            navController = navHostController
-        )
-    }
-}
-
-@Composable
-fun SocialApp2(mainAuthState: MainAuthState) {
-    val navHostController = rememberNavController()
-
-    when (mainAuthState) {
-        is MainAuthState.Success -> {
-            //토큰이 제거 되었다면 로그인 화면으로 이동
-            LaunchedEffect(Unit) {
-                if (mainAuthState.currentUser.token.isBlank()) {
-                    navHostController.navigate(SignInDestination.route) {
-                        popUpTo(HomeDestination.route) {
-                            inclusive = true
-                        }
-                    }
-                }
-            }
-        }
-
-        else -> Unit
-    }
-
-    Scaffold(
-        topBar = { AppBar(navHostController = navHostController) },
-        floatingActionButton = {
-            AnimatedVisibility(
-                navHostController.currentDestinationAsState().value == Routes.HomeScreen
-            ) {
-                FloatingActionButton(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    onClick = {
-                        navHostController.navigate(PostCreateDestination.route)
+                        navController.navigate(Routes.PostCreateScreen)
                     }
                 ) {
                     Icon(
@@ -131,7 +84,7 @@ fun SocialApp2(mainAuthState: MainAuthState) {
 
         NavHost(
             modifier = Modifier.padding(innerPadding),
-            navController = navHostController,
+            navController = navController,
             startDestination = Routes.MainGraph
         ) {
 
@@ -140,11 +93,11 @@ fun SocialApp2(mainAuthState: MainAuthState) {
             ) {
 
                 composable<Routes.SignInScreen> {
-                    SignIn2(navigator = navHostController)
+                    SignIn(navigator = navController)
                 }
 
                 composable<Routes.SignUpScreen> {
-                    SignUp2(navigator = navHostController)
+                    SignUp(navigator = navController)
                 }
             }
 
@@ -153,41 +106,41 @@ fun SocialApp2(mainAuthState: MainAuthState) {
             ) {
 
                 composable<Routes.HomeScreen> {
-                    Home2(navigator = navHostController)
+                    Home(navigator = navController)
                 }
 
                 composable<Routes.ProfileScreen> {
                     val args = it.toRoute<Routes.ProfileScreen>()
 
-                    Profile2(navigator = navHostController, userId = args.userId)
+                    Profile(navigator = navController, userId = args.userId)
                 }
 
                 composable<Routes.ProfileEditScreen> {
                     val args = it.toRoute<Routes.ProfileEditScreen>()
 
-                    ProfileEdit2(navigator = navHostController, userId = args.userId)
+                    ProfileEdit(navigator = navController, userId = args.userId)
                 }
 
                 composable<Routes.PostCreateScreen> {
-                    PostCreate2(navigator = navHostController)
+                    PostCreate(navigator = navController)
                 }
 
                 composable<Routes.PostDetailScreen> {
                     val args = it.toRoute<Routes.PostDetailScreen>()
 
-                    PostDetail2(navigator = navHostController, postId = args.postId)
+                    PostDetail(navigator = navController, postId = args.postId)
                 }
 
                 composable<Routes.FollowingScreen> {
                     val args = it.toRoute<Routes.FollowingScreen>()
 
-                    Following2(navigator = navHostController, userId = args.userId)
+                    Following(navigator = navController, userId = args.userId)
                 }
 
                 composable<Routes.FollowersScreen> {
                     val args = it.toRoute<Routes.FollowersScreen>()
 
-                    Followers2(navigator = navHostController, userId = args.userId)
+                    Followers(navigator = navController, userId = args.userId)
                 }
             }
 

@@ -6,18 +6,18 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class RemoteProfile(
-    val id: Long,
+    val userId: Long,
     val name: String,
     val bio: String,
-    val imageUrl: String,
-    val followersCount: Int,
-    val followingCount: Int,
-    val isOwnProfile: Boolean,
-    val isFollowing: Boolean
+    val imageUrl: String? = null,
+    val followersCount: Int = 0,
+    val followingCount: Int = 0,
+    val isFollowing: Boolean = false,
+    val isOwnProfile: Boolean = false,
 ) {
     fun toProfile(): Profile {
         return Profile(
-            id = id,
+            id = userId,
             name = name,
             bio = bio,
             imageUrl = imageUrl,

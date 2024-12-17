@@ -6,8 +6,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 internal data class FollowsParams(
-    val follower: Long,
-    val following: Long,
+    val followerId: Long,
+    val followingId: Long,
 )
 
 @Serializable
@@ -43,5 +43,5 @@ internal data class FollowOrUnFollowResponse(
 @Serializable
 internal data class FollowOrUnFollowResponseData(
     val success: Boolean,
-    val message: String? = null
+    val message: String? = null,
 )

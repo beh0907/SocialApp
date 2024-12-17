@@ -33,9 +33,6 @@ internal class PostApiService : KtorApi() {
             setToken(token = token)
         }
 
-        println(httpResponse)
-        println(httpResponse.status)
-
         return PostsResponse(code = httpResponse.status, data = httpResponse.body())
     }
 

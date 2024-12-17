@@ -62,6 +62,4 @@ internal class FollowApiService : KtorApi() {
 
         return FollowsResponse(code = response.status, data = response.body())
     }
-
-    //나의 팔로윙 목록
 }
