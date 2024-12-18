@@ -14,11 +14,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.skymilk.socialapp.android.presentation.navigation.SocialApp
-import com.skymilk.socialapp.android.presentation.util.MessageEvent
-import com.skymilk.socialapp.android.presentation.util.EventBus.messageEvents
-import com.skymilk.socialapp.android.ui.theme.SocialAppTheme
-import kotlinx.coroutines.flow.collectLatest
+import com.skymilk.socialapp.MainAuthState
+import com.skymilk.socialapp.MainViewModel
+import com.skymilk.socialapp.presentation.navigation.SocialApp
+import com.skymilk.socialapp.presentation.util.EventBus.messageEvents
+import com.skymilk.socialapp.presentation.util.MessageEvent
+import com.skymilk.socialapp.ui.theme.SocialAppTheme
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

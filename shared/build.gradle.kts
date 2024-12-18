@@ -1,9 +1,10 @@
+import dev.icerock.gradle.MRVisibility
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
-
+    id("dev.icerock.mobile.multiplatform-resources")
     kotlin("plugin.serialization") version "2.0.21"
 }
 
@@ -24,6 +25,9 @@ kotlin {
         iosSimulatorArm64()
     ).forEach {
         it.binaries.framework {
+            export(libs.moko.resources)
+            export(libs.moko.graphics)// toUIColor here
+
             baseName = "shared"
             isStatic = true
         }
@@ -47,6 +51,9 @@ kotlin {
 
                 //koin
                 api(libs.koin.core)
+                implementation(libs.koin.compose)
+                implementation(libs.koin.composeVM)
+                implementation(libs.androidx.lifecycle.viewmodel)
 
                 //datastore
                 implementation(libs.androidx.datastore.preferences.core)
@@ -57,6 +64,26 @@ kotlin {
                 //paging3
                 implementation(libs.paging.common)
                 implementation(libs.paging.compose.common)
+
+                //coil
+                implementation(libs.coil.compose)
+                implementation(libs.coil.compose.core)
+                implementation(libs.coil)
+                implementation(libs.coil.network.ktor)
+
+                //image Picker
+                implementation(libs.peekaboo.ui)
+                implementation(libs.peekaboo.image.picker)
+
+                //moko resource
+                api(libs.moko.resources)
+                api(libs.moko.resources.compose) // for compose multiplatform
+
+                // Material Icon Extended
+                implementation(libs.kmp.compose.material.icons.extended)
+
+                // Window Size
+                implementation(libs.kmp.compose.material3.window.size)
             }
         }
 
@@ -123,4 +150,12 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+}
+
+multiplatformResources {
+    resourcesPackage.set("com.skymilk.socialapp") // required
+    resourcesClassName.set("SharedRes") // optional, default MR
+    resourcesVisibility.set(MRVisibility.Internal) // optional, default Public
+    iosBaseLocalizationRegion.set("ko") // optional, default "en"
+    iosMinimalDeploymentTarget.set("11.0") // optional, default "9.0"
 }

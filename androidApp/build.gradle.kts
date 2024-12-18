@@ -48,25 +48,8 @@ dependencies {
     implementation(libs.androidx.ui.android)
     debugImplementation(libs.compose.ui.tooling)
 
-    // Material Icon Extended
-    implementation(libs.androidx.material.icons.extended)
-
-    //size
-    implementation(libs.androidx.material3.window.size)
-
     //serialization
     implementation(libs.ktor.serialization.kotlinx.json)
-
-    //coil
-    implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp)
-
-    //paging3
-    implementation(libs.androidx.paging.runtime)
-    implementation(libs.androidx.paging.compose)
-
-    //navigation
-    implementation(libs.androidx.navigation.compose)
 
     implementation(libs.splash.screen)
     implementation(libs.koin.androidx.compose)
