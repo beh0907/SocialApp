@@ -1,6 +1,6 @@
 package com.skymilk.socialapp
 
-import com.skymilk.socialapp.data.model.UserSettings
+import com.skymilk.socialapp.store.data.model.UserSettings
 
 sealed interface MainAuthState {
 

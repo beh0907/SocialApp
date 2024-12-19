@@ -19,22 +19,22 @@ fun SocialAppTheme(
 
     val window = calculateWindowSizeClass()
     var appDimens = CompactDimens
-    var typography = CompactTypography
+    var typography = provideCompactTypography()
 
     when (window.widthSizeClass) {
         WindowWidthSizeClass.Compact -> {
             appDimens = CompactMediumDimens
-            typography = CompactMediumTypography
+            typography = provideCompactTypography()
         }
 
         WindowWidthSizeClass.Medium -> {
             appDimens = MediumDimens
-            typography = MediumTypography
+            typography = provideMediumTypography()
         }
 
         WindowWidthSizeClass.Expanded -> {
             appDimens = ExpandedDimens
-            typography = ExpandedTypography
+            typography = provideExpandedTypography()
         }
     }
 

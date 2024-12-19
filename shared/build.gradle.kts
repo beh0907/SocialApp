@@ -4,8 +4,10 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.jetbrainsCompose)
     id("dev.icerock.mobile.multiplatform-resources")
-    kotlin("plugin.serialization") version "2.0.21"
 }
 
 kotlin {
@@ -66,10 +68,7 @@ kotlin {
                 implementation(libs.paging.compose.common)
 
                 //coil
-                implementation(libs.coil.compose)
-                implementation(libs.coil.compose.core)
-                implementation(libs.coil)
-                implementation(libs.coil.network.ktor)
+                implementation(libs.landscapist.coil3)
 
                 //image Picker
                 implementation(libs.peekaboo.ui)
@@ -142,7 +141,7 @@ kotlin {
 
 android {
     namespace = "com.skymilk.socialapp"
-    compileSdk = 34
+    compileSdk = 35
     defaultConfig {
         minSdk = 26
     }

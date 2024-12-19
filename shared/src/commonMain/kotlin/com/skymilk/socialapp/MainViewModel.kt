@@ -3,7 +3,7 @@ package com.skymilk.socialapp
 import androidx.datastore.core.DataStore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.skymilk.socialapp.data.model.UserSettings
+import com.skymilk.socialapp.store.data.model.UserSettings
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map

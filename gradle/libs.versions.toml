@@ -2,8 +2,10 @@
 accompanistSystemuicontroller = "0.36.0"
 agp = "8.7.3"
 coil-version = "3.0.4"
+compose-plugin = "1.7.0"
 kotlinxCoroutinesCore = "1.9.0"
 kotlinxDatetime = "0.6.1"
+landscapistCoil3 = "2.4.4"
 moko-resources-version = "0.24.4"
 moko-graphics-version = "0.9.0"
 peekaboo = "0.5.2"
@@ -29,10 +31,6 @@ kmp-paging3 = "3.3.0-alpha02-0.5.1"
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastorePreferences" }
-coil = { module = "io.coil-kt.coil3:coil", version.ref = "coil-version" }
-coil-compose-core = { module = "io.coil-kt.coil3:coil-compose-core", version.ref = "coil-version" }
-coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil-version" }
-coil-network-ktor = { module = "io.coil-kt.coil3:coil-network-ktor", version = "3.0.0-alpha08" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor-version" }
@@ -40,6 +38,7 @@ ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "k
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor-version" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor-version" }
 ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor-version" }
+landscapist-coil3 = { module = "com.github.skydoves:landscapist-coil3", version.ref = "landscapistCoil3" }
 paging-compose-common = { module = "app.cash.paging:paging-compose-common", version.ref = "kmp-paging3" }
 paging-common = { module = "app.cash.paging:paging-common", version.ref = "kmp-paging3" }
 moko-resources = { module = "dev.icerock.moko:resources", version.ref = "moko-resources-version" }
@@ -76,7 +75,9 @@ kmp-compose-navigation = { group = "org.jetbrains.androidx.navigation", name = "
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlinCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = "kotlin" }
+jetbrains-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

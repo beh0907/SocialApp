@@ -16,4 +16,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "SocialApp"
 include(":androidApp")
+include(":iosApp")
 include(":shared")

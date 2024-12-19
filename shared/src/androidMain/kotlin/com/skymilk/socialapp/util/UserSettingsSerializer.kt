@@ -1,7 +1,7 @@
 package com.skymilk.socialapp.util
 
 import androidx.datastore.core.Serializer
-import com.skymilk.socialapp.data.model.UserSettings
+import com.skymilk.socialapp.store.data.model.UserSettings
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 import kotlin.io.readBytes

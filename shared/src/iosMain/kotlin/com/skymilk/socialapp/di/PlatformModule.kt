@@ -1,8 +1,8 @@
 package com.skymilk.socialapp.di
 
-import com.skymilk.socialapp.data.local.IosUserPreferences
-import com.skymilk.socialapp.data.local.UserPreferences
-import com.skymilk.socialapp.data.local.createDataStore
+import com.skymilk.socialapp.store.data.local.IosUserPreferences
+import com.skymilk.socialapp.store.data.local.UserPreferences
+import com.skymilk.socialapp.store.data.local.createDataStore
 import org.koin.dsl.module
 
 actual val platformModule = module {
