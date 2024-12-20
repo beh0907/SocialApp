@@ -9,18 +9,18 @@ import com.skymilk.socialapp.store.presentation.screen.main.postCreate.PostCreat
 import com.skymilk.socialapp.store.presentation.screen.main.postDetail.PostDetailViewModel
 import com.skymilk.socialapp.store.presentation.screen.main.profile.ProfileViewModel
 import com.skymilk.socialapp.store.presentation.screen.main.profileEdit.ProfileEditViewModel
-import org.koin.core.module.dsl.viewModel
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val appModule = module {
-    viewModel { SignInViewModel(get()) }
-    viewModel { SignUpViewModel(get()) }
-    viewModel { MainViewModel(get()) }
-    viewModel { HomeViewModel(get(), get()) }
-    viewModel { PostCreateViewModel(get()) }
-    viewModel { (postId: Long) -> PostDetailViewModel(get(), get(), postId) }
-    viewModel { (userId: Long) -> ProfileViewModel(get(), get(), get(), userId) }
-    viewModel { (userId: Long) -> ProfileEditViewModel(get(), userId) }
-    viewModel { (userId: Long, followsType: Int) -> FollowsViewModel(get(), userId, followsType) }
+    viewModelOf(::SignInViewModel)
+    viewModelOf(::SignUpViewModel)
+    viewModelOf(::MainViewModel)
+    viewModelOf(::HomeViewModel)
+    viewModelOf(::PostCreateViewModel)
+    viewModelOf(::PostDetailViewModel)
+    viewModelOf(::ProfileViewModel)
+    viewModelOf(::ProfileEditViewModel)
+    viewModelOf(::FollowsViewModel)
 }
 

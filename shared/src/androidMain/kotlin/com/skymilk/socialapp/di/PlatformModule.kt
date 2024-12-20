@@ -6,10 +6,12 @@ import androidx.datastore.dataStoreFile
 import com.skymilk.socialapp.store.data.local.AndroidUserPreferences
 import com.skymilk.socialapp.store.data.local.UserPreferences
 import com.skymilk.socialapp.util.UserSettingsSerializer
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 actual val platformModule = module {
-    single<UserPreferences> { AndroidUserPreferences(get()) }
+    singleOf(::AndroidUserPreferences) { bind<UserPreferences>() }
 
     single {
         DataStoreFactory.create(

@@ -36,12 +36,15 @@ import com.skymilk.socialapp.store.domain.usecase.profile.GetProfile
 import com.skymilk.socialapp.store.domain.usecase.profile.ProfileUseCase
 import com.skymilk.socialapp.store.domain.usecase.profile.UpdateProfile
 import com.skymilk.socialapp.util.provideDispatcher
+import org.koin.core.module.dsl.bind
+import org.koin.core.module.dsl.factoryOf
+import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
 //인증
 private val authModule = module {
-    single<AuthRepository> { AuthRepositoryImpl(get(), get(), get()) }
-    factory { AuthApiService() }
+    singleOf(::AuthRepositoryImpl) { bind<AuthRepository>() }
+    singleOf (::AuthApiService)
     factory {
         AuthUseCase(
             SignUp(get()),
@@ -52,8 +55,8 @@ private val authModule = module {
 
 //팔로우
 private val followModule = module {
-    single<FollowsRepository> { FollowsRepositoryImpl(get(), get(), get()) }
-    factory { FollowApiService() }
+    singleOf(::FollowsRepositoryImpl) { bind<FollowsRepository>() }
+    singleOf (::FollowApiService)
     factory {
         FollowsUseCase(
             GetMyFollows(get()),
@@ -65,8 +68,8 @@ private val followModule = module {
 
 //게시물
 private val postModule = module {
-    single<PostRepository> { PostRepositoryImpl(get(), get(), get()) }
-    factory { PostApiService() }
+    singleOf(::PostRepositoryImpl) { bind<PostRepository>() }
+    singleOf (::PostApiService)
     factory {
         PostUseCase(
             GetPost(get()),
@@ -80,8 +83,8 @@ private val postModule = module {
 
 //게시물 댓글
 private val postCommentsModule = module {
-    single<PostCommentsRepository> { PostCommentsRepositoryImpl(get(), get(), get()) }
-    factory { PostCommentsApiService() }
+    singleOf(::PostCommentsRepositoryImpl) { bind<PostCommentsRepository>() }
+    singleOf (::PostCommentsApiService)
     factory {
         PostCommentsUseCase(
             GetPostComments(get()),
@@ -93,8 +96,8 @@ private val postCommentsModule = module {
 
 //프로필
 private val profileModule = module {
-    single<ProfileRepository> { ProfileRepositoryImpl(get(), get(), get()) }
-    factory { ProfileApiService() }
+    singleOf(::ProfileRepositoryImpl) { bind<ProfileRepository>() }
+    singleOf (::ProfileApiService)
     factory {
         ProfileUseCase(
             GetProfile(get()),
@@ -104,7 +107,7 @@ private val profileModule = module {
 }
 
 private val utilModule = module {
-    factory { provideDispatcher() }
+    factoryOf(::provideDispatcher)
 }
 
 fun getSharedModule() =
