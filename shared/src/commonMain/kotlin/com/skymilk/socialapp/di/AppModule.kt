@@ -9,8 +9,11 @@ import com.skymilk.socialapp.store.presentation.screen.main.postCreate.PostCreat
 import com.skymilk.socialapp.store.presentation.screen.main.postDetail.PostDetailViewModel
 import com.skymilk.socialapp.store.presentation.screen.main.profile.ProfileViewModel
 import com.skymilk.socialapp.store.presentation.screen.main.profileEdit.ProfileEditViewModel
+import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
+import kotlin.experimental.ExperimentalObjCName
+import kotlin.native.ObjCName
 
 val appModule = module {
     viewModelOf(::SignInViewModel)
@@ -22,5 +25,13 @@ val appModule = module {
     viewModelOf(::ProfileViewModel)
     viewModelOf(::ProfileEditViewModel)
     viewModelOf(::FollowsViewModel)
+}
+
+@OptIn(ExperimentalObjCName::class)
+@ObjCName(name = "doInitKoin")
+fun initKoin() {
+    startKoin {
+        modules(appModule + getSharedModule())
+    }
 }
 

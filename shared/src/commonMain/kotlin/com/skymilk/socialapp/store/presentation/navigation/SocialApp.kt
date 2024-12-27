@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -21,6 +22,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.skymilk.socialapp.MainAuthState
+import com.skymilk.socialapp.MainViewModel
 import com.skymilk.socialapp.store.presentation.common.component.AppBar
 import com.skymilk.socialapp.store.presentation.navigation.routes.Routes
 import com.skymilk.socialapp.store.presentation.screen.auth.signIn.SignIn
@@ -32,6 +34,15 @@ import com.skymilk.socialapp.store.presentation.screen.main.postCreate.PostCreat
 import com.skymilk.socialapp.store.presentation.screen.main.postDetail.PostDetail
 import com.skymilk.socialapp.store.presentation.screen.main.profile.Profile
 import com.skymilk.socialapp.store.presentation.screen.main.profileEdit.ProfileEdit
+import org.koin.compose.viewmodel.koinViewModel
+
+@Composable
+fun SocialApp() {
+    val mainViewModel: MainViewModel = koinViewModel()
+    val mainAuthState by mainViewModel.authState.collectAsStateWithLifecycle()
+
+    SocialApp(mainAuthState)
+}
 
 @Composable
 fun SocialApp(mainAuthState: MainAuthState) {
