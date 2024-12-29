@@ -43,7 +43,7 @@ class ProfileViewModel(
     }
 
     //다른 화면에서 업데이트된 정보 반영
-    fun onUpdatedEvent() {
+    private fun onUpdatedEvent() {
         dataEvents.onEach {
             when (it) {
                 is DataEvent.UpdatedProfile -> updateProfile(it.profile)

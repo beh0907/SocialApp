@@ -8,10 +8,15 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -34,6 +39,9 @@ import com.skymilk.socialapp.store.presentation.screen.main.postCreate.PostCreat
 import com.skymilk.socialapp.store.presentation.screen.main.postDetail.PostDetail
 import com.skymilk.socialapp.store.presentation.screen.main.profile.Profile
 import com.skymilk.socialapp.store.presentation.screen.main.profileEdit.ProfileEdit
+import com.skymilk.socialapp.store.presentation.util.EventBus.messageEvents
+import com.skymilk.socialapp.store.presentation.util.MessageEvent
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -73,6 +81,9 @@ fun SocialApp(mainAuthState: MainAuthState) {
         else -> Unit
     }
 
+    //메시지 스낵바
+    val snackbarHostState = remember { SnackbarHostState() }
+
     Scaffold(
         topBar = {
             //상단바 정의
@@ -95,8 +106,11 @@ fun SocialApp(mainAuthState: MainAuthState) {
                 }
             }
         },
-//        snackbarHost =
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        }
     ) { innerPadding ->
+        SetObserveMessage(snackbarHostState)
 
         NavHost(
             modifier = Modifier.padding(innerPadding),
@@ -161,6 +175,42 @@ fun SocialApp(mainAuthState: MainAuthState) {
                 }
             }
 
+        }
+    }
+}
+
+@Composable
+private fun SetObserveMessage(snackbarHostState: SnackbarHostState) {
+    val scope = rememberCoroutineScope() // 스낵바 표시를 위한 코루틴 스코프
+
+    LaunchedEffect(Unit) {
+        messageEvents.collect { event ->
+            when (event) {
+                is MessageEvent.SnackBar -> {
+                    scope.launch {
+                        //현재 스낵바가 띄워진 상태라면 먼저 닫는다
+                        snackbarHostState.currentSnackbarData?.dismiss()
+
+                        //스낵바 띄우기
+                        snackbarHostState.showSnackbar(
+                            event.message,
+                            "닫기",
+                            true,
+                            SnackbarDuration.Short
+                        ).let {
+                            when(it){
+                                SnackbarResult.Dismissed -> println("snackBar: 스낵바 닫아짐")
+
+                                // 스낵바에 있는 버튼이 눌러졌을 때 로직처리 하는 부분
+                                SnackbarResult.ActionPerformed -> if (event.action != null) event.action.invoke()
+
+                            }
+                        }
+                    }
+                }
+
+                else -> Unit
+            }
         }
     }
 }

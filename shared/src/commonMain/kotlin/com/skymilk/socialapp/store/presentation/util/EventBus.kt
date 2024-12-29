@@ -26,7 +26,6 @@ object EventBus {
 
 //알람 이벤트 정의
 sealed interface MessageEvent {
-    data class Toast(val message: String) : MessageEvent
     data class SnackBar(val message: String, val action: (() -> Unit)? = null) : MessageEvent
 }
 

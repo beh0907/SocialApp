@@ -48,7 +48,6 @@ import com.skymilk.socialapp.ui.theme.MediumSpacing
 import com.skymilk.socialapp.ui.theme.SmallSpacing
 import dev.icerock.moko.resources.compose.stringResource
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PostDetailScreen(
     modifier: Modifier = Modifier,
@@ -93,7 +92,7 @@ fun PostDetailScreen(
                     }
 
                     item(key = "commentHeaderSection") {
-                        CommentHeaderSection(onRefreshComments = { onEvent(PostDetailEvent.RetryComments) })
+                        CommentHeaderSection(onRefreshComments = { postComments.refresh() })
                     }
 
                     postCommentsList(

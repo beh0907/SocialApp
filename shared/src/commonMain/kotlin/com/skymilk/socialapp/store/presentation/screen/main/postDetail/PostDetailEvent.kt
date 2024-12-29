@@ -5,8 +5,6 @@ import com.skymilk.socialapp.store.domain.model.PostComment
 
 sealed interface PostDetailEvent {
 
-    data object RetryComments : PostDetailEvent
-
     data class LikePost(val post: Post) : PostDetailEvent
 
     data class ChangeComment(val comment: String) : PostDetailEvent

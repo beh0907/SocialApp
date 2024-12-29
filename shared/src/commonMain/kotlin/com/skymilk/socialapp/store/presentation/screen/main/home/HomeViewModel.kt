@@ -44,7 +44,7 @@ class HomeViewModel(
     }
 
     //다른 화면에서 업데이트된 정보 반영
-    fun onUpdatedEvent() {
+    private fun onUpdatedEvent() {
         dataEvents.onEach {
             when (it) {
                 is DataEvent.CreatedPost -> {
@@ -75,8 +75,7 @@ class HomeViewModel(
 
         //추천 유저 목록 불러오기
         viewModelScope.launch {
-            val result = followsUseCase.getFollowableUsers()
-            when (result) {
+            when (val result = followsUseCase.getFollowableUsers()) {
                 is Result.Success -> {
                     _onBoardingState.update {
                         OnBoardingState.Success(
@@ -128,7 +127,7 @@ class HomeViewModel(
                 }
 
                 is Result.Error -> {
-                    sendEvent(MessageEvent.Toast(result.message ?: "팔로우 처리에 실패하였습니다."))
+                    sendEvent(MessageEvent.SnackBar(result.message ?: "팔로우 처리에 실패하였습니다."))
                 }
             }
         }
@@ -152,7 +151,7 @@ class HomeViewModel(
                 }
 
                 is Result.Error -> {
-                    sendEvent(MessageEvent.Toast(result.message ?: "좋아요 처리에 실패하였습니다."))
+                    sendEvent(MessageEvent.SnackBar(result.message ?: "좋아요 처리에 실패하였습니다."))
                 }
             }
         }

@@ -42,11 +42,11 @@ class PostCreateViewModel(
                     uiState = uiState.copy(isCreated = true)
                     sendEvent(DataEvent.CreatedPost(result.data))
 
-                    sendEvent(MessageEvent.Toast("게시글을 등록하였습니다."))
+                    sendEvent(MessageEvent.SnackBar("게시글을 등록하였습니다."))
                 }
 
                 is Result.Error -> {
-                    sendEvent(MessageEvent.Toast(result.message ?: "게시글 생성 오류가 발생하였습니다."))
+                    sendEvent(MessageEvent.SnackBar(result.message ?: "게시글 생성 오류가 발생하였습니다."))
                 }
             }
 

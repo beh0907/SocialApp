@@ -55,7 +55,7 @@ class PostDetailViewModel(
     }
 
     //다른 화면에서 업데이트된 정보 반영
-    fun onUpdatedEvent() {
+    private fun onUpdatedEvent() {
         dataEvents.onEach {
             when (it) {
                 is DataEvent.CreatedPost -> Unit
@@ -69,8 +69,6 @@ class PostDetailViewModel(
 
     fun onEvent(event: PostDetailEvent) {
         when (event) {
-            is PostDetailEvent.RetryComments -> loadComments()
-
             is PostDetailEvent.LikePost -> likeOrDislikePost(event.post)
 
             is PostDetailEvent.ChangeComment -> postDetailUiState =
@@ -132,7 +130,7 @@ class PostDetailViewModel(
 
                 is Result.Error -> {
                     // 오류 알림
-                    sendEvent(MessageEvent.Toast("좋아요 처리를 실패했습니다."))
+                    sendEvent(MessageEvent.SnackBar("좋아요 처리를 실패했습니다."))
                 }
             }
         }
@@ -160,12 +158,12 @@ class PostDetailViewModel(
                     sendEvent(DataEvent.UpdatedPost(post))
 
                     //댓글 추가 알림
-                    sendEvent(MessageEvent.Toast("댓글이 삭제되었습니다."))
+                    sendEvent(MessageEvent.SnackBar("댓글이 삭제되었습니다."))
                 }
 
                 is Result.Error -> {
                     // 오류 알림
-                    sendEvent(MessageEvent.Toast("댓글 삭제를 실패했습니다."))
+                    sendEvent(MessageEvent.SnackBar("댓글 삭제를 실패했습니다."))
                 }
             }
         }
@@ -182,28 +180,23 @@ class PostDetailViewModel(
 
             when (result) {
                 is Result.Success -> {
-                    // 성공한 댓글 데이터 추출 (서버에서 반환되는 댓글 객체)
-                    val newComment = result.data
-
-                    // 현재 댓글 목록의 맨 앞에 새 댓글 추가
-                    _postComments.value = _postComments.value.insertHeaderItem(
-                        item = newComment
-                    )
-
                     //게시물 상태 정보 갱신
                     post = post.copy(commentsCount = post.commentsCount.plus(1))
                     sendEvent(DataEvent.UpdatedPost(post))
 
                     //댓글 추가 알림
-                    sendEvent(MessageEvent.Toast("댓글이 추가되었습니다."))
+                    sendEvent(MessageEvent.SnackBar("댓글이 추가되었습니다."))
 
                     //입력값 초기화
                     postDetailUiState = postDetailUiState.copy(content = "")
+
+                    //새 댓글 목록 다시 불러오기
+                    loadComments()
                 }
 
                 is Result.Error -> {
                     // 오류 알림
-                    sendEvent(MessageEvent.Toast("댓글 작성을 실패했습니다."))
+                    sendEvent(MessageEvent.SnackBar("댓글 작성을 실패했습니다."))
                 }
             }
         }

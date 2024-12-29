@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import coil3.Uri
 import com.skymilk.socialapp.store.data.util.Result
 import com.skymilk.socialapp.store.domain.usecase.profile.ProfileUseCase
 import com.skymilk.socialapp.store.presentation.screen.main.profile.state.ProfileState
@@ -90,11 +89,11 @@ class ProfileEditViewModel(
                     _profileState.update { ProfileState.Success(profile = profile) }
                     sendEvent(DataEvent.UpdatedProfile(profile))
 
-                    sendEvent(MessageEvent.Toast("프로필이 갱신되었습니다."))
+                    sendEvent(MessageEvent.SnackBar("프로필이 갱신되었습니다."))
                 }
 
                 is Result.Error -> {
-                    sendEvent(MessageEvent.Toast(result.message ?: "프로필 갱신 오류가 발생하였습니다"))
+                    sendEvent(MessageEvent.SnackBar(result.message ?: "프로필 갱신 오류가 발생하였습니다"))
                 }
             }
 

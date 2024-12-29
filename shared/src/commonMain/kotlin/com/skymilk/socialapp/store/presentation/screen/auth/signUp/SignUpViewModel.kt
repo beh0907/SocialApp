@@ -79,7 +79,7 @@ class SignUpViewModel(
                 when (authResultData) {
                     is Result.Error -> {
                         val message = authResultData.message.toString()
-                        sendEvent(MessageEvent.Toast(message = message))
+                        sendEvent(MessageEvent.SnackBar(message = message))
 
                         AuthState.Error(message)
                     }

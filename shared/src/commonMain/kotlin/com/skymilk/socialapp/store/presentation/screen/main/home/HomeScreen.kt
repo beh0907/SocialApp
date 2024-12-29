@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.key.Key.Companion.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.paging.LoadState
 import app.cash.paging.compose.LazyPagingItems
 import com.skymilk.socialapp.SharedRes
 import com.skymilk.socialapp.store.domain.model.FollowsUser
@@ -45,7 +46,7 @@ fun HomeScreen(
     PullToRefreshBox(
         modifier = modifier
             .fillMaxSize(),
-        isRefreshing = (onBoardingState is OnBoardingState.Loading) /*|| (feedPosts.loadState.source.isIdle)*/,
+        isRefreshing = (onBoardingState is OnBoardingState.Loading || feedPosts.loadState.refresh is LoadState.Loading),
         onRefresh = { onEvent(HomeEvent.RetryData) }
     ) {
         LazyColumn(

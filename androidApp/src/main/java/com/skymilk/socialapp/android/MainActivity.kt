@@ -46,36 +46,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             SocialAppTheme {
-                SetObserveMessage()
-
                 SocialApp(authState)
-            }
-        }
-    }
-
-    @Composable
-    private fun SetObserveMessage() {
-        //생명주기
-        val lifecycle = LocalLifecycleOwner.current.lifecycle
-        LaunchedEffect(key1 = lifecycle) {
-            //앱이 실행중일 경우에만 수집한다
-            repeatOnLifecycle(state = Lifecycle.State.STARTED) {
-                //알림 이벤트 수집 시 처리
-                messageEvents.collect { event ->
-                    when (event) {
-                        is MessageEvent.Toast -> {
-                            Toast.makeText(
-                                this@MainActivity,
-                                event.message,
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-
-                        is MessageEvent.SnackBar -> {}
-
-                        else -> Unit
-                    }
-                }
             }
         }
     }

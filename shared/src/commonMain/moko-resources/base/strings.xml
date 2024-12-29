@@ -35,4 +35,6 @@
     <string name="select_post_image_label">이미지 선택</string>
     <string name="create_post_button_label">게시글 생성</string>
     <string name="post_create_destination_title">Post Create</string>
+    <string name="error_load_comments_text">댓글 목록을 불러오지 못하였습니다.</string>
+    <string name="error_load_posts_text">게시글 목록을 불러오지 못하였습니다.</string>
 </resources>

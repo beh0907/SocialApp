@@ -11,6 +11,7 @@ import com.skymilk.socialapp.store.presentation.screen.main.profile.ProfileViewM
 import com.skymilk.socialapp.store.presentation.screen.main.profileEdit.ProfileEditViewModel
 import org.koin.core.context.startKoin
 import org.koin.core.module.dsl.viewModelOf
+import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 import kotlin.experimental.ExperimentalObjCName
 import kotlin.native.ObjCName
@@ -29,8 +30,11 @@ val appModule = module {
 
 @OptIn(ExperimentalObjCName::class)
 @ObjCName(name = "doInitKoin")
-fun initKoin() {
+fun initKoin(
+    appDeclaration: KoinAppDeclaration = {}
+) {
     startKoin {
+        appDeclaration()
         modules(appModule + getSharedModule())
     }
 }
