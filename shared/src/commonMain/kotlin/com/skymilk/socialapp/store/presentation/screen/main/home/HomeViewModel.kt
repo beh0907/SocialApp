@@ -47,9 +47,9 @@ class HomeViewModel(
     private fun onUpdatedEvent() {
         dataEvents.onEach {
             when (it) {
-                is DataEvent.CreatedPost -> {
-                    _feedPosts.value.insertHeaderItem(item = it.post)
-                }
+                is DataEvent.CreatedPost -> { _feedPosts.value.insertHeaderItem(item = it.post) }
+
+                is DataEvent.RemovedPost -> { _feedPosts.value.insertHeaderItem(item = it.post) }
 
                 is DataEvent.UpdatedPost -> updatePost(it.post)
 

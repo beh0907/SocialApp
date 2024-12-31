@@ -20,4 +20,7 @@ interface PostRepository {
 
     //게시물 작성
     suspend fun createPost(text: String, imageBytes: ByteArray): Result<Post>
+
+    //게시물 삭제
+    suspend fun removePost(postId: Long): Result<Post>
 }

@@ -60,6 +60,8 @@ class PostDetailViewModel(
             when (it) {
                 is DataEvent.CreatedPost -> Unit
 
+                is DataEvent.RemovedPost -> Unit
+
                 is DataEvent.UpdatedPost -> updatePost(it.post)
 
                 is DataEvent.UpdatedProfile -> updateProfile(it.profile)
@@ -70,6 +72,8 @@ class PostDetailViewModel(
     fun onEvent(event: PostDetailEvent) {
         when (event) {
             is PostDetailEvent.LikePost -> likeOrDislikePost(event.post)
+
+            is PostDetailEvent.RemovePost -> removePost(event.post)
 
             is PostDetailEvent.ChangeComment -> postDetailUiState =
                 postDetailUiState.copy(content = event.comment)
@@ -136,6 +140,31 @@ class PostDetailViewModel(
         }
     }
 
+    //댓글 삭제
+    private fun removePost(post: Post) {
+        viewModelScope.launch {
+            val result = postUseCase.removePost(
+                postId = post.postId,
+            )
+
+            when (result) {
+                is Result.Success -> {
+                    //게시물 삭제
+                    sendEvent(DataEvent.RemovedPost(post))
+
+                    //댓글 추가 알림
+                    sendEvent(MessageEvent.SnackBar("게시글이 삭제되었습니다."))
+                }
+
+                is Result.Error -> {
+                    // 오류 알림
+                    sendEvent(MessageEvent.SnackBar("게시글 삭제를 실패했습니다."))
+                }
+            }
+        }
+    }
+
+    //댓글 삭제
     private fun removeComment(comment: PostComment) {
         viewModelScope.launch {
             var post = (_postDetailState.value as? PostDetailState.Success)?.post ?: return@launch

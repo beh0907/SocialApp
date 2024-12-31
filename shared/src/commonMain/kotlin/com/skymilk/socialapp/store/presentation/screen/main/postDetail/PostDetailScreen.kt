@@ -1,6 +1,9 @@
 package com.skymilk.socialapp.store.presentation.screen.main.postDetail
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -16,7 +19,6 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Refresh
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -25,11 +27,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.font.FontWeight
@@ -39,6 +44,7 @@ import com.skymilk.socialapp.SharedRes
 import com.skymilk.socialapp.store.domain.model.PostComment
 import com.skymilk.socialapp.store.presentation.common.component.PostItem
 import com.skymilk.socialapp.store.presentation.screen.main.postDetail.component.CommentOptionBottomSheet
+import com.skymilk.socialapp.store.presentation.screen.main.postDetail.component.PostOptionBottomSheet
 import com.skymilk.socialapp.store.presentation.screen.main.postDetail.component.SendCommentButton
 import com.skymilk.socialapp.store.presentation.screen.main.postDetail.component.postCommentsList
 import com.skymilk.socialapp.store.presentation.screen.main.postDetail.state.PostDetailState
@@ -47,6 +53,7 @@ import com.skymilk.socialapp.ui.theme.LargeSpacing
 import com.skymilk.socialapp.ui.theme.MediumSpacing
 import com.skymilk.socialapp.ui.theme.SmallSpacing
 import dev.icerock.moko.resources.compose.stringResource
+import kotlinx.coroutines.launch
 
 @Composable
 fun PostDetailScreen(
@@ -58,7 +65,13 @@ fun PostDetailScreen(
     onEvent: (PostDetailEvent) -> Unit,
     onNavigateToProfile: (Long) -> Unit,
 ) {
-    var selectedPostComment by rememberSaveable(stateSaver = postCommentSaver) {
+    //바텀시트 관련 선택 게시글
+    var selectedPost by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+    //바텀시트 관련 선택 댓글
+    var selectedPostComment: PostComment? by rememberSaveable {
         mutableStateOf(null)
     }
 
@@ -85,6 +98,7 @@ fun PostDetailScreen(
                         PostItem(
                             post = postDetailState.post,
                             onClickPost = { },
+                            onClickPostMore = { selectedPost = true },
                             onNavigateToProfile = onNavigateToProfile,
                             onLikeClick = { onEvent(PostDetailEvent.LikePost(it)) },
                             isDetailScreen = true
@@ -111,6 +125,16 @@ fun PostDetailScreen(
                 )
             }
 
+            //게시글 옵션 선택 바텀 시트 팝업
+            if (selectedPost) {
+                PostOptionBottomSheet(
+                    post = postDetailState.post,
+                    onDeletePost = { onEvent(PostDetailEvent.RemovePost(post = postDetailState.post)) },
+                    onNavigateToEditPost = {  },
+                    onResetSelectedPost = { selectedPost = false },
+                )
+            }
+
             //선택한 댓글이 있을 경우 바텀 시트 팝업
             selectedPostComment?.let { postComment ->
                 CommentOptionBottomSheet(
@@ -133,10 +157,24 @@ fun CommentHeaderSection(
     modifier: Modifier = Modifier,
     onRefreshComments: () -> Unit
 ) {
+    // 애니메이션 값을 저장
+    val rotation = remember { Animatable(0f) }
+    val scope = rememberCoroutineScope()
+
+    // 클릭 시 애니메이션 실행 함수
+    suspend fun startRotation() {
+        rotation.stop() // 애니메이션 중단
+        rotation.snapTo(0f) // 0으로 초기화
+        rotation.animateTo(
+            targetValue = 360f, // 1회전
+            animationSpec = tween(1000, easing = LinearEasing) // 1000ms 동안 회전
+        )
+    }
+
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(top = LargeSpacing, start = LargeSpacing, end = LargeSpacing),
+            .padding(top = LargeSpacing, start = LargeSpacing, end = MediumSpacing),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -147,7 +185,14 @@ fun CommentHeaderSection(
         )
 
         IconButton(
-            onClick = onRefreshComments
+            modifier = Modifier.rotate(rotation.value),
+            onClick = {
+                //회전 애니메이션 시작
+                scope.launch { startRotation() }
+
+                //새로고침 API 요청
+                onRefreshComments()
+            }
         ) {
             Icon(imageVector = Icons.Rounded.Refresh, contentDescription = null)
         }
@@ -223,31 +268,3 @@ fun BottomSection(
         }
     }
 }
-
-private val postCommentSaver = Saver<PostComment?, Any>(
-    save = { postComment ->
-        if (postComment != null) {
-            mapOf(
-                "commentId" to postComment.commentId,
-                "content" to postComment.content,
-                "postId" to postComment.postId,
-                "userId" to postComment.userId,
-                "userName" to postComment.userName,
-                "userImageUrl" to postComment.userImageUrl,
-                "createAt" to postComment.createAt,
-            )
-        } else null
-    },
-    restore = { savedValue ->
-        val map = savedValue as Map<*, *>
-        PostComment(
-            commentId = map["commentId"] as Long,
-            content = map["content"] as String,
-            postId = map["postId"] as Long,
-            userId = map["userId"] as Long,
-            userName = map["userName"] as String,
-            userImageUrl = map["userImageUrl"] as String?,
-            createAt = map["createAt"] as String
-        )
-    }
-)

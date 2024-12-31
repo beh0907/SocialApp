@@ -30,6 +30,8 @@
     <string name="edit_button_text">수정</string>
     <string name="comment_option_title">댓글 옵션</string>
     <string name="delete_comment_option">댓글 삭제</string>
+    <string name="delete_post_option">게시글 삭제</string>
+    <string name="edit_post_option">게시글 수정</string>
     <string name="navigate_profile_option">프로필 이동</string>
     <string name="post_caption_hint">게시글 내용 입력</string>
     <string name="select_post_image_label">이미지 선택</string>

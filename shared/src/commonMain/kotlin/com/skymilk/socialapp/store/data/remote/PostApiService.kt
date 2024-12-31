@@ -120,4 +120,16 @@ internal class PostApiService : KtorApi() {
         }
         return PostResponse(code = httpResponse.status, data = httpResponse.body())
     }
+
+    //게시물 삭제
+    suspend fun removePost(
+        token: String,
+        postId: Long,
+    ): PostResponse {
+        val httpResponse = client.delete {
+            endPoint(path = "/post/$postId")
+            setToken(token = token)
+        }
+        return PostResponse(code = httpResponse.status, data = httpResponse.body())
+    }
 }

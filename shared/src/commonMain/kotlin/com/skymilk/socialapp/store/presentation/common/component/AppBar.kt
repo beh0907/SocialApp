@@ -12,12 +12,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.skymilk.socialapp.MainAuthState
 import com.skymilk.socialapp.SharedRes
 import com.skymilk.socialapp.store.presentation.navigation.routes.Routes
 import com.skymilk.socialapp.ui.theme.SmallElevation
@@ -29,6 +30,7 @@ import dev.icerock.moko.resources.compose.stringResource
 @Composable
 fun AppBar(
     navController: NavHostController,
+    mainAuthState: MainAuthState.Success?,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val canGoBack = remember(key1 = navBackStackEntry) {
@@ -67,7 +69,15 @@ fun AppBar(
             },
             actions = {
                 AnimatedVisibility(!isVisibleProfile) {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {
+                        mainAuthState?.currentUser?.id?.let {
+                            navController.navigate(Routes.ProfileScreen(it)){
+                                popUpTo(Routes.HomeScreen) {
+                                    inclusive = false
+                                }
+                            }
+                        }
+                    }) {
                         Icon(
                             painter = painterResource(SharedRes.images.person_circle_icon),
                             contentDescription = null

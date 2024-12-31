@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.skymilk.socialapp.SharedRes
 import com.skymilk.socialapp.ui.theme.SmallSpacing
@@ -34,7 +35,7 @@ fun ErrorItem(
             onClick = onRetry,
             modifier = Modifier.padding(top = 8.dp)
         ) {
-            Text(stringResource(SharedRes.strings.retry_button_text))
+            Text(stringResource(SharedRes.strings.retry_button_text), color = Color.White)
         }
     }
 }

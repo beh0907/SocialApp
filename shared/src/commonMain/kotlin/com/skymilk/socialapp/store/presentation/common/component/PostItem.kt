@@ -43,6 +43,7 @@ fun PostItem(
     modifier: Modifier = Modifier,
     post: Post,
     onClickPost: (Post) -> Unit,
+    onClickPostMore: () -> Unit,
     onNavigateToProfile: (Long) -> Unit,
     onLikeClick: (Post) -> Unit,
     isDetailScreen: Boolean = false
@@ -60,7 +61,10 @@ fun PostItem(
             name = post.userName,
             imageUrl = post.userImageUrl,
             date = post.createdAt,
-            onProfileClick = { onNavigateToProfile(post.userId) }
+            isOwnPost = post.isOwnPost,
+            onProfileClick = { onNavigateToProfile(post.userId) },
+            onClickPostMore = onClickPostMore,
+            isDetailScreen = isDetailScreen
         )
 
         //메인 이미지
@@ -109,12 +113,15 @@ fun PostHeaderSection(
     name: String,
     imageUrl: String?,
     date: String,
-    onProfileClick: () -> Unit
+    isOwnPost: Boolean,
+    onProfileClick: () -> Unit,
+    onClickPostMore: () -> Unit,
+    isDetailScreen: Boolean
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = LargeSpacing, vertical = MediumSpacing),
+            .padding(LargeSpacing),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(MediumSpacing)
     ) {
@@ -151,16 +158,15 @@ fun PostHeaderSection(
         )
 
         //더보기 버튼
-        IconButton(
-            onClick = { /*TODO*/ }
-        ) {
+        //상세 화면에서만 처리할 수 있다
+        if (isDetailScreen && isOwnPost) {
             Icon(
+                modifier = Modifier.clip(CircleShape).clickable { onClickPostMore() },
                 imageVector = Icons.Rounded.MoreHoriz,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onSurface
             )
         }
-
     }
 }
 

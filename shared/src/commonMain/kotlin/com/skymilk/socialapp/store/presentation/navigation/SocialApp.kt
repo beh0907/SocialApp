@@ -19,7 +19,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.White
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -39,7 +42,7 @@ import com.skymilk.socialapp.store.presentation.screen.main.postCreate.PostCreat
 import com.skymilk.socialapp.store.presentation.screen.main.postDetail.PostDetail
 import com.skymilk.socialapp.store.presentation.screen.main.profile.Profile
 import com.skymilk.socialapp.store.presentation.screen.main.profileEdit.ProfileEdit
-import com.skymilk.socialapp.store.presentation.util.EventBus.messageEvents
+import com.skymilk.socialapp.store.presentation.util.EventBus
 import com.skymilk.socialapp.store.presentation.util.MessageEvent
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
@@ -83,11 +86,12 @@ fun SocialApp(mainAuthState: MainAuthState) {
 
     //메시지 스낵바
     val snackbarHostState = remember { SnackbarHostState() }
+    SetObserveMessage(snackbarHostState)
 
     Scaffold(
         topBar = {
             //상단바 정의
-            AppBar(navController = navController)
+            AppBar(navController = navController, mainAuthState = (mainAuthState as? MainAuthState.Success))
         },
         floatingActionButton = {
             //우측 하단의 플로팅 버튼
@@ -107,11 +111,11 @@ fun SocialApp(mainAuthState: MainAuthState) {
             }
         },
         snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
+            SnackbarHost(
+                hostState = snackbarHostState,
+            )
         }
     ) { innerPadding ->
-        SetObserveMessage(snackbarHostState)
-
         NavHost(
             modifier = Modifier.padding(innerPadding),
             navController = navController,
@@ -181,35 +185,31 @@ fun SocialApp(mainAuthState: MainAuthState) {
 
 @Composable
 private fun SetObserveMessage(snackbarHostState: SnackbarHostState) {
-    val scope = rememberCoroutineScope() // 스낵바 표시를 위한 코루틴 스코프
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val scope = rememberCoroutineScope()
 
-    LaunchedEffect(Unit) {
-        messageEvents.collect { event ->
-            when (event) {
-                is MessageEvent.SnackBar -> {
-                    scope.launch {
-                        //현재 스낵바가 띄워진 상태라면 먼저 닫는다
-                        snackbarHostState.currentSnackbarData?.dismiss()
-
-                        //스낵바 띄우기
-                        snackbarHostState.showSnackbar(
-                            event.message,
-                            "닫기",
-                            true,
-                            SnackbarDuration.Short
-                        ).let {
-                            when(it){
-                                SnackbarResult.Dismissed -> println("snackBar: 스낵바 닫아짐")
-
-                                // 스낵바에 있는 버튼이 눌러졌을 때 로직처리 하는 부분
-                                SnackbarResult.ActionPerformed -> if (event.action != null) event.action.invoke()
-
+    LaunchedEffect(lifecycle) {
+        lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            EventBus.messageEvents.collect { event ->
+                when (event) {
+                    is MessageEvent.SnackBar -> {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                event.message,
+                                event.actionTitle,
+                                true, // 닫기 버튼
+                                SnackbarDuration.Short
+                            ).let {
+                                when (it) {
+                                    SnackbarResult.Dismissed -> println("snackBar: 스낵바 닫아짐")
+                                    SnackbarResult.ActionPerformed -> event.action?.invoke()
+                                }
                             }
                         }
                     }
-                }
 
-                else -> Unit
+                    else -> Unit
+                }
             }
         }
     }

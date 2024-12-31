@@ -26,6 +26,7 @@ fun LazyListScope.postsList(
             PostItem(
                 post = post,
                 onClickPost = onClickPost,
+                onClickPostMore = { },
                 onNavigateToProfile = onNavigateToProfile,
                 onLikeClick = onLikeClick
             )

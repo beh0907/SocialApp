@@ -5,5 +5,6 @@ data class PostUseCase(
     val getFeedPosts: GetFeedPosts,
     val getUserPosts: GetUserPosts,
     val likeOrDislikePost: LikeOrDislikePost,
-    val createPost: CreatePost
+    val createPost: CreatePost,
+    val removePost: RemovePost
 )

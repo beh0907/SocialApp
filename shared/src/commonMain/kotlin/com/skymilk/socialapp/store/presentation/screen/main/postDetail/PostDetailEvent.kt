@@ -7,6 +7,8 @@ sealed interface PostDetailEvent {
 
     data class LikePost(val post: Post) : PostDetailEvent
 
+    data class RemovePost(val post: Post) : PostDetailEvent
+
     data class ChangeComment(val comment: String) : PostDetailEvent
 
     data class RemoveComment(val comment: PostComment) : PostDetailEvent

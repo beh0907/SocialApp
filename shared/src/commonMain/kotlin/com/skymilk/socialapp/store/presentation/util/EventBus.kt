@@ -26,14 +26,16 @@ object EventBus {
 
 //알람 이벤트 정의
 sealed interface MessageEvent {
-    data class SnackBar(val message: String, val action: (() -> Unit)? = null) : MessageEvent
+    data class SnackBar(val message: String, val actionTitle: String? = null, val action: (() -> Unit)? = null) : MessageEvent
 }
 
-//게시글 이벤트 정의
+//이벤트 정의
 sealed interface DataEvent {
     data class CreatedPost(val post: Post) : DataEvent
 
     data class UpdatedPost(val post: Post) : DataEvent
+
+    data class RemovedPost(val post: Post) : DataEvent
 
     data class UpdatedProfile(val profile: Profile) : DataEvent
 }
