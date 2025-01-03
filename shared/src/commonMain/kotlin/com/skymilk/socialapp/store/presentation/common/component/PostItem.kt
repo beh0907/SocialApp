@@ -96,7 +96,7 @@ fun PostItem(
             isPostLiked = post.isLiked
         )
 
-        //게시물 설명
+        //게시글 설명
         Text(
             text = post.caption,
             modifier = Modifier.padding(horizontal = LargeSpacing),

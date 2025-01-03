@@ -12,4 +12,6 @@ data class Post(
     val userImageUrl: String?,
     val isLiked: Boolean = false,
     val isOwnPost: Boolean = false,
-)
+) {
+    constructor() : this(0L, "", "", "", 0, 0, 0L, "", null, false, false)
+}

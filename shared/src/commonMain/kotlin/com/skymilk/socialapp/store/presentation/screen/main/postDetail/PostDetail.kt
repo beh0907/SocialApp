@@ -28,8 +28,8 @@ fun PostDetail(
         postDetailState = postState,
         postComments = postComments,
         onEvent = postDetailViewModel::onEvent,
-        onNavigateToProfile = {
-            navigator.navigate(Routes.ProfileScreen(it))
-        },
+        onNavigateToProfile = { navigator.navigate(Routes.ProfileScreen(it)) },
+        onNavigateToPostEdit = { navigator.navigate(Routes.PostEditScreen(postId = it.postId, caption = it.caption, imageUrl = it.imageUrl)) },
+        onNavigateToBack = { navigator.navigateUp() },
     )
 }

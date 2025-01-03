@@ -14,7 +14,7 @@ import com.skymilk.socialapp.store.domain.model.Post
 import com.skymilk.socialapp.ui.theme.MediumSpacing
 import dev.icerock.moko.resources.compose.stringResource
 
-//게시물 목록
+//게시글 목록
 fun LazyListScope.postsList(
     posts: LazyPagingItems<Post>,
     onClickPost: (Post) -> Unit,

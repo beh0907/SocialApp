@@ -6,6 +6,7 @@ import com.skymilk.socialapp.store.presentation.screen.auth.signUp.SignUpViewMod
 import com.skymilk.socialapp.store.presentation.screen.main.follows.FollowsViewModel
 import com.skymilk.socialapp.store.presentation.screen.main.home.HomeViewModel
 import com.skymilk.socialapp.store.presentation.screen.main.postCreate.PostCreateViewModel
+import com.skymilk.socialapp.store.presentation.screen.main.postEdit.PostEditViewModel
 import com.skymilk.socialapp.store.presentation.screen.main.postDetail.PostDetailViewModel
 import com.skymilk.socialapp.store.presentation.screen.main.profile.ProfileViewModel
 import com.skymilk.socialapp.store.presentation.screen.main.profileEdit.ProfileEditViewModel
@@ -22,6 +23,7 @@ val appModule = module {
     viewModelOf(::MainViewModel)
     viewModelOf(::HomeViewModel)
     viewModelOf(::PostCreateViewModel)
+    viewModelOf(::PostEditViewModel)
     viewModelOf(::PostDetailViewModel)
     viewModelOf(::ProfileViewModel)
     viewModelOf(::ProfileEditViewModel)

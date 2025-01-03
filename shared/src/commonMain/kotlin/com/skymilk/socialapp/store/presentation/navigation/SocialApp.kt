@@ -31,6 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.skymilk.socialapp.MainAuthState
 import com.skymilk.socialapp.MainViewModel
+import com.skymilk.socialapp.store.domain.model.Post
 import com.skymilk.socialapp.store.presentation.common.component.AppBar
 import com.skymilk.socialapp.store.presentation.navigation.routes.Routes
 import com.skymilk.socialapp.store.presentation.screen.auth.signIn.SignIn
@@ -40,6 +41,7 @@ import com.skymilk.socialapp.store.presentation.screen.main.follows.Following
 import com.skymilk.socialapp.store.presentation.screen.main.home.Home
 import com.skymilk.socialapp.store.presentation.screen.main.postCreate.PostCreate
 import com.skymilk.socialapp.store.presentation.screen.main.postDetail.PostDetail
+import com.skymilk.socialapp.store.presentation.screen.main.postEdit.PostEdit
 import com.skymilk.socialapp.store.presentation.screen.main.profile.Profile
 import com.skymilk.socialapp.store.presentation.screen.main.profileEdit.ProfileEdit
 import com.skymilk.socialapp.store.presentation.util.EventBus
@@ -91,7 +93,10 @@ fun SocialApp(mainAuthState: MainAuthState) {
     Scaffold(
         topBar = {
             //상단바 정의
-            AppBar(navController = navController, mainAuthState = (mainAuthState as? MainAuthState.Success))
+            AppBar(
+                navController = navController,
+                mainAuthState = (mainAuthState as? MainAuthState.Success)
+            )
         },
         floatingActionButton = {
             //우측 하단의 플로팅 버튼
@@ -157,6 +162,13 @@ fun SocialApp(mainAuthState: MainAuthState) {
 
                 composable<Routes.PostCreateScreen> {
                     PostCreate(navigator = navController)
+                }
+
+                composable<Routes.PostEditScreen> {
+                    val args = it.toRoute<Routes.PostEditScreen>()
+                    val post = Post().copy(postId = args.postId, caption = args.caption, imageUrl = args.imageUrl)
+
+                    PostEdit(navigator = navController, post = post)
                 }
 
                 composable<Routes.PostDetailScreen> {

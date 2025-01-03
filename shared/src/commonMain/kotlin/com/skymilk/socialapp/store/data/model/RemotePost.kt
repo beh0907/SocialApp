@@ -5,9 +5,6 @@ import com.skymilk.socialapp.store.data.util.DateFormatter
 import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.Serializable
 
-
-
-
 @Serializable
 data class RemotePost(
     val postId: Long,
@@ -66,9 +63,18 @@ internal data class PostResponseData(
 )
 
 
-//게시물 작성
+//게시글 작성
 @Serializable
 internal data class CreatePostParams(
     val caption: String,
     val userId: Long
+)
+
+//게시글 수정
+@Serializable
+internal data class UpdatePostParams(
+    val caption: String,
+    val imageUrl: String,
+    val userId: Long,
+    val postId: Long,
 )

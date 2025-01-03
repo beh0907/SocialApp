@@ -25,13 +25,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.Saver
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -41,14 +37,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import app.cash.paging.compose.LazyPagingItems
 import com.skymilk.socialapp.SharedRes
+import com.skymilk.socialapp.store.domain.model.Post
 import com.skymilk.socialapp.store.domain.model.PostComment
+import com.skymilk.socialapp.store.presentation.common.component.CustomAlertDialog
 import com.skymilk.socialapp.store.presentation.common.component.PostItem
 import com.skymilk.socialapp.store.presentation.screen.main.postDetail.component.CommentOptionBottomSheet
 import com.skymilk.socialapp.store.presentation.screen.main.postDetail.component.PostOptionBottomSheet
 import com.skymilk.socialapp.store.presentation.screen.main.postDetail.component.SendCommentButton
 import com.skymilk.socialapp.store.presentation.screen.main.postDetail.component.postCommentsList
 import com.skymilk.socialapp.store.presentation.screen.main.postDetail.state.PostDetailState
-import com.skymilk.socialapp.store.presentation.screen.main.postDetail.state.PostUiState
+import com.skymilk.socialapp.store.presentation.screen.main.postDetail.state.PostDetailUiState
 import com.skymilk.socialapp.ui.theme.LargeSpacing
 import com.skymilk.socialapp.ui.theme.MediumSpacing
 import com.skymilk.socialapp.ui.theme.SmallSpacing
@@ -59,20 +57,17 @@ import kotlinx.coroutines.launch
 fun PostDetailScreen(
     modifier: Modifier = Modifier,
     userId: Long,
-    postDetailUiState: PostUiState,
+    postDetailUiState: PostDetailUiState,
     postDetailState: PostDetailState,
     postComments: LazyPagingItems<PostComment>,
     onEvent: (PostDetailEvent) -> Unit,
     onNavigateToProfile: (Long) -> Unit,
+    onNavigateToPostEdit: (Post) -> Unit,
+    onNavigateToBack: () -> Boolean,
 ) {
-    //바텀시트 관련 선택 게시글
-    var selectedPost by rememberSaveable {
-        mutableStateOf(false)
-    }
-
-    //바텀시트 관련 선택 댓글
-    var selectedPostComment: PostComment? by rememberSaveable {
-        mutableStateOf(null)
+    //삭제가 확인 되었다면 뒤로 가기
+    LaunchedEffect(postDetailUiState.isDeletedPost) {
+        if (postDetailUiState.isDeletedPost) onNavigateToBack()
     }
 
     when (postDetailState) {
@@ -98,7 +93,7 @@ fun PostDetailScreen(
                         PostItem(
                             post = postDetailState.post,
                             onClickPost = { },
-                            onClickPostMore = { selectedPost = true },
+                            onClickPostMore = { onEvent(PostDetailEvent.SetSelectedPostOption(true)) },
                             onNavigateToProfile = onNavigateToProfile,
                             onLikeClick = { onEvent(PostDetailEvent.LikePost(it)) },
                             isDetailScreen = true
@@ -113,36 +108,52 @@ fun PostDetailScreen(
                         postComments = postComments,
                         onNavigateToProfile = onNavigateToProfile,
                         onCommentMoreClick = {
-                            selectedPostComment = it
+                            onEvent(PostDetailEvent.SetSelectedPostComment(it))
                         }
                     )
                 }
 
                 BottomSection(
-                    comment = postDetailUiState.content,
+                    comment = postDetailUiState.comment,
                     onCommentChange = { onEvent(PostDetailEvent.ChangeComment(it)) },
                     onSendClick = { onEvent(PostDetailEvent.SendComment) }
                 )
             }
 
+            //게시글 삭제 다이얼로그
+            if (postDetailUiState.isShowRemoveDialog) {
+                CustomAlertDialog(
+                    title = "",
+                    message = "",
+                    onConfirm = { onEvent(PostDetailEvent.RemovePost(post = postDetailState.post)) },
+                    onDismiss = { onEvent(PostDetailEvent.SetShowRemoveDialog(false)) }
+                )
+            }
+
             //게시글 옵션 선택 바텀 시트 팝업
-            if (selectedPost) {
+            if (postDetailUiState.isSelectedPostOption) {
                 PostOptionBottomSheet(
                     post = postDetailState.post,
-                    onDeletePost = { onEvent(PostDetailEvent.RemovePost(post = postDetailState.post)) },
-                    onNavigateToEditPost = {  },
-                    onResetSelectedPost = { selectedPost = false },
+                    onDeletePost = { onEvent(PostDetailEvent.SetShowRemoveDialog(true)) },
+                    onNavigateToEditPost = { onNavigateToPostEdit(postDetailState.post) },
+                    onResetSelectedPost = { onEvent(PostDetailEvent.SetSelectedPostOption(false)) },
                 )
             }
 
             //선택한 댓글이 있을 경우 바텀 시트 팝업
-            selectedPostComment?.let { postComment ->
+            postDetailUiState.selectedPostComment?.let { postComment ->
                 CommentOptionBottomSheet(
                     comment = postComment,
                     shouldDeleteComment = userId == postDetailState.post.userId || postComment.isOwner, // 게시글 작성자 or 댓글 작성자만 지울 수 있다
                     onDeletePostComment = { onEvent(PostDetailEvent.RemoveComment(it)) },
                     onNavigateToProfile = onNavigateToProfile,
-                    onResetSelectedPostComment = { selectedPostComment = null }
+                    onResetSelectedPostComment = {
+                        onEvent(
+                            PostDetailEvent.SetSelectedPostComment(
+                                null
+                            )
+                        )
+                    }
                 )
             }
         }

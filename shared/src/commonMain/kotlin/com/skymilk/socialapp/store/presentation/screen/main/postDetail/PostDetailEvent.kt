@@ -5,6 +5,12 @@ import com.skymilk.socialapp.store.domain.model.PostComment
 
 sealed interface PostDetailEvent {
 
+    data class SetSelectedPostOption(val isSelected: Boolean) : PostDetailEvent
+
+    data class SetShowRemoveDialog(val isShow: Boolean) : PostDetailEvent
+
+    data class SetSelectedPostComment(val postComment: PostComment?) : PostDetailEvent
+
     data class LikePost(val post: Post) : PostDetailEvent
 
     data class RemovePost(val post: Post) : PostDetailEvent

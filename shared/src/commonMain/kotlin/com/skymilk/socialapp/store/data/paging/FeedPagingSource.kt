@@ -8,7 +8,6 @@ import com.skymilk.socialapp.store.domain.model.Post
 import com.skymilk.socialapp.util.Constants
 import io.ktor.http.HttpStatusCode
 import kotlinx.io.IOException
-import kotlin.let
 
 internal class FeedPagingSource(
     private val postApiService: PostApiService,

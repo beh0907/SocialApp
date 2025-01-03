@@ -32,7 +32,7 @@ class ProfileViewModel(
     private val _profileState = MutableStateFlow<ProfileState>(ProfileState.Initial)
     val profileState = _profileState.asStateFlow()
 
-    //선택한 유저의 게시물 목록
+    //선택한 유저의 게시글 목록
     private val _feedPosts = MutableStateFlow<PagingData<Post>>(PagingData.empty())
     val feedPosts = _feedPosts.asStateFlow()
 
@@ -81,7 +81,7 @@ class ProfileViewModel(
             }
         }
 
-        //선택한 유저의 게시물 목록
+        //선택한 유저의 게시글 목록
         viewModelScope.launch {
             val feed = postUseCase.getUserPosts(userId).cachedIn(viewModelScope)
             feed.collect {
@@ -150,7 +150,7 @@ class ProfileViewModel(
         //내 정보 수정
         _profileState.update { ProfileState.Success(profile) }
 
-        //게시물 정보 수정
+        //게시글 정보 수정
         _feedPosts.value = _feedPosts.value.map {
             if (it.userId == profile.id)
                 it.copy(

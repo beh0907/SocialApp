@@ -72,7 +72,7 @@ fun HomeScreen(
 
             }
 
-            //피드 게시물 목록
+            //피드 게시글 목록
             postsList(
                 posts = feedPosts,
                 onClickPost = onNavigateToPostDetail,

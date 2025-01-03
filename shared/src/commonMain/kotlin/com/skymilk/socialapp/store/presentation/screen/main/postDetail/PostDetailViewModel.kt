@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import androidx.paging.filter
-import androidx.paging.insertHeaderItem
 import androidx.paging.map
 import com.skymilk.socialapp.store.data.util.Result
 import com.skymilk.socialapp.store.domain.model.Post
@@ -17,7 +16,7 @@ import com.skymilk.socialapp.store.domain.model.Profile
 import com.skymilk.socialapp.store.domain.usecase.post.PostUseCase
 import com.skymilk.socialapp.store.domain.usecase.postComments.PostCommentsUseCase
 import com.skymilk.socialapp.store.presentation.screen.main.postDetail.state.PostDetailState
-import com.skymilk.socialapp.store.presentation.screen.main.postDetail.state.PostUiState
+import com.skymilk.socialapp.store.presentation.screen.main.postDetail.state.PostDetailUiState
 import com.skymilk.socialapp.store.presentation.util.DataEvent
 import com.skymilk.socialapp.store.presentation.util.EventBus.dataEvents
 import com.skymilk.socialapp.store.presentation.util.MessageEvent
@@ -44,7 +43,7 @@ class PostDetailViewModel(
     val postComments = _postComments.asStateFlow()
 
     //UI 상태 정보
-    var postDetailUiState by mutableStateOf(PostUiState())
+    var postDetailUiState by mutableStateOf(PostDetailUiState())
         private set
 
     init {
@@ -71,12 +70,17 @@ class PostDetailViewModel(
 
     fun onEvent(event: PostDetailEvent) {
         when (event) {
+            is PostDetailEvent.SetSelectedPostOption -> postDetailUiState = postDetailUiState.copy(isSelectedPostOption = event.isSelected)
+
+            is PostDetailEvent.SetShowRemoveDialog -> postDetailUiState = postDetailUiState.copy(isShowRemoveDialog = event.isShow)
+
+            is PostDetailEvent.SetSelectedPostComment -> postDetailUiState = postDetailUiState.copy(selectedPostComment = event.postComment)
+
             is PostDetailEvent.LikePost -> likeOrDislikePost(event.post)
 
             is PostDetailEvent.RemovePost -> removePost(event.post)
 
-            is PostDetailEvent.ChangeComment -> postDetailUiState =
-                postDetailUiState.copy(content = event.comment)
+            is PostDetailEvent.ChangeComment -> postDetailUiState = postDetailUiState.copy(comment = event.comment)
 
             is PostDetailEvent.RemoveComment -> removeComment(event.comment)
 
@@ -84,7 +88,7 @@ class PostDetailViewModel(
         }
     }
 
-    //게시물 정보 요청
+    //게시글 정보 요청
     private fun loadPostDetail() {
         viewModelScope.launch {
             _postDetailState.update { PostDetailState.Loading }
@@ -149,11 +153,14 @@ class PostDetailViewModel(
 
             when (result) {
                 is Result.Success -> {
-                    //게시물 삭제
+                    //게시글 삭제
                     sendEvent(DataEvent.RemovedPost(post))
 
-                    //댓글 추가 알림
+                    //게시글 삭제 알림
                     sendEvent(MessageEvent.SnackBar("게시글이 삭제되었습니다."))
+
+                    //게시글 삭제 처리 설정
+                    postDetailUiState = postDetailUiState.copy(isDeletedPost = true)
                 }
 
                 is Result.Error -> {
@@ -182,7 +189,7 @@ class PostDetailViewModel(
                         }
                     }
 
-                    //게시물 상태 정보 갱신
+                    //게시글 상태 정보 갱신
                     post = post.copy(commentsCount = post.commentsCount.minus(1))
                     sendEvent(DataEvent.UpdatedPost(post))
 
@@ -204,12 +211,12 @@ class PostDetailViewModel(
             var post = (_postDetailState.value as? PostDetailState.Success)?.post ?: return@launch
             val result = postCommentUseCase.addPostComment(
                 postId = postId,
-                content = postDetailUiState.content
+                content = postDetailUiState.comment
             )
 
             when (result) {
                 is Result.Success -> {
-                    //게시물 상태 정보 갱신
+                    //게시글 상태 정보 갱신
                     post = post.copy(commentsCount = post.commentsCount.plus(1))
                     sendEvent(DataEvent.UpdatedPost(post))
 
@@ -217,7 +224,7 @@ class PostDetailViewModel(
                     sendEvent(MessageEvent.SnackBar("댓글이 추가되었습니다."))
 
                     //입력값 초기화
-                    postDetailUiState = postDetailUiState.copy(content = "")
+                    postDetailUiState = postDetailUiState.copy(comment = "")
 
                     //새 댓글 목록 다시 불러오기
                     loadComments()
@@ -231,7 +238,7 @@ class PostDetailViewModel(
         }
     }
 
-    //상세 게시물 정보를 수정한다
+    //상세 게시글 정보를 수정한다
     private fun updatePost(post: Post) {
         _postDetailState.update { PostDetailState.Success(post) }
     }
@@ -239,7 +246,7 @@ class PostDetailViewModel(
     private fun updateProfile(profile: Profile) {
         val post = (_postDetailState.value as? PostDetailState.Success)?.post ?: return
 
-        //나의 게시물이라면 갱신
+        //나의 게시글이라면 갱신
         if (post.isOwnPost) {
             val updatedPost = post.copy(
                 userName = profile.name,

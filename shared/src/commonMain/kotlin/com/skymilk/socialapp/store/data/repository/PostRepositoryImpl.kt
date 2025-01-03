@@ -6,6 +6,7 @@ import app.cash.paging.PagingData
 import com.skymilk.socialapp.store.data.local.UserPreferences
 import com.skymilk.socialapp.store.data.model.CreatePostParams
 import com.skymilk.socialapp.store.data.model.PostLikesParams
+import com.skymilk.socialapp.store.data.model.UpdatePostParams
 import com.skymilk.socialapp.store.data.paging.FeedPagingSource
 import com.skymilk.socialapp.store.data.paging.UserPostsPagingSource
 import com.skymilk.socialapp.store.data.remote.PostApiService
@@ -92,13 +93,13 @@ internal class PostRepositoryImpl(
         }
     }
 
-    override suspend fun createPost(text: String, imageBytes: ByteArray): Result<Post> {
+    override suspend fun createPost(caption: String, imageBytes: ByteArray): Result<Post> {
         return safeApiRequest(dispatcher) {
             val currentUserData = userPreferences.getUserData()
 
             val postData = Json.encodeToString(
                 serializer = CreatePostParams.serializer(),
-                value = CreatePostParams(caption = text, userId = currentUserData.id)
+                value = CreatePostParams(caption = caption, userId = currentUserData.id)
             )
 
             val response = postApiService.createPost(
@@ -109,6 +110,58 @@ internal class PostRepositoryImpl(
 
             if (response.code == HttpStatusCode.OK) {
                 Result.Success(data = response.data.post!!.toPost())
+            } else {
+                Result.Error(message = response.data.message ?: Constants.UNEXPECTED_ERROR)
+            }
+        }
+    }
+
+    override suspend fun updatePost(
+        post: Post,
+        imageBytes: ByteArray?
+    ): Result<Post> {
+        return safeApiRequest(dispatcher) {
+            val userData = userPreferences.getUserData()
+
+            val postData = Json.encodeToString(
+                serializer = UpdatePostParams.serializer(),
+                value = UpdatePostParams(
+                    caption = post.caption,
+                    imageUrl = post.imageUrl,
+                    userId = userData.id,
+                    postId = post.postId
+                )
+            )
+
+            //게시글 정보 수정 요청
+            val response = postApiService.updatePost(
+                token = userData.token,
+                postData = postData,
+                imageBytes = imageBytes
+            )
+
+
+            if (response.code == HttpStatusCode.OK) {
+                var imageUrl = post.imageUrl
+
+                //업로드한 프로필 이미지가 있다면 경로 요청
+                if (imageBytes != null) {
+                    val updatedPostResponse = postApiService.getPost(
+                        token = userData.token,
+                        postId = post.postId,
+                        currentUserId = userData.id
+                    )
+                    //프로필 이미지 경로 설정
+                    updatedPostResponse.data.post?.let {
+                        imageUrl = it.imageUrl
+                    }
+                }
+
+                //데이터 스토어에 유저 정보 저장
+                val updatedPost = post.copy(imageUrl = imageUrl)
+
+                //최종 갱신 정보 리턴
+                Result.Success(data = updatedPost)
             } else {
                 Result.Error(message = response.data.message ?: Constants.UNEXPECTED_ERROR)
             }

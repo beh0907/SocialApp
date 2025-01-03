@@ -8,6 +8,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.kotlinCocoapods)
+    alias(libs.plugins.devtools.ksp)
     id("dev.icerock.mobile.multiplatform-resources")
 }
 

@@ -18,7 +18,7 @@ import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 
 internal class PostApiService : KtorApi() {
-    //게시물 목록
+    //게시글 목록
     suspend fun getFeedPosts(
         token: String,
         currentUserId: Long,
@@ -62,7 +62,7 @@ internal class PostApiService : KtorApi() {
         return PostLikesResponse(code = httpResponse.status, data = httpResponse.body())
     }
 
-    //유저 게시물 목록
+    //유저 게시글 목록
     suspend fun getUserPosts(
         token: String,
         userId: Long,
@@ -80,7 +80,7 @@ internal class PostApiService : KtorApi() {
         return PostsResponse(code = httpResponse.status, data = httpResponse.body())
     }
 
-    //선택한 게시물 상세정보
+    //선택한 게시글 상세정보
     suspend fun getPost(
         token: String,
         postId: Long,
@@ -94,7 +94,7 @@ internal class PostApiService : KtorApi() {
         return PostResponse(code = httpResponse.status, data = httpResponse.body())
     }
 
-    //게시물 생성
+    //게시글 생성
     suspend fun createPost(
         token: String,
         postData: String,
@@ -121,7 +121,38 @@ internal class PostApiService : KtorApi() {
         return PostResponse(code = httpResponse.status, data = httpResponse.body())
     }
 
-    //게시물 삭제
+    //게시글 수정
+    suspend fun updatePost(
+        token: String,
+        postData: String,
+        imageBytes: ByteArray?
+    ): PostResponse {
+        val httpResponse = client.submitFormWithBinaryData(
+            formData = formData {
+                append(key = "post_data", value = postData)
+
+                //수정된 이미지가 있다면 전달
+                if (imageBytes != null) {
+                    append(
+                        key = "post_image",
+                        value = imageBytes,
+                        headers = Headers.build {
+                            append(HttpHeaders.ContentType, value = "image/*")
+                            append(HttpHeaders.ContentDisposition, value = "filename=post.jpg")
+                        }
+                    )
+                }
+            }
+        ) {
+            endPoint(path = "/post/update")
+            setToken(token = token)
+            setupMultipartRequest()
+            method = HttpMethod.Post
+        }
+        return PostResponse(code = httpResponse.status, data = httpResponse.body())
+    }
+
+    //게시글 삭제
     suspend fun removePost(
         token: String,
         postId: Long,

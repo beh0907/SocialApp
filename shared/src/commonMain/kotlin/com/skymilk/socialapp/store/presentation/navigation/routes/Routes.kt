@@ -1,5 +1,6 @@
 package com.skymilk.socialapp.store.presentation.navigation.routes
 
+import com.skymilk.socialapp.store.domain.model.Post
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -33,10 +34,13 @@ sealed interface Routes {
     data class FollowingScreen(val userId: Long) : Routes // 팔로윙 목록 화면
 
     @Serializable
-    data object PostCreateScreen: Routes // 게시물 생성 화면
+    data object PostCreateScreen : Routes // 게시글 생성 화면
 
     @Serializable
-    data class PostDetailScreen(val postId: Long) : Routes // 게시물 상세 화면
+    data class PostEditScreen(val postId: Long, val caption: String, val imageUrl: String) : Routes // 게시글 수정 화면
+
+    @Serializable
+    data class PostDetailScreen(val postId: Long) : Routes // 게시글 상세 화면
 
     @Serializable
     data class ProfileScreen(val userId: Long) : Routes // 프로필 화면
