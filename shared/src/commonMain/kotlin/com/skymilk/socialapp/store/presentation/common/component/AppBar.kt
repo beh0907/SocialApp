@@ -94,7 +94,7 @@ fun getCurrentRouteDescription(navBackStackEntry: NavBackStackEntry?): StringRes
     val currentRoute = navBackStackEntry?.destination?.route
 
     return when {
-        // 인증 관련 화면 (파라미터 없는 화면)
+        //파라미터 없는 화면
         currentRoute == Routes.SignInScreen::class.qualifiedName -> SharedRes.strings.signin_destination_title
         currentRoute == Routes.SignUpScreen::class.qualifiedName -> SharedRes.strings.signup_destination_title
         currentRoute == Routes.HomeScreen::class.qualifiedName -> SharedRes.strings.home_destination_title
@@ -118,6 +118,10 @@ fun getCurrentRouteDescription(navBackStackEntry: NavBackStackEntry?): StringRes
         }
 
         currentRoute?.startsWith(Routes.PostDetailScreen::class.qualifiedName.toString()) == true -> {
+            SharedRes.strings.post_detail_destination_title
+        }
+
+        currentRoute?.startsWith(Routes.PostEditScreen::class.qualifiedName.toString()) == true -> {
             SharedRes.strings.post_detail_destination_title
         }
 

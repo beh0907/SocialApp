@@ -59,6 +59,12 @@ kotlin {
                 implementation(libs.kmp.compose.ui)
                 implementation(libs.kmp.compose.navigation)
 
+                // serialization
+                implementation(libs.kotlinx.serialization.json)
+
+                // uri
+                implementation(libs.kmp.uri)
+
                 //ktor
                 implementation(libs.kotlinx.coroutines.core)
                 implementation(libs.ktor.client.core)

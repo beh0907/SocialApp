@@ -9,7 +9,7 @@ import com.skymilk.socialapp.store.presentation.navigation.routes.Routes
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun Home(
+fun HomeRoute(
     navigator: NavHostController
 ) {
     val homeViewModel: HomeViewModel = koinViewModel()

@@ -10,7 +10,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun Profile(
+fun ProfileRoute(
     navigator: NavHostController,
     userId: Long
 ) {

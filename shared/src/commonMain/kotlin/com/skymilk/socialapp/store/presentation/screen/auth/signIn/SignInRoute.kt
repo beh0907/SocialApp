@@ -1,34 +1,32 @@
-package com.skymilk.socialapp.store.presentation.screen.auth.signUp
+package com.skymilk.socialapp.store.presentation.screen.auth.signIn
 
 import androidx.compose.runtime.Composable
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import com.skymilk.socialapp.store.presentation.navigation.routes.Routes
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun SignUp(
-    navigator: NavHostController
+fun SignInRoute(
+    navigator: NavHostController,
 ) {
-    val viewModel: SignUpViewModel = koinViewModel()
+    val viewModel: SignInViewModel = koinViewModel()
     val authState by viewModel.authState.collectAsStateWithLifecycle()
 
-    SignUpScreen(uiState = viewModel.uiState,
+    SignInScreen(
+        uiState = viewModel.uiState,
         authState = authState,
         onEvent = viewModel::onEvent,
-        onNavigateToSignIn = {
-            navigator.navigate(Routes.SignInScreen) {
-                popUpTo(Routes.SignUpScreen) {
-                    inclusive = true
-                }
-            }
+        onNavigateToSignUp = {
+            navigator.navigate(Routes.SignUpScreen)
         },
         onNavigateToHome = {
             navigator.navigate(Routes.HomeScreen) {
-                popUpTo(Routes.SignUpScreen) {
+                popUpTo(Routes.SignInScreen) {
                     inclusive = true
                 }
             }
-        })
+        }
+    )
 }

@@ -34,16 +34,16 @@ import com.skymilk.socialapp.MainViewModel
 import com.skymilk.socialapp.store.domain.model.Post
 import com.skymilk.socialapp.store.presentation.common.component.AppBar
 import com.skymilk.socialapp.store.presentation.navigation.routes.Routes
-import com.skymilk.socialapp.store.presentation.screen.auth.signIn.SignIn
-import com.skymilk.socialapp.store.presentation.screen.auth.signUp.SignUp
-import com.skymilk.socialapp.store.presentation.screen.main.follows.Followers
-import com.skymilk.socialapp.store.presentation.screen.main.follows.Following
-import com.skymilk.socialapp.store.presentation.screen.main.home.Home
-import com.skymilk.socialapp.store.presentation.screen.main.postCreate.PostCreate
-import com.skymilk.socialapp.store.presentation.screen.main.postDetail.PostDetail
-import com.skymilk.socialapp.store.presentation.screen.main.postEdit.PostEdit
-import com.skymilk.socialapp.store.presentation.screen.main.profile.Profile
-import com.skymilk.socialapp.store.presentation.screen.main.profileEdit.ProfileEdit
+import com.skymilk.socialapp.store.presentation.screen.auth.signIn.SignInRoute
+import com.skymilk.socialapp.store.presentation.screen.auth.signUp.SignUpRoute
+import com.skymilk.socialapp.store.presentation.screen.main.follows.FollowersRoute
+import com.skymilk.socialapp.store.presentation.screen.main.follows.FollowingRoute
+import com.skymilk.socialapp.store.presentation.screen.main.home.HomeRoute
+import com.skymilk.socialapp.store.presentation.screen.main.postCreate.PostCreateRoute
+import com.skymilk.socialapp.store.presentation.screen.main.postDetail.PostDetailRoute
+import com.skymilk.socialapp.store.presentation.screen.main.postEdit.PostEditRoute
+import com.skymilk.socialapp.store.presentation.screen.main.profile.ProfileRoute
+import com.skymilk.socialapp.store.presentation.screen.main.profileEdit.ProfileEditRoute
 import com.skymilk.socialapp.store.presentation.util.EventBus
 import com.skymilk.socialapp.store.presentation.util.MessageEvent
 import kotlinx.coroutines.launch
@@ -132,11 +132,11 @@ fun SocialApp(mainAuthState: MainAuthState) {
             ) {
 
                 composable<Routes.SignInScreen> {
-                    SignIn(navigator = navController)
+                    SignInRoute(navigator = navController)
                 }
 
                 composable<Routes.SignUpScreen> {
-                    SignUp(navigator = navController)
+                    SignUpRoute(navigator = navController)
                 }
             }
 
@@ -145,49 +145,50 @@ fun SocialApp(mainAuthState: MainAuthState) {
             ) {
 
                 composable<Routes.HomeScreen> {
-                    Home(navigator = navController)
+                    HomeRoute(navigator = navController)
                 }
 
                 composable<Routes.ProfileScreen> {
                     val args = it.toRoute<Routes.ProfileScreen>()
 
-                    Profile(navigator = navController, userId = args.userId)
+                    ProfileRoute(navigator = navController, userId = args.userId)
                 }
 
                 composable<Routes.ProfileEditScreen> {
                     val args = it.toRoute<Routes.ProfileEditScreen>()
 
-                    ProfileEdit(navigator = navController, userId = args.userId)
+                    ProfileEditRoute(navigator = navController, userId = args.userId)
                 }
 
                 composable<Routes.PostCreateScreen> {
-                    PostCreate(navigator = navController)
+                    PostCreateRoute(navigator = navController)
                 }
 
-                composable<Routes.PostEditScreen> {
+                composable<Routes.PostEditScreen>(
+                    typeMap = createTypeMap<Post>() // Post 객체 전달을 위해 커스텀 타입 설정
+                ) {
                     val args = it.toRoute<Routes.PostEditScreen>()
-                    val post = Post().copy(postId = args.postId, caption = args.caption, imageUrl = args.imageUrl)
 
-                    PostEdit(navigator = navController, post = post)
+                    PostEditRoute(navigator = navController, post = args.post)
                 }
 
                 composable<Routes.PostDetailScreen> {
                     val args = it.toRoute<Routes.PostDetailScreen>()
                     val userId = (mainAuthState as MainAuthState.Success).currentUser.id
 
-                    PostDetail(navigator = navController, postId = args.postId, userId = userId)
+                    PostDetailRoute(navigator = navController, postId = args.postId, userId = userId)
                 }
 
                 composable<Routes.FollowingScreen> {
                     val args = it.toRoute<Routes.FollowingScreen>()
 
-                    Following(navigator = navController, userId = args.userId)
+                    FollowingRoute(navigator = navController, userId = args.userId)
                 }
 
                 composable<Routes.FollowersScreen> {
                     val args = it.toRoute<Routes.FollowersScreen>()
 
-                    Followers(navigator = navController, userId = args.userId)
+                    FollowersRoute(navigator = navController, userId = args.userId)
                 }
             }
 

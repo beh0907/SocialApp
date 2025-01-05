@@ -37,7 +37,7 @@ sealed interface Routes {
     data object PostCreateScreen : Routes // 게시글 생성 화면
 
     @Serializable
-    data class PostEditScreen(val postId: Long, val caption: String, val imageUrl: String) : Routes // 게시글 수정 화면
+    data class PostEditScreen(val post: Post) : Routes // 게시글 수정 화면
 
     @Serializable
     data class PostDetailScreen(val postId: Long) : Routes // 게시글 상세 화면

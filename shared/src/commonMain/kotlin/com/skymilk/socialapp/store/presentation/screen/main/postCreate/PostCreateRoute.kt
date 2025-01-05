@@ -5,7 +5,7 @@ import androidx.navigation.NavHostController
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
-fun PostCreate(
+fun PostCreateRoute(
     navigator: NavHostController,
 ) {
     val postCreateViewModel: PostCreateViewModel = koinViewModel()

@@ -8,15 +8,15 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun Following(
+fun FollowersRoute(
     navigator: NavHostController,
     userId: Long,
 ) {
-    val followsViewModel: FollowsViewModel = koinViewModel(parameters = { parametersOf(userId, 2) })
-    val follows = followsViewModel.follows.collectAsLazyPagingItems()
+    val followsViewModel: FollowsViewModel = koinViewModel(parameters = { parametersOf(userId, 1) })
+    val followsState = followsViewModel.follows.collectAsLazyPagingItems()
 
     FollowsScreen(
-        follows = follows,
+        follows = followsState,
         onNavigateToProfile = {
             navigator.navigate(Routes.ProfileScreen(it))
         }

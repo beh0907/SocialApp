@@ -1,5 +1,8 @@
 package com.skymilk.socialapp.store.domain.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Post(
     val postId: Long,
     val caption: String,

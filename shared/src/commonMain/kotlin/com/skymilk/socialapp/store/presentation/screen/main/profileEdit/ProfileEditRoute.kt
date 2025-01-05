@@ -8,7 +8,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun ProfileEdit(
+fun ProfileEditRoute(
     navigator: NavHostController,
     userId: Long
 ) {
@@ -21,6 +21,6 @@ fun ProfileEdit(
     ProfileEditScreen(
         uiState = uiState,
         profileState = profileState,
-        onEvent = profileEditViewModel::onEvent,
+        onEvent = profileEditViewModel::onEvent
     )
 }

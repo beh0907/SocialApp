@@ -5,6 +5,7 @@ coil-version = "3.0.4"
 compose-plugin = "1.7.0"
 kotlinxCoroutinesCore = "1.9.0"
 kotlinxDatetime = "0.6.1"
+kotlinxSerializationJson = "1.7.3"
 landscapistCoil3 = "2.4.4"
 moko-resources-version = "0.24.4"
 moko-graphics-version = "0.9.0"
@@ -26,6 +27,7 @@ kmp-window-size-version = "0.5.0"
 kmp-compose-version = "1.7.1"
 kmp-compose-navigation-version = "2.8.0-alpha10"
 kmp-paging3 = "3.3.0-alpha02-0.5.1"
+kmp-uri-version = "0.0.18"
 
 [libraries]
 accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
@@ -33,6 +35,9 @@ androidx-datastore-preferences = { module = "androidx.datastore:datastore-prefer
 androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastorePreferences" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinxDatetime" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+kmp-uri = { module = "com.eygraber:uri-kmp", version.ref = "kmp-uri-version" }
+
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor-version" }
 ktor-client-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor-version" }
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor-version" }

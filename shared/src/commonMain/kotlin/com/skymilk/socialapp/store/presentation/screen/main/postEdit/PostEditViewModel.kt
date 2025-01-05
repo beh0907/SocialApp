@@ -23,7 +23,7 @@ class PostEditViewModel(
         private set
 
     init {
-        uiState.copy(
+        uiState = uiState .copy(
             caption = post.caption,
             imageUrl = post.imageUrl
         )
@@ -55,7 +55,7 @@ class PostEditViewModel(
                 is Result.Success -> {
                     //게시글 업로드 완료 처리
                     uiState = uiState.copy(isUpdated = true)
-                    sendEvent(DataEvent.CreatedPost(result.data))
+                    sendEvent(DataEvent.UpdatedPost(result.data))
 
                     sendEvent(MessageEvent.SnackBar("게시글을 등록하였습니다."))
                 }

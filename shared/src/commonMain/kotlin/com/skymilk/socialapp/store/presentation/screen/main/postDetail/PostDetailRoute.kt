@@ -10,7 +10,7 @@ import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.parameter.parametersOf
 
 @Composable
-fun PostDetail(
+fun PostDetailRoute(
     navigator: NavHostController,
     postId: Long,
     userId: Long
@@ -29,7 +29,7 @@ fun PostDetail(
         postComments = postComments,
         onEvent = postDetailViewModel::onEvent,
         onNavigateToProfile = { navigator.navigate(Routes.ProfileScreen(it)) },
-        onNavigateToPostEdit = { navigator.navigate(Routes.PostEditScreen(postId = it.postId, caption = it.caption, imageUrl = it.imageUrl)) },
+        onNavigateToPostEdit = { navigator.navigate(Routes.PostEditScreen(post = it)) },
         onNavigateToBack = { navigator.navigateUp() },
     )
 }
