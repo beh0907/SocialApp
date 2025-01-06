@@ -144,7 +144,7 @@ class PostDetailViewModel(
         }
     }
 
-    //댓글 삭제
+    //게시글 삭제
     private fun removePost(post: Post) {
         viewModelScope.launch {
             val result = postUseCase.removePost(

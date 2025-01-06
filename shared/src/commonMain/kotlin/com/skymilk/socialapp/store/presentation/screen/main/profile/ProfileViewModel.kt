@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.filter
+import androidx.paging.insertHeaderItem
 import androidx.paging.map
 import com.skymilk.socialapp.store.data.util.Result
 import com.skymilk.socialapp.store.domain.model.Post
@@ -46,9 +48,13 @@ class ProfileViewModel(
     private fun onUpdatedEvent() {
         dataEvents.onEach {
             when (it) {
-                is DataEvent.UpdatedProfile -> updateProfile(it.profile)
+                is DataEvent.CreatedPost -> loadPosts()
 
-                else -> Unit
+                is DataEvent.RemovedPost -> removePost(it.post)
+
+                is DataEvent.UpdatedPost -> updatePost(it.post)
+
+                is DataEvent.UpdatedProfile -> updateProfile(it.profile)
             }
         }.launchIn(viewModelScope)
     }
@@ -64,6 +70,11 @@ class ProfileViewModel(
     }
 
     private fun loadData() {
+        loadProfile()
+        loadPosts()
+    }
+
+    private fun loadProfile() {
         //프로필 정보 요청
         viewModelScope.launch {
             _profileState.update { ProfileState.Loading }
@@ -80,7 +91,9 @@ class ProfileViewModel(
                 }
             }
         }
+    }
 
+    private fun loadPosts() {
         //선택한 유저의 게시글 목록
         viewModelScope.launch {
             val feed = postUseCase.getUserPosts(userId).cachedIn(viewModelScope)
@@ -141,6 +154,24 @@ class ProfileViewModel(
 
                 is Result.Error -> {}
             }
+        }
+    }
+
+    //삭제된 포스트 목록에 반영
+    private fun removePost(post: Post) {
+        // PagingData에서 해당 댓글 제거
+        _feedPosts.update { pagingData ->
+            pagingData.filter { existingPost ->
+                existingPost.postId != post.postId
+            }
+        }
+    }
+
+    //메인 화면 게시글에 일치한 것을 찾아 갱신한다
+    private fun updatePost(post: Post) {
+        _feedPosts.value = _feedPosts.value.map {
+            if (it.postId == post.postId) post
+            else it
         }
     }
 

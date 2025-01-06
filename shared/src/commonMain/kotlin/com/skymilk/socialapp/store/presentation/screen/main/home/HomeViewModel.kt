@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import androidx.paging.filter
 import androidx.paging.insertHeaderItem
 import androidx.paging.map
 import com.skymilk.socialapp.store.data.util.Result
@@ -47,9 +48,9 @@ class HomeViewModel(
     private fun onUpdatedEvent() {
         dataEvents.onEach {
             when (it) {
-                is DataEvent.CreatedPost -> { _feedPosts.value.insertHeaderItem(item = it.post) }
+                is DataEvent.CreatedPost -> loadPosts()
 
-                is DataEvent.RemovedPost -> { _feedPosts.value.insertHeaderItem(item = it.post) }
+                is DataEvent.RemovedPost -> removePost(it.post)
 
                 is DataEvent.UpdatedPost -> updatePost(it.post)
 
@@ -70,7 +71,14 @@ class HomeViewModel(
         }
     }
 
+
+
     private fun loadData() {
+        loadOnboarding()
+        loadPosts()
+    }
+
+    private fun loadOnboarding() {
         _onBoardingState.update { OnBoardingState.Loading }
 
         //추천 유저 목록 불러오기
@@ -88,7 +96,9 @@ class HomeViewModel(
                 is Result.Error -> Unit
             }
         }
+    }
 
+    private fun loadPosts() {
         //게시글 목록 불러오기
         viewModelScope.launch {
             val feeds = postUseCase.getFeedPosts().cachedIn(viewModelScope)
@@ -96,7 +106,6 @@ class HomeViewModel(
                 _feedPosts.value = it
             }
         }
-
     }
 
     private fun dismissOnBoarding() {
@@ -153,6 +162,16 @@ class HomeViewModel(
                 is Result.Error -> {
                     sendEvent(MessageEvent.SnackBar(result.message ?: "좋아요 처리에 실패하였습니다."))
                 }
+            }
+        }
+    }
+
+    //삭제된 포스트 목록에 반영
+    private fun removePost(post: Post) {
+        // PagingData에서 해당 댓글 제거
+        _feedPosts.update { pagingData ->
+            pagingData.filter { existingPost ->
+                existingPost.postId != post.postId
             }
         }
     }

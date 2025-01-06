@@ -17,7 +17,8 @@ fun HomeRoute(
     val onBoardingUiState by homeViewModel.onBoardingUiState.collectAsStateWithLifecycle()
     val feedPosts = homeViewModel.feedPosts.collectAsLazyPagingItems()
 
-    HomeScreen(onBoardingState = onBoardingUiState,
+    HomeScreen(
+        onBoardingState = onBoardingUiState,
         feedPosts = feedPosts,
         onEvent = homeViewModel::onEvent,
         onNavigateToPostDetail = {
@@ -25,5 +26,6 @@ fun HomeRoute(
         },
         onNavigateToProfile = {
             navigator.navigate(Routes.ProfileScreen(it))
-        })
+        }
+    )
 }

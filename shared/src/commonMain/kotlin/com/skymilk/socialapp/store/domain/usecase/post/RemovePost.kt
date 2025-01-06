@@ -7,7 +7,7 @@ import com.skymilk.socialapp.store.domain.repository.PostRepository
 class RemovePost(
     private val postRepository: PostRepository
 ) {
-    suspend operator fun invoke(postId: Long): Result<Post> {
+    suspend operator fun invoke(postId: Long): Result<Boolean> {
         return postRepository.removePost(postId)
     }
 }

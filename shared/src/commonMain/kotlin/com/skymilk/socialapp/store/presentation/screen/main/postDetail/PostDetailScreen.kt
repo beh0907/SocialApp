@@ -123,8 +123,8 @@ fun PostDetailScreen(
             //게시글 삭제 다이얼로그
             if (postDetailUiState.isShowRemoveDialog) {
                 CustomAlertDialog(
-                    title = "",
-                    message = "",
+                    title = stringResource(SharedRes.strings.post_delete_dialog_title),
+                    message = stringResource(SharedRes.strings.post_delete_dialog_description),
                     onConfirm = { onEvent(PostDetailEvent.RemovePost(post = postDetailState.post)) },
                     onDismiss = { onEvent(PostDetailEvent.SetShowRemoveDialog(false)) }
                 )

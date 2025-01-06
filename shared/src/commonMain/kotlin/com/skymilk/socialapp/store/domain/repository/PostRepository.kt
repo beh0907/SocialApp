@@ -25,5 +25,5 @@ interface PostRepository {
     suspend fun updatePost(post: Post, imageBytes: ByteArray?): Result<Post>
 
     //게시글 삭제
-    suspend fun removePost(postId: Long): Result<Post>
+    suspend fun removePost(postId: Long): Result<Boolean>
 }

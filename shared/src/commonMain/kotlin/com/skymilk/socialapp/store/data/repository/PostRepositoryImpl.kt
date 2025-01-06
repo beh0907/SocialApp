@@ -168,7 +168,7 @@ internal class PostRepositoryImpl(
         }
     }
 
-    override suspend fun removePost(postId: Long): Result<Post> {
+    override suspend fun removePost(postId: Long): Result<Boolean> {
         return safeApiRequest(dispatcher) {
             val currentUserData = userPreferences.getUserData()
 
@@ -178,7 +178,7 @@ internal class PostRepositoryImpl(
             )
 
             if (response.code == HttpStatusCode.OK) {
-                Result.Success(data = response.data.post!!.toPost())
+                Result.Success(true)
             } else {
                 Result.Error(message = response.data.message ?: Constants.UNEXPECTED_ERROR)
             }

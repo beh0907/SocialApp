@@ -20,16 +20,16 @@ fun CustomAlertDialog(
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {
+    println("title : $title")
+    println("message : $message")
     AlertDialog(
         onDismissRequest = { },
         title = {
-            if (title.isNotBlank()) {
-                Text(
-                    text = title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                )
-            }
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+            )
         },
         text = {
             Text(
