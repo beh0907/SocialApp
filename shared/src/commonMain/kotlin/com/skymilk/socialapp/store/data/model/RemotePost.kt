@@ -2,6 +2,8 @@ package com.skymilk.socialapp.store.data.model
 
 import com.skymilk.socialapp.store.domain.model.Post
 import com.skymilk.socialapp.store.data.util.DateFormatter
+import com.skymilk.socialapp.util.Constants.BASE_URL
+import com.skymilk.socialapp.util.Constants.POST_IMAGES_FOLDER
 import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.Serializable
 
@@ -9,7 +11,7 @@ import kotlinx.serialization.Serializable
 data class RemotePost(
     val postId: Long,
     val caption: String,
-    val imageUrl: String,
+    val fileNames: List<String>,
     val createdAt: String,
     val likesCount: Int,
     val commentsCount: Int,
@@ -23,7 +25,7 @@ data class RemotePost(
         return Post(
             postId = postId,
             caption = caption,
-            imageUrl = imageUrl,
+            imageUrls = fileNames.map { "$BASE_URL$POST_IMAGES_FOLDER$it" }, // 파일명과 서버 경로 연결
             createdAt = DateFormatter.parseDate(createdAt),
             likesCount = likesCount,
             commentsCount = commentsCount,
@@ -74,7 +76,7 @@ internal data class CreatePostParams(
 @Serializable
 internal data class UpdatePostParams(
     val caption: String,
-    val imageUrl: String,
+    val imageUrls: List<String>,
     val userId: Long,
     val postId: Long,
 )

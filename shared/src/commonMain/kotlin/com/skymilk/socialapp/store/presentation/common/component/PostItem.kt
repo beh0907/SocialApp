@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -48,6 +50,10 @@ fun PostItem(
     onLikeClick: (Post) -> Unit,
     isDetailScreen: Boolean = false
 ) {
+    val pagerState = rememberPagerState(
+        pageCount = { post.imageUrls.size },
+        initialPage = 0
+    )
 
     Column(
         modifier = modifier
@@ -67,25 +73,42 @@ fun PostItem(
             isDetailScreen = isDetailScreen
         )
 
-        //메인 이미지
-        CoilImage(
-            imageModel = { post.imageUrl },
-            modifier = modifier
-                .aspectRatio(1f)
-                .fillMaxSize(),
-            imageOptions = ImageOptions(
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.Center
-            ),
-            loading = {
-                Box(
-                    modifier = modifier
-                        .aspectRatio(1f)
-                        .fillMaxSize()
-                        .shimmerEffect(RoundedCornerShape(0.dp))
+        //이미지 영역
+        Box {
+            //게시물 이미지 페이저
+            HorizontalPager(
+                modifier = Modifier
+                    .aspectRatio(1f)
+                    .fillMaxSize(),
+                state = pagerState
+            ) { page ->
+                CoilImage(
+                    imageModel = { post.imageUrls[page] },
+                    modifier = Modifier.fillMaxSize(),
+                    imageOptions = ImageOptions(
+                        contentScale = ContentScale.Crop,
+                        alignment = Alignment.Center
+                    ),
+                    loading = {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .shimmerEffect(RoundedCornerShape(0.dp))
+                        )
+                    }
                 )
             }
-        )
+
+            //이미지가 여러장일 경우 인디케이터를 표시한다
+            if (post.imageUrls.size > 1) {
+                // 커스텀 인디케이터
+                PagerIndicator(
+                    pagerState = pagerState,
+                    modifier = Modifier.align(Alignment.BottomCenter).padding(16.dp)
+                )
+            }
+        }
+
 
         //하단 정보
         PostFooterLikesSection(

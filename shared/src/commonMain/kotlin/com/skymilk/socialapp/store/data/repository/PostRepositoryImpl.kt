@@ -93,7 +93,7 @@ internal class PostRepositoryImpl(
         }
     }
 
-    override suspend fun createPost(caption: String, imageBytes: ByteArray): Result<Post> {
+    override suspend fun createPost(caption: String, images: List<ByteArray>): Result<Post> {
         return safeApiRequest(dispatcher) {
             val currentUserData = userPreferences.getUserData()
 
@@ -105,7 +105,7 @@ internal class PostRepositoryImpl(
             val response = postApiService.createPost(
                 token = currentUserData.token,
                 postData = postData,
-                imageBytes = imageBytes
+                images = images
             )
 
             if (response.code == HttpStatusCode.OK) {
@@ -127,7 +127,7 @@ internal class PostRepositoryImpl(
                 serializer = UpdatePostParams.serializer(),
                 value = UpdatePostParams(
                     caption = post.caption,
-                    imageUrl = post.imageUrl,
+                    imageUrls = post.imageUrls,
                     userId = userData.id,
                     postId = post.postId
                 )
@@ -142,7 +142,7 @@ internal class PostRepositoryImpl(
 
 
             if (response.code == HttpStatusCode.OK) {
-                var imageUrl = post.imageUrl
+                var imageUrl = post.imageUrls
 
                 //업로드한 프로필 이미지가 있다면 경로 요청
                 if (imageBytes != null) {
@@ -153,12 +153,12 @@ internal class PostRepositoryImpl(
                     )
                     //프로필 이미지 경로 설정
                     updatedPostResponse.data.post?.let {
-                        imageUrl = it.imageUrl
+                        imageUrl = it.fileNames
                     }
                 }
 
                 //데이터 스토어에 유저 정보 저장
-                val updatedPost = post.copy(imageUrl = imageUrl)
+                val updatedPost = post.copy(imageUrls = imageUrl)
 
                 //최종 갱신 정보 리턴
                 Result.Success(data = updatedPost)

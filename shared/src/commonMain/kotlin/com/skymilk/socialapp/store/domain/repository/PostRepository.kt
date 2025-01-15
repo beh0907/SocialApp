@@ -19,7 +19,7 @@ interface PostRepository {
     suspend fun getPost(postId: Long): Result<Post>
 
     //게시글 작성
-    suspend fun createPost(caption: String, imageBytes: ByteArray): Result<Post>
+    suspend fun createPost(caption: String, images: List<ByteArray>): Result<Post>
 
     //게시글 수정
     suspend fun updatePost(post: Post, imageBytes: ByteArray?): Result<Post>

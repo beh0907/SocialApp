@@ -5,6 +5,9 @@ object Constants {
     //API 서버 URL
     const val BASE_URL = "http://inhyeop.iptime.org:88/"
 
+    //게시글 이미지 저장 경로
+    const val POST_IMAGES_FOLDER = "post_images/"
+
     //DataStore 파일명
     const val PREFERENCE_FILE_NAME = "user_settings.preferences_pb"
 

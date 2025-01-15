@@ -1,5 +1,5 @@
 [versions]
-accompanistSystemuicontroller = "0.36.0"
+accompanist = "0.36.0"
 agp = "8.7.3"
 coil-version = "3.0.4"
 compose-plugin = "1.7.0"
@@ -30,7 +30,7 @@ kmp-paging3 = "3.3.0-alpha02-0.5.1"
 kmp-uri-version = "0.0.18"
 
 [libraries]
-accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanistSystemuicontroller" }
+accompanist-systemuicontroller = { module = "com.google.accompanist:accompanist-systemuicontroller", version.ref = "accompanist" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
 androidx-datastore-preferences-core = { module = "androidx.datastore:datastore-preferences-core", version.ref = "datastorePreferences" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }

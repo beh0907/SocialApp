@@ -23,9 +23,9 @@ class PostEditViewModel(
         private set
 
     init {
-        uiState = uiState .copy(
+        uiState = uiState.copy(
             caption = post.caption,
-            imageUrl = post.imageUrl
+            imageUrls = post.imageUrls
         )
     }
 
@@ -46,7 +46,7 @@ class PostEditViewModel(
             val result = postUseCase.updatePost(
                 post.copy(
                     caption = uiState.caption,
-                    imageUrl = uiState.imageUrl
+                    imageUrls = uiState.imageUrls
                 ),
                 uiState.imageBytes
             )

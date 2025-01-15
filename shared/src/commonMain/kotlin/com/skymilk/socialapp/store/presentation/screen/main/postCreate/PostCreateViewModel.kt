@@ -24,7 +24,17 @@ class PostCreateViewModel(
         when (event) {
             is PostCreateEvent.UpdateCaption -> uiState = uiState.copy(caption = event.caption)
 
-            is PostCreateEvent.UpdateImage -> uiState = uiState.copy(imageBytes = event.byteArray)
+            is PostCreateEvent.AddImage -> uiState =
+                uiState.copy(
+                    selectedImages = uiState.selectedImages + event.images,
+                    maxSelection = uiState.maxSelection - event.images.size
+                )
+
+            is PostCreateEvent.RemoveImage -> uiState =
+                uiState.copy(
+                    selectedImages = uiState.selectedImages.filterIndexed { index, _ -> index != event.index },
+                    maxSelection = uiState.maxSelection + 1
+                )
 
             is PostCreateEvent.CreatePost -> createPost()
         }
@@ -34,7 +44,7 @@ class PostCreateViewModel(
         uiState = uiState.copy(isLoading = true)
 
         viewModelScope.launch {
-            val result = postUseCase.createPost(uiState.caption, uiState.imageBytes)
+            val result = postUseCase.createPost(uiState.caption, uiState.selectedImages)
 
             when (result) {
                 is Result.Success -> {

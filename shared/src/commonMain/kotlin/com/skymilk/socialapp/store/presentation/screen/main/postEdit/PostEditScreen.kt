@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -37,7 +36,6 @@ import com.skymilk.socialapp.store.presentation.screen.main.postEdit.state.PostE
 import com.skymilk.socialapp.ui.theme.ButtonHeight
 import com.skymilk.socialapp.ui.theme.ExtraLargeSpacing
 import com.skymilk.socialapp.ui.theme.LargeSpacing
-import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 
 @Composable
@@ -94,9 +92,9 @@ fun PostEditScreen(
 
                 //선택된 이미지가 없을 때 원본 이미지를 사용한다
                 CoilImage(
-                    imageModel = { uiState.imageBytes ?: uiState.imageUrl },
+                    imageModel = { uiState.imageBytes ?: uiState.imageUrls[0] },
                     modifier = modifier
-                        .size(70.dp)
+                        .size(80.dp)
                         .clip(MaterialTheme.shapes.medium)
                         .clickable {
                             singleImagePicker.launch()

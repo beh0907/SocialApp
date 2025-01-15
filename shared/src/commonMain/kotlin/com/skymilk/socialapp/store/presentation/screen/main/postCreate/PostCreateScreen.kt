@@ -5,12 +5,18 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.CameraAlt
+import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
@@ -25,7 +31,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Color.Companion.White
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import com.preat.peekaboo.image.picker.SelectionMode
@@ -37,7 +42,6 @@ import com.skymilk.socialapp.store.presentation.screen.main.postCreate.state.Pos
 import com.skymilk.socialapp.ui.theme.ButtonHeight
 import com.skymilk.socialapp.ui.theme.ExtraLargeSpacing
 import com.skymilk.socialapp.ui.theme.LargeSpacing
-import dev.icerock.moko.resources.compose.painterResource
 import dev.icerock.moko.resources.compose.stringResource
 
 @Composable
@@ -53,13 +57,15 @@ fun PostCreateScreen(
     }
 
     val scope = rememberCoroutineScope()
-    val singleImagePicker = rememberImagePickerLauncher(
-        selectionMode = SelectionMode.Single,
+    val imagePicker = rememberImagePickerLauncher(
+        //Multiple은 1이 반드시 초과해야 하기 때문에 1일땐 Single 모드로 전환해야 한다
+        selectionMode = if (uiState.maxSelection == 1) SelectionMode.Single else SelectionMode.Multiple(
+            maxSelection = uiState.maxSelection
+        ),
         scope = scope,
-        onResult = { byteArrays ->
-            byteArrays.firstOrNull()?.let {
-                onEvent(PostCreateEvent.UpdateImage(it))
-            }
+        onResult = { selectedImages ->
+            //선택된 이미지 전달
+            onEvent(PostCreateEvent.AddImage(selectedImages))
         }
     )
 
@@ -73,7 +79,6 @@ fun PostCreateScreen(
                 .background(MaterialTheme.colorScheme.surface)
                 .padding(ExtraLargeSpacing),
             verticalArrangement = Arrangement.spacedBy(LargeSpacing),
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             PostCaptionTextField(
                 caption = uiState.caption,
@@ -82,41 +87,78 @@ fun PostCreateScreen(
                 }
             )
 
-            Row(
-                modifier = modifier.fillMaxWidth(),
+            LazyRow(
                 horizontalArrangement = Arrangement.spacedBy(LargeSpacing),
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(
-                    text = stringResource(SharedRes.strings.select_post_image_label),
-                    style = MaterialTheme.typography.bodySmall
-                )
-
-                uiState.imageBytes?.let {
-                    CoilImage(
-                        imageModel = { it },
-                        modifier = modifier
-                            .size(70.dp)
-                            .clip(MaterialTheme.shapes.medium)
-                            .clickable {
-                                singleImagePicker.launch()
-                            },
-                        imageOptions = ImageOptions(
-                            contentScale = ContentScale.Crop,
-                            alignment = Alignment.Center
+                //타이틀
+                if (uiState.selectedImages.isEmpty()) {
+                    item {
+                        //선택된 이미지가 있다면 타이틀 제거
+                        Text(
+                            text = stringResource(SharedRes.strings.select_post_image_label),
+                            style = MaterialTheme.typography.bodySmall
                         )
-                    )
-                } ?: run {
-                    Icon(
-                        modifier = modifier
-                            .size(36.dp)
-                            .clickable {
-                                singleImagePicker.launch()
-                            },
-                        painter = painterResource(SharedRes.images.add_image_icon),
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                    )
+                    }
+                }
+
+                //선택된 이미지
+                itemsIndexed(items = uiState.selectedImages) { index, item ->
+                    Box(
+                        modifier = Modifier.size(80.dp)
+                    ) {
+                        //이미지
+                        CoilImage(
+                            imageModel = { item },
+                            modifier = modifier
+                                .fillMaxSize()
+                                .clip(MaterialTheme.shapes.medium),
+                            imageOptions = ImageOptions(
+                                contentScale = ContentScale.Crop,
+                                alignment = Alignment.Center
+                            )
+                        )
+
+                        //선택 이미지 삭제 버튼
+                        Icon(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .align(Alignment.TopEnd)
+                                .padding(2.dp)
+                                .clip(CircleShape)
+                                .clickable {
+                                    //이미지 제거
+                                    onEvent(PostCreateEvent.RemoveImage(index = index))
+                                },
+                            imageVector = Icons.Rounded.Cancel,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+
+                }
+
+                //이미지 추가 버튼
+                //추가로 선택할 수 이미지 수가 남아있는 경우에만 적용
+                if (uiState.maxSelection > 0) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(MaterialTheme.colorScheme.surfaceVariant)
+                                .clickable {
+                                    imagePicker.launch()
+                                }
+                        ) {
+                            Icon(
+                                modifier = Modifier
+                                    .padding(10.dp),
+                                imageVector = Icons.Rounded.CameraAlt,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
+                    }
                 }
             }
 
@@ -132,7 +174,7 @@ fun PostCreateScreen(
             ) {
                 Text(
                     text = stringResource(SharedRes.strings.create_post_button_label),
-                    color = White
+                    color = Color.White
                 )
             }
         }

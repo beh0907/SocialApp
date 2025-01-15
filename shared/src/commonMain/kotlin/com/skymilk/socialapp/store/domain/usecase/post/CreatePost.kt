@@ -8,11 +8,11 @@ import com.skymilk.socialapp.util.Constants
 class CreatePost(
     private val postRepository: PostRepository
 ) {
-    suspend operator fun invoke(caption: String, imageBytes: ByteArray?): Result<Post> {
+    suspend operator fun invoke(caption: String, images: List<ByteArray>): Result<Post> {
         if (caption.isBlank()) return Result.Error(Constants.INVALID_INPUT_CAPTION_MESSAGE)
 
-        if (imageBytes == null) return Result.Error(Constants.INVALID_UPLOAD_POST_IMAGE_MESSAGE)
+        if (images.isEmpty()) return Result.Error(Constants.INVALID_UPLOAD_POST_IMAGE_MESSAGE)
 
-        return postRepository.createPost(caption, imageBytes)
+        return postRepository.createPost(caption, images)
     }
 }
