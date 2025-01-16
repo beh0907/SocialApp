@@ -9,11 +9,13 @@ class UpdatePost(
     private val postRepository: PostRepository
 ) {
     suspend operator fun invoke(
-        post:Post,
-        imageBytes: ByteArray?
+        post: Post,
+        addImages: List<ByteArray>
     ): Result<Post> {
         if (post.caption.isBlank()) return Result.Error(Constants.INVALID_INPUT_CAPTION_MESSAGE)
 
-        return postRepository.updatePost(post, imageBytes)
+        if (post.imageUrls.isEmpty() && addImages.isEmpty()) return Result.Error(Constants.INVALID_UPLOAD_POST_IMAGE_MESSAGE)
+
+        return postRepository.updatePost(post, addImages)
     }
 }

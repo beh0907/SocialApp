@@ -25,7 +25,8 @@ class PostEditViewModel(
     init {
         uiState = uiState.copy(
             caption = post.caption,
-            imageUrls = post.imageUrls
+            images = post.imageUrls.map { PostImage.UrlImage(it) },
+            maxSelection = uiState.maxSelection - post.imageUrls.size
         )
     }
 
@@ -33,7 +34,18 @@ class PostEditViewModel(
         when (event) {
             is PostEditEvent.UpdateCaption -> uiState = uiState.copy(caption = event.caption)
 
-            is PostEditEvent.UpdateImage -> uiState = uiState.copy(imageBytes = event.byteArray)
+            //이미지 리스트 통합
+            is PostEditEvent.AddImage -> uiState =
+                uiState.copy(
+                    images = uiState.images + event.images.map { PostImage.ByteImage(it) },
+                    maxSelection = uiState.maxSelection - event.images.size
+                )
+
+            //이미지 삭제
+            is PostEditEvent.RemoveImage -> uiState = uiState.copy(
+                images = uiState.images.filterIndexed { index, _ -> index != event.index },
+                maxSelection = uiState.maxSelection + 1
+            )
 
             is PostEditEvent.EditPost -> editPost()
         }
@@ -46,9 +58,9 @@ class PostEditViewModel(
             val result = postUseCase.updatePost(
                 post.copy(
                     caption = uiState.caption,
-                    imageUrls = uiState.imageUrls
+                    imageUrls = uiState.images.filterIsInstance<PostImage.UrlImage>().map { it.url }
                 ),
-                uiState.imageBytes
+                uiState.images.filterIsInstance<PostImage.ByteImage>().map { it.byteArray }
             )
 
             when (result) {

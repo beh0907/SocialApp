@@ -1,6 +1,8 @@
 package com.skymilk.socialapp.store.data.model
 
 import com.skymilk.socialapp.store.domain.model.FollowsUser
+import com.skymilk.socialapp.util.Constants.BASE_URL
+import com.skymilk.socialapp.util.Constants.PROFILE_IMAGES_FOLDER
 import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.Serializable
 
@@ -15,10 +17,11 @@ internal data class RemoteFollowsUser(
     val id: Long = -1,
     val name: String = "",
     val bio: String = "",
-    val imageUrl: String? = null,
+    val fileName: String? = null,
     val isFollowing: Boolean = false,
 ) {
-    fun toDomainFollowUser() = FollowsUser(id, name, bio, imageUrl, isFollowing)
+    fun toDomainFollowUser() =
+        FollowsUser(id, name, bio, BASE_URL + PROFILE_IMAGES_FOLDER + fileName, isFollowing)
 }
 
 //팔로워 유저 목록 응답

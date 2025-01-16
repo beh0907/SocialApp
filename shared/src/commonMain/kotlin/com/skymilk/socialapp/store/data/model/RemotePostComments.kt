@@ -1,7 +1,9 @@
 package com.skymilk.socialapp.store.data.model
 
-import com.skymilk.socialapp.store.domain.model.PostComment
 import com.skymilk.socialapp.store.data.util.DateFormatter
+import com.skymilk.socialapp.store.domain.model.PostComment
+import com.skymilk.socialapp.util.Constants.BASE_URL
+import com.skymilk.socialapp.util.Constants.PROFILE_IMAGES_FOLDER
 import io.ktor.http.HttpStatusCode
 import kotlinx.serialization.Serializable
 
@@ -13,7 +15,7 @@ data class RemotePostComment(
     val postId: Long,
     val userId: Long,
     val userName: String,
-    val userImageUrl: String?,
+    val userImageFileName: String?,
     val createdAt: String,
 ) {
     fun toPostComment(isOwner: Boolean): PostComment {
@@ -23,7 +25,7 @@ data class RemotePostComment(
             postId = postId,
             userId = userId,
             userName = userName,
-            userImageUrl = userImageUrl,
+            userImageUrl = BASE_URL + PROFILE_IMAGES_FOLDER + userImageFileName, // 파일명과 서버 경로 연결
             createAt = DateFormatter.parseDate(createdAt),
             isOwner = isOwner
         )
@@ -57,7 +59,7 @@ internal data class PostCommentResponseData(
 
 @Serializable
 internal data class AddPostCommentParams(
-    val content:String,
+    val content: String,
     val postId: Long,
     val userId: Long,
 )

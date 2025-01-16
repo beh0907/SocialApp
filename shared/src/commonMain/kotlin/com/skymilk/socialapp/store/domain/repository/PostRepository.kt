@@ -22,7 +22,7 @@ interface PostRepository {
     suspend fun createPost(caption: String, images: List<ByteArray>): Result<Post>
 
     //게시글 수정
-    suspend fun updatePost(post: Post, imageBytes: ByteArray?): Result<Post>
+    suspend fun updatePost(post: Post, addImages: List<ByteArray>): Result<Post>
 
     //게시글 삭제
     suspend fun removePost(postId: Long): Result<Boolean>

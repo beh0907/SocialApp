@@ -11,7 +11,7 @@ internal fun AuthResponseData.toAuthResultData(): AuthResultData {
         name = name,
         email = email,
         bio = bio,
-        imageUrl = imageUrl,
+        fileName = fileName,
         token = token,
         followersCount = followersCount,
         followingCount = followingCount

@@ -104,7 +104,7 @@ fun PostItem(
                 // 커스텀 인디케이터
                 PagerIndicator(
                     pagerState = pagerState,
-                    modifier = Modifier.align(Alignment.BottomCenter).padding(16.dp)
+                    modifier = Modifier.align(Alignment.BottomCenter).padding(MediumSpacing)
                 )
             }
         }

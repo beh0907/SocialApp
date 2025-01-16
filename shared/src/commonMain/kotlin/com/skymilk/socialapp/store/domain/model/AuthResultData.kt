@@ -5,7 +5,7 @@ data class AuthResultData(
     val name: String,
     val email: String,
     val bio: String,
-    val imageUrl: String? = null,
+    val fileName: String? = null,
     val token: String,
     val followersCount: Int = 0,
     val followingCount: Int = 0,

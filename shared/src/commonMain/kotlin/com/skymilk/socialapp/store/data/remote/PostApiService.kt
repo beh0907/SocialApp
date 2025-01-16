@@ -129,20 +129,20 @@ internal class PostApiService : KtorApi() {
     suspend fun updatePost(
         token: String,
         postData: String,
-        imageBytes: ByteArray?
+        addImages: List<ByteArray>
     ): PostResponse {
         val httpResponse = client.submitFormWithBinaryData(
             formData = formData {
                 append(key = "post_data", value = postData)
 
-                //수정된 이미지가 있다면 전달
-                if (imageBytes != null) {
+                //추가할 이미지가 있다면 전달
+                addImages.forEachIndexed { index, bytes ->
                     append(
-                        key = "post_image",
-                        value = imageBytes,
+                        key = "post_image_$index",
+                        value = bytes,
                         headers = Headers.build {
                             append(HttpHeaders.ContentType, value = "image/*")
-                            append(HttpHeaders.ContentDisposition, value = "filename=post.jpg")
+                            append(HttpHeaders.ContentDisposition, value = "filename=post_$index.jpg")
                         }
                     )
                 }

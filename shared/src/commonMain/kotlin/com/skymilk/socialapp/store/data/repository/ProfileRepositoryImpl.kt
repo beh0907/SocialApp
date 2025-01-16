@@ -5,11 +5,11 @@ import com.skymilk.socialapp.store.data.mapper.toDomainProfile
 import com.skymilk.socialapp.store.data.mapper.toUserSettings
 import com.skymilk.socialapp.store.data.model.UpdateProfileParams
 import com.skymilk.socialapp.store.data.remote.ProfileApiService
-import com.skymilk.socialapp.util.DispatcherProvider
 import com.skymilk.socialapp.store.data.util.Result
 import com.skymilk.socialapp.store.data.util.safeApiRequest
 import com.skymilk.socialapp.store.domain.model.Profile
 import com.skymilk.socialapp.store.domain.repository.ProfileRepository
+import com.skymilk.socialapp.util.DispatcherProvider
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -66,7 +66,7 @@ internal class ProfileRepositoryImpl(
                     userId = profile.id,
                     name = profile.name,
                     bio = profile.bio,
-                    imageUrl = profile.imageUrl
+                    fileName = profile.imageUrl?.substringAfterLast('/') //파일명만 추출한다
                 )
             )
 
@@ -89,7 +89,7 @@ internal class ProfileRepositoryImpl(
                     )
                     //프로필 이미지 경로 설정
                     updatedProfileResponse.data.profile?.let {
-                        imageUrl = it.imageUrl
+                        imageUrl = it.fileName
                     }
                 }
 

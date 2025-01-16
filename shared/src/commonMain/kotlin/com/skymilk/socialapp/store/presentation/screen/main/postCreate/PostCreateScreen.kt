@@ -38,6 +38,7 @@ import com.preat.peekaboo.image.picker.rememberImagePickerLauncher
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil3.CoilImage
 import com.skymilk.socialapp.SharedRes
+import com.skymilk.socialapp.store.presentation.common.component.PostUploadImageItem
 import com.skymilk.socialapp.store.presentation.screen.main.postCreate.state.PostCreateUiState
 import com.skymilk.socialapp.ui.theme.ButtonHeight
 import com.skymilk.socialapp.ui.theme.ExtraLargeSpacing
@@ -104,38 +105,12 @@ fun PostCreateScreen(
 
                 //선택된 이미지
                 itemsIndexed(items = uiState.selectedImages) { index, item ->
-                    Box(
-                        modifier = Modifier.size(80.dp)
-                    ) {
-                        //이미지
-                        CoilImage(
-                            imageModel = { item },
-                            modifier = modifier
-                                .fillMaxSize()
-                                .clip(MaterialTheme.shapes.medium),
-                            imageOptions = ImageOptions(
-                                contentScale = ContentScale.Crop,
-                                alignment = Alignment.Center
-                            )
-                        )
-
-                        //선택 이미지 삭제 버튼
-                        Icon(
-                            modifier = Modifier
-                                .size(24.dp)
-                                .align(Alignment.TopEnd)
-                                .padding(2.dp)
-                                .clip(CircleShape)
-                                .clickable {
-                                    //이미지 제거
-                                    onEvent(PostCreateEvent.RemoveImage(index = index))
-                                },
-                            imageVector = Icons.Rounded.Cancel,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                    }
-
+                    PostUploadImageItem(
+                        image = item,
+                        onRemoveItem = {
+                            onEvent(PostCreateEvent.RemoveImage(index = index))
+                        }
+                    )
                 }
 
                 //이미지 추가 버튼

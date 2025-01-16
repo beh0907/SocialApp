@@ -15,6 +15,8 @@ import com.skymilk.socialapp.store.data.util.safeApiRequest
 import com.skymilk.socialapp.store.domain.model.Post
 import com.skymilk.socialapp.store.domain.repository.PostRepository
 import com.skymilk.socialapp.util.Constants
+import com.skymilk.socialapp.util.Constants.BASE_URL
+import com.skymilk.socialapp.util.Constants.POST_IMAGES_FOLDER
 import com.skymilk.socialapp.util.DispatcherProvider
 import io.ktor.http.HttpStatusCode
 import kotlinx.coroutines.flow.Flow
@@ -118,7 +120,7 @@ internal class PostRepositoryImpl(
 
     override suspend fun updatePost(
         post: Post,
-        imageBytes: ByteArray?
+        addImages: List<ByteArray>
     ): Result<Post> {
         return safeApiRequest(dispatcher) {
             val userData = userPreferences.getUserData()
@@ -127,7 +129,7 @@ internal class PostRepositoryImpl(
                 serializer = UpdatePostParams.serializer(),
                 value = UpdatePostParams(
                     caption = post.caption,
-                    imageUrls = post.imageUrls,
+                    fileNames = post.imageUrls.map { it.substringAfterLast('/') },//파일명만 추출한다
                     userId = userData.id,
                     postId = post.postId
                 )
@@ -137,28 +139,29 @@ internal class PostRepositoryImpl(
             val response = postApiService.updatePost(
                 token = userData.token,
                 postData = postData,
-                imageBytes = imageBytes
+                addImages = addImages
             )
 
 
             if (response.code == HttpStatusCode.OK) {
-                var imageUrl = post.imageUrls
+                var imageUrls = post.imageUrls
 
-                //업로드한 프로필 이미지가 있다면 경로 요청
-                if (imageBytes != null) {
+                //업로드한 이미지가 있다면 경로 요청
+                if (addImages.isNotEmpty()) {
                     val updatedPostResponse = postApiService.getPost(
                         token = userData.token,
                         postId = post.postId,
                         currentUserId = userData.id
                     )
-                    //프로필 이미지 경로 설정
+
+                    //업로드 이미지 경로 설정
                     updatedPostResponse.data.post?.let {
-                        imageUrl = it.fileNames
+                        imageUrls = it.fileNames.map { name -> BASE_URL + POST_IMAGES_FOLDER + name }
                     }
                 }
 
-                //데이터 스토어에 유저 정보 저장
-                val updatedPost = post.copy(imageUrls = imageUrl)
+                //갱신된 게시물 객체 저장
+                val updatedPost = post.copy(imageUrls = imageUrls)
 
                 //최종 갱신 정보 리턴
                 Result.Success(data = updatedPost)
