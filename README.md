@@ -1,5 +1,5 @@
 # <div align=center>SocialApp</div>
-[KMP(Kotlin MultiPlatform)](https://firebase.google.com/) 기반 안드로이드 및 IOS 타겟 소셜 네트워크 서비스 어플리케이션입니다.
+[KMP(Kotlin MultiPlatform)](https://www.jetbrains.com/ko-kr/kotlin-multiplatform/) 기반 안드로이드 및 IOS 타겟 소셜 네트워크 서비스 어플리케이션입니다.
 
 # 특징
 
