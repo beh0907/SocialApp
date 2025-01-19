@@ -54,7 +54,7 @@ fun AuthResultData.toUserSettings(): UserSettings {
         name = name,
         email = email,
         bio = bio,
-        imageUrl = BASE_URL + PROFILE_IMAGES_FOLDER + fileName,
+        imageUrl = if (fileName == null) null else BASE_URL + PROFILE_IMAGES_FOLDER + fileName,
         token = token,
         followersCount = followersCount,
         followingCount = followingCount

@@ -21,7 +21,13 @@ internal data class RemoteFollowsUser(
     val isFollowing: Boolean = false,
 ) {
     fun toDomainFollowUser() =
-        FollowsUser(id, name, bio, BASE_URL + PROFILE_IMAGES_FOLDER + fileName, isFollowing)
+        FollowsUser(
+            id = id,
+            name = name,
+            bio = bio,
+            imageUrl = if (fileName == null) null else BASE_URL + PROFILE_IMAGES_FOLDER + fileName,
+            isFollowing = isFollowing
+        )
 }
 
 //팔로워 유저 목록 응답

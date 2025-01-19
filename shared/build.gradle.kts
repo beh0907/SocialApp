@@ -144,18 +144,6 @@ kotlin {
             iosArm64Test.dependsOn(this)
             iosSimulatorArm64Test.dependsOn(this)
         }
-
-//        commonMain.dependencies {
-//            implementation(libs.kotlinx.coroutines.core)
-//            implementation(libs.ktor.client.core)
-//            implementation(libs.ktor.client.content.negotiation)
-//            implementation(libs.ktor.serialization.kotlinx.json)
-//
-//            implementation(libs.koin.core)
-//        }
-//        commonTest.dependencies {
-//            implementation(libs.kotlin.test)
-//        }
     }
 }
 

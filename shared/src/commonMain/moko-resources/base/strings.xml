@@ -17,13 +17,15 @@
     <string name="home_destination_title">Social App</string>
     <string name="no_destination_title">알 수 없는 화면</string>
     <string name="post_detail_destination_title">Post Detail</string>
-    <string name="post_detail_destination_title">Post Edit</string>
+    <string name="post_edit_destination_title">Post Edit</string>
     <string name="comments_header_label">Comments</string>
     <string name="add_comment_button_label">댓글 추가</string>
     <string name="send_comment_button">전송</string>
     <string name="profile_destination_title">Profile</string>
     <string name="followers_title">팔로워</string>
     <string name="following_title">팔로윙</string>
+    <string name="followers_destination_title">Followers</string>
+    <string name="following_destination_title">Followings</string>
     <string name="follow_button_text">Follow</string>
     <string name="onboarding_title">who to follow</string>
     <string name="onboarding_description">팔로우하는 사용자의 게시글이 여기에 표시됩니다\n팔로우할 수 있는 추천 유저 목록은 다음과 같습니다</string>

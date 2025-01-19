@@ -32,7 +32,7 @@ data class RemotePost(
             commentsCount = commentsCount,
             userId = userId,
             userName = userName,
-            userImageUrl = BASE_URL + PROFILE_IMAGES_FOLDER + userImageFileName, // 파일명과 서버 경로 연결
+            userImageUrl = if(userImageFileName == null) null else BASE_URL + PROFILE_IMAGES_FOLDER + userImageFileName, // 파일명과 서버 경로 연결
             isLiked = isLiked,
             isOwnPost = isOwnPost
         )

@@ -110,11 +110,11 @@ fun getCurrentRouteDescription(navBackStackEntry: NavBackStackEntry?): StringRes
         }
 
         currentRoute?.startsWith(Routes.FollowersScreen::class.qualifiedName.toString()) == true -> {
-            SharedRes.strings.followers_title
+            SharedRes.strings.followers_destination_title
         }
 
         currentRoute?.startsWith(Routes.FollowingScreen::class.qualifiedName.toString()) == true -> {
-            SharedRes.strings.following_title
+            SharedRes.strings.following_destination_title
         }
 
         currentRoute?.startsWith(Routes.PostDetailScreen::class.qualifiedName.toString()) == true -> {
